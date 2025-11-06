@@ -8,8 +8,9 @@ const Profile = () => {
 
   if (!user) return <p className="text-white">Usuario no encontrado</p>;
 
+
   return (
-    <div className="p-2 flex flex-col gap-4">
+    <div className="p-2 flex flex-col gap-4 min-h-screen">
       <div className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md bg-opacity-10 bg-white/10">
         <img
           src={user.avatar}
