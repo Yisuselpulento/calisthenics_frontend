@@ -1,12 +1,19 @@
+import { useState } from "react";
 import ProgressBar from "../components/ProgressBar";
 import { getLevelColor } from "../helpers/getLevelColor";
 import { tailwindColors } from "../helpers/tailwindColor";
 import { users } from "../helpers/users";
 import { useParams } from "react-router-dom";
+import { IoEyeSharp } from "react-icons/io5";
+import { HiMiniEyeSlash } from "react-icons/hi2";
+
 
 const Profile = () => {
   const { username } = useParams();
   const user = users.find((u) => u.username === username);
+
+  // 🔘 Estado para mostrar/ocultar estadísticas
+  const [showMore, setShowMore] = useState(false);
 
   if (!user) return <p className="text-white">Usuario no encontrado</p>;
 
@@ -16,53 +23,77 @@ const Profile = () => {
 
   return (
     <div className="p-2 flex flex-col gap-4 min-h-screen">
-      <div
-        className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md"   
-      >
+      <div className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
         <img
           src={user.avatar}
           alt={user.name}
-          className={`w-34 h-34 rounded-full border object-cover`}
+          className="aspect-square w-34 h-34 xs:w-20 xs:h-20 rounded-full border object-cover"
           style={{ borderColor: bgColor }}
         />
-        <div >
+
+        <div className="w-full">
+          {/* Nombre y tipo */}
           <div className="flex gap-3 items-center">
-          <p className="text-xl mt-2">{user.name}</p>
-          <p
-            className="rounded-md px-1 text-xs absolute top-2 right-2 border text-center"
-            style={{
-              backgroundColor: bgColor,
-              border: `1px solid ${borderColor}`,
-            }}
-          >{user.type}</p>
+            <p className="text-xl mt-2">{user.name}</p>
+            <p
+               className={`rounded-md px-1 text-xs absolute top-2 right-2 border text-center ${
+              bgColor === "#ffffff" ? "text-gray-800" : "text-white"
+            }`}
+              style={{
+                backgroundColor: bgColor,
+                border: `1px solid ${borderColor}`,
+              }}
+            >
+              {user.type}
+            </p>
           </div>
+
+          {/* Peso y altura */}
           <div className="flex gap-2 text-xs">
             <p>Peso: {user.peso}</p>
             <p>Altura: {user.altura}</p>
           </div>
-          <div>
-              <p className="mt-5 text-xs font-bold">AU : {user.level}</p>
-              <ProgressBar level={user.level} maxLevel={18000} label="Main AU" />
-          </div>
-          <div>
-              <div className="flex gap-2 items-center">
-                <ProgressBar level={user.staticAu} maxLevel={9000} label="Static AU" />
+
+          {/* Barra principal y botón */}
+          <div >
+            <div className="flex items-center gap-2 mt-5">
+              <p className="text-xs font-bold">AU : {user.level}</p>
+
+              <button
+                onClick={() => setShowMore((prev) => !prev)}
+                className="text-[10px] px-2 py-1 border rounded-md hover:bg-gray-700 transition-all"
+              >
+                {showMore ? <HiMiniEyeSlash /> : <IoEyeSharp />
+}
+              </button>
+            </div>
+
+            <ProgressBar level={user.level} maxLevel={18000} label="Main AU" />
+
+            {/* Barras secundarias ocultables */}
+            {showMore && (
+              <div className="mt-1 flex flex-col animate-fadeIn">
+                <ProgressBar
+                  level={user.staticAu}
+                  maxLevel={9000}
+                  label="Static AU"
+                />
+                <ProgressBar
+                  level={user.dynamicAu}
+                  maxLevel={9000}
+                  label="Dynamic AU"
+                />
               </div>
-              <div className="flex gap-2 items-center">
-                <ProgressBar level={user.dynamicAu} maxLevel={9000} label="Dynamic AU" />
-              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/*favoriteSkill video*/}
-      <div className="">
-        {user.favoriteSkills?.length > 0 && (
+      {/* Videos de habilidades favoritas */}
+      {user.favoriteSkills?.length > 0 && (
         <div className="flex gap-3 justify-center">
           {user.favoriteSkills.map((video, index) => (
-            <div
-              key={index}
-            >
+            <div key={index}>
               <video
                 className="w-30 h-60 object-cover rounded-md"
                 src={video.url}
@@ -73,7 +104,6 @@ const Profile = () => {
           ))}
         </div>
       )}
-      </div>
     </div>
   );
 };

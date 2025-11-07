@@ -32,7 +32,7 @@ const ProgressBar = ({ level = 0, maxLevel = 18000, label }) => {
   const barColor = getProgressColor(progress);
 
   return (
-    <div className="flex flex-col gap-1 mt-1 w-[200px]">
+    <div className="flex flex-col gap-1 mt-1 w-full ">
       {label && (
         <p className="text-[11px] text-gray-300">
           {label}: {Math.floor(progressPercent)}%
