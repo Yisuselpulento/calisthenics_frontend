@@ -1,60 +1,56 @@
 export const users = [
-  {
+    {
     _id: "u1",
     name: "Iliesse Ns",
     username: "iliesse_ns",
     country: "Chile",
-    videoProfile : "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762447550/AQMAMjfgJ-Ku3cSSckQ1-sv7IvLSSBiIgJ_8j6icCaDXRyF1RfaANvTKb15jzNYH9CqXAnyo9XOYQ5OEG8eAt0dL7QQ0bN2P_lzb1fc.mp4",
+    videoProfile:
+      "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762447550/AQMAMjfgJ-Ku3cSSckQ1-sv7IvLSSBiIgJ_8j6icCaDXRyF1RfaANvTKb15jzNYH9CqXAnyo9XOYQ5OEG8eAt0dL7QQ0bN2P_lzb1fc.mp4",
     avatar: "/users/iliesse.jpg",
     altura: 1.75,
     peso: 70,
     favoriteSkills: [
       {
         title: "Full Planche Hold",
-        url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
+        url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4"
       },
       {
         title: "Hefesto Progress",
-        url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
+        url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
       },
       {
         title: "Full Planche Pushups Combo",
-        url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQPQR5mjOoAll_XGmGATctvWq466rZw4XrCxuaKLvfI-aARfQWLz_R5_jVPWh_WV-GashGF7DDof2mj3-HVezj66cVyOHA6T_pedha5.mp4",
-      },
+        url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQPQR5mjOoAll_XGmGATctvWq466rZw4XrCxuaKLvfI-aARfQWLz_R5_jVPWh_WV-GashGF7DDof2mj3-HVezj66cVyOHA6T_pedha5.mp4"
+      }
     ],
     type: "static",
-    staticAu: 10.589,
-    dynamicAu: 1500,
-    level: 12.089,
-    skills: [
+    // stats base
+    staticAu: 8589,
+    dynamicAu: 1700,
+    level: 10289,
+    maxEnergy: 500,
+
+    // skills del usuario: SOLO la variante que desbloqueó (Full Planche Hold)
+       skills: [
       {
-        skillName: "Full Planche",
-        variant: "Full Planche",
-        type: "static",
-        seconds: 5,
-        cleanliness: 0.9,
-        arms: 2,
-        fingers: 5,
+        skillId: "planche_001",
+        variantId: "planche_full_hold",
+        variantName: "Full Planche Hold (2 dedos, ambas manos)",
+        armsUsed: 2,
+        fingersUsed: 2,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
       },
       {
-        skillName: "Full Planche Pushups",
-        variant: "Full Planche Pushups",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.85,
-        arms: 2,
-        fingers: 5,
-      },
-      {
-        skillName: "Hefesto",
-        variant: "Hefesto completo",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.8,
-        arms: 2,
-        fingers: 5,
-      },
-    ],
+        skillId: "frontlever_001",
+        variantId: "front_full_hold",
+        variantName: "Full Front Lever Hold (1 brazo)",
+        armsUsed: 1,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
+      }
+    ]
   },
    {
     _id: "u2",
@@ -79,10 +75,10 @@ export const users = [
         url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762457249/AQM9HsRAx8oInJ5_SE1DwiGWaSPnbR5KyacIGOPiVLXtsZb2_DJaFkZvaskmd0jBreZX23V-SsUsAMij7KOkXs-52Z_tJdSy_sfyywa.mp4",
       },
     ],
-    type: "static and dynamic",
-     staticAu: 5.589,
-    dynamicAu: 10.500,
-    level: 16.089,
+    type: "Complete",
+     staticAu: 5589,
+    dynamicAu: 7500,
+    level: 13089,
     skills: [
       {
         skillName: "Full Planche",
@@ -137,9 +133,9 @@ export const users = [
       },
     ],
     type: "static",
-         staticAu: 3.589,
-    dynamicAu: 1.500,
-    level: 5.089,
+         staticAu: 4589,
+    dynamicAu: 1500,
+    level: 6089,
     skills: [
       {
         skillName: "Full Planche",
@@ -194,9 +190,9 @@ export const users = [
       },
     ],
     type: "static",
-         staticAu: 1.589,
+    staticAu: 2589,
     dynamicAu: 100,
-    level: 1.689,
+    level: 2689,
     skills: [
       {
         skillName: "Full Planche",
@@ -250,10 +246,10 @@ export const users = [
         url: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762464606/InShot_20250924_183418076_c9t5mc.mp4",
       },
     ],
-    type: "static",
-    staticAu: 18.000,
-    dynamicAu: 1500,
-    level: 18.000,
+    type: "complete",
+    staticAu: 8500,
+    dynamicAu: 8500,
+    level: 17000,
     skills: [
       {
         skillName: "Full Planche",

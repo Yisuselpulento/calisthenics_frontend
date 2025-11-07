@@ -1,39 +1,45 @@
-import React from "react";
+const ProgressBar = ({ level = 0, maxLevel = 18000, label }) => {
+  // Asegurar que sea un número válido
+  const numericLevel = typeof level === "number" ? level : parseFloat(level) || 0;
 
-const ProgressBar = ({ level, maxLevel = 18000 }) => {
-  // Si el nivel tiene decimales (ej: 10.589), lo convertimos a miles
-  const numericLevel = typeof level === "number" && level < 1000
-    ? level * 1000
-    : parseFloat(level);
-
-  const progress = Math.min(numericLevel, maxLevel);
+  // Limitar entre 0 y maxLevel
+  const progress = Math.min(Math.max(numericLevel, 0), maxLevel);
   const progressPercent = (progress / maxLevel) * 100;
 
-  // Colores fijos para que Tailwind no los elimine al compilar
-  const colorClasses = [
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-yellow-500",
-    "bg-green-500",
-    "bg-blue-500",
-    "bg-yellow-500",
-    "bg-indigo-500",
-    "bg-purple-500",
-    "bg-pink-500",
-  ];
+  // 🎨 Paleta de colores según el tipo de barra
+  const colorSets = {
+    9000: ["bg-gray-300", "bg-blue-500", "bg-purple-500", "bg-yellow-500"],
+    18000: [
+      "bg-red-500",
+      "bg-orange-500",
+      "bg-green-500",
+      "bg-blue-500",
+      "bg-purple-500",
+      "bg-yellow-500",
+    ],
+  };
 
+  // Elegir paleta según maxLevel (si no existe, usar la de 18000)
+  const colors = colorSets[maxLevel] || colorSets[18000];
+
+  // 🔢 Elegir color dinámicamente
   const getProgressColor = (lvl) => {
-    const index = Math.floor(lvl / 3000) % colorClasses.length;
-    return colorClasses[index];
+    const range = maxLevel / colors.length;
+    const index = Math.min(Math.floor(lvl / range), colors.length - 1);
+    return colors[index];
   };
 
   const barColor = getProgressColor(progress);
 
   return (
-    <div className="mt-2 w-[200px]">
-      {/* Contenedor base */}
-      <div className="w-full h-3 bg-gray-800 rounded-full relative overflow-hidden">
-        {/* Barra de progreso */}
+    <div className="flex flex-col gap-1 mt-1 w-[200px]">
+      {label && (
+        <p className="text-[11px] text-gray-300">
+          {label}: {Math.floor(progressPercent)}%
+        </p>
+      )}
+
+      <div className="w-full h-2 bg-gray-800 rounded-full relative overflow-hidden">
         <div
           className={`absolute left-0 top-0 h-full rounded-full transition-[width] duration-700 ease-out ${barColor}`}
           style={{ width: `${progressPercent}%` }}

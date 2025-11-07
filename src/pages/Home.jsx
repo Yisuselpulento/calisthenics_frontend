@@ -1,6 +1,11 @@
+import { users } from "../helpers/users"
+
 const Home = () => {
+
   return (
-    <div className="p-2">Home</div>
+    <div className="p-2">
+
+    </div>
   )
 }
 
