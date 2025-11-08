@@ -8,7 +8,7 @@ const Home = () => {
   );
 
   return (
-    <div className="p-4 flex flex-col gap-4">
+    <div className="p-2 flex flex-col gap-4">
       {sortedActivities.length > 0 ? (
         sortedActivities.map((activity) => (
           <PostCard key={activity._id} activity={activity} />

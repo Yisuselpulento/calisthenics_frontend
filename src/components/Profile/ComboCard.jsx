@@ -6,10 +6,10 @@ const ComboCard = ({ combo }) => {
         <h3 className="text-lg font-semibold text-white">{combo.comboName}</h3>
         <span className={`text-xs px-2 py-1 rounded-full ${
           combo.type === "static"
-            ? "bg-blue-500/20 text-blue-300"
+            ? "bg-blue-500/50 text-blue-300"
             : combo.type === "dynamic"
-            ? "bg-green-500/20 text-green-300"
-            : "bg-purple-500/20 text-purple-300"
+            ? "bg-green-500/50 text-green-300"
+            : "bg-yellow-500/50 text-yellow-300"
         }`}>
           {combo.type}
         </span>
