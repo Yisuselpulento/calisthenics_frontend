@@ -21,7 +21,6 @@ const PostCard = ({ activity }) => {
     minute: "2-digit",
   });
 
-  // 🪄 Texto dinámico según tipo de actividad
   let description = "";
   switch (type) {
     case "unlockSkill":

@@ -145,7 +145,8 @@ export const users = [
       static: "combo_001",
       dynamic: "combo_002",
       mixed: "combo_003"
-    }
+    },
+    historialIds: ["h1", "h3", "h4", "h7", "h9"]
   },
    {
     _id: "u2",
@@ -291,7 +292,8 @@ export const users = [
       static: "combo_001",
       dynamic: "combo_002",
       mixed: "combo_003"
-    }
+    },
+     historialIds: ["h1", "h2", "h7", "h10"]
   },
    {
     _id: "u3",
@@ -437,7 +439,8 @@ export const users = [
       static: "combo_001",
       dynamic: "combo_002",
       mixed: "combo_003"
-    }
+    },
+     historialIds: ["h2", "h3", "h6", "h8"]
   },
    {
     _id: "u4",
@@ -583,7 +586,8 @@ export const users = [
       static: "combo_001",
       dynamic: "combo_002",
       mixed: "combo_003"
-    }
+    },
+     historialIds: ["h4", "h5", "h8", "h10"]
   },
   {
     _id: "u5",
@@ -729,6 +733,7 @@ export const users = [
       static: "combo_001",
       dynamic: "combo_002",
       mixed: "combo_003"
-    }
+    },
+    historialIds: ["h5", "h6", "h9"]
   },
 ]
