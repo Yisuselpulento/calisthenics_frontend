@@ -1,5 +1,5 @@
 export const users = [
-    {
+  {
     _id: "u1",
     name: "Iliesse Ns",
     username: "iliesse_ns",
@@ -24,14 +24,11 @@ export const users = [
       }
     ],
     type: "static",
-    // stats base
     staticAu: 8589,
     dynamicAu: 1700,
     level: 10289,
     maxEnergy: 500,
-
-    // skills del usuario: SOLO la variante que desbloqueó (Full Planche Hold)
-       skills: [
+    skills: [
       {
         skillId: "planche_001",
         variantId: "planche_full_hold",
@@ -39,7 +36,7 @@ export const users = [
         armsUsed: 2,
         fingersUsed: 2,
         videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4"
       },
       {
         skillId: "frontlever_001",
@@ -48,9 +45,107 @@ export const users = [
         armsUsed: 1,
         fingersUsed: 5,
         videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
+      },
+      {
+        skillId: "hefesto_001",
+        variantId: "hefesto_progress",
+        variantName: "Hefesto Progress (fase 2)",
+        armsUsed: 2,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
       }
-    ]
+    ],
+
+    // 🌀 Combos creados por el usuario
+    combos: [
+      {
+        comboId: "combo_001",
+        comboName: "Static Power Flow",
+        description: "Transición entre Full Planche y Front Lever.",
+        type: "static",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 6,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "frontlever_001",
+            variantId: "front_full_hold",
+            holdSeconds: 5,
+            auraUsed: 100,
+            energyCost: 80
+          }
+        ],
+        totalAuraUsed: 220,
+        totalEnergyCost: 180,
+        totalDamage: 190,
+        createdAt: new Date("2025-10-21")
+      },
+      {
+        comboId: "combo_002",
+        comboName: "Dynamic Explosion Flow",
+        description: "Secuencia explosiva de Hefesto con transición controlada.",
+        type: "dynamic",
+        skills: [
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 3,
+            auraUsed: 150,
+            energyCost: 140
+          },
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 4,
+            auraUsed: 100,
+            energyCost: 90
+          }
+        ],
+        totalAuraUsed: 250,
+        totalEnergyCost: 230,
+        totalDamage: 260,
+        createdAt: new Date("2025-10-27")
+      },
+      {
+        comboId: "combo_003",
+        comboName: "Mixed Titan Flow",
+        description: "Combinación de control y potencia entre estáticos y dinámicos.",
+        type: "mixed",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 5,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 2,
+            auraUsed: 150,
+            energyCost: 120
+          }
+        ],
+        totalAuraUsed: 270,
+        totalEnergyCost: 220,
+        totalDamage: 280,
+        createdAt: new Date("2025-11-03")
+      }
+    ],
+
+    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
+    favoriteCombos: {
+      static: "combo_001",
+      dynamic: "combo_002",
+      mixed: "combo_003"
+    }
   },
    {
     _id: "u2",
@@ -81,33 +176,122 @@ export const users = [
     level: 13089,
     skills: [
       {
-        skillName: "Full Planche",
-        variant: "Full Planche",
-        type: "static",
-        seconds: 5,
-        cleanliness: 0.9,
-        arms: 2,
-        fingers: 5,
+        skillId: "planche_001",
+        variantId: "planche_full_hold",
+        variantName: "Full Planche Hold (2 dedos, ambas manos)",
+        armsUsed: 2,
+        fingersUsed: 2,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4"
       },
       {
-        skillName: "Full Planche Pushups",
-        variant: "Full Planche Pushups",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.85,
-        arms: 2,
-        fingers: 5,
+        skillId: "frontlever_001",
+        variantId: "front_full_hold",
+        variantName: "Full Front Lever Hold (1 brazo)",
+        armsUsed: 1,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
       },
       {
-        skillName: "Hefesto",
-        variant: "Hefesto completo",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.8,
-        arms: 2,
-        fingers: 5,
-      },
+        skillId: "hefesto_001",
+        variantId: "hefesto_progress",
+        variantName: "Hefesto Progress (fase 2)",
+        armsUsed: 2,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
+      }
     ],
+
+    // 🌀 Combos creados por el usuario
+    combos: [
+      {
+        comboId: "combo_001",
+        comboName: "Static Power Flow",
+        description: "Transición entre Full Planche y Front Lever.",
+        type: "static",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 6,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "frontlever_001",
+            variantId: "front_full_hold",
+            holdSeconds: 5,
+            auraUsed: 100,
+            energyCost: 80
+          }
+        ],
+        totalAuraUsed: 220,
+        totalEnergyCost: 180,
+        totalDamage: 190,
+        createdAt: new Date("2025-10-21")
+      },
+      {
+        comboId: "combo_002",
+        comboName: "Dynamic Explosion Flow",
+        description: "Secuencia explosiva de Hefesto con transición controlada.",
+        type: "dynamic",
+        skills: [
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 3,
+            auraUsed: 150,
+            energyCost: 140
+          },
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 4,
+            auraUsed: 100,
+            energyCost: 90
+          }
+        ],
+        totalAuraUsed: 250,
+        totalEnergyCost: 230,
+        totalDamage: 260,
+        createdAt: new Date("2025-10-27")
+      },
+      {
+        comboId: "combo_003",
+        comboName: "Mixed Titan Flow",
+        description: "Combinación de control y potencia entre estáticos y dinámicos.",
+        type: "mixed",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 5,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 2,
+            auraUsed: 150,
+            energyCost: 120
+          }
+        ],
+        totalAuraUsed: 270,
+        totalEnergyCost: 220,
+        totalDamage: 280,
+        createdAt: new Date("2025-11-03")
+      }
+    ],
+
+    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
+    favoriteCombos: {
+      static: "combo_001",
+      dynamic: "combo_002",
+      mixed: "combo_003"
+    }
   },
    {
     _id: "u3",
@@ -136,35 +320,124 @@ export const users = [
          staticAu: 4589,
     dynamicAu: 1500,
     level: 6089,
-    skills: [
+     skills: [
       {
-        skillName: "Full Planche",
-        variant: "Full Planche",
-        type: "static",
-        seconds: 5,
-        cleanliness: 0.9,
-        arms: 2,
-        fingers: 5,
+        skillId: "planche_001",
+        variantId: "planche_full_hold",
+        variantName: "Full Planche Hold (2 dedos, ambas manos)",
+        armsUsed: 2,
+        fingersUsed: 2,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4"
       },
       {
-        skillName: "Full Planche Pushups",
-        variant: "Full Planche Pushups",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.85,
-        arms: 2,
-        fingers: 5,
+        skillId: "frontlever_001",
+        variantId: "front_full_hold",
+        variantName: "Full Front Lever Hold (1 brazo)",
+        armsUsed: 1,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
       },
       {
-        skillName: "Hefesto",
-        variant: "Hefesto completo",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.8,
-        arms: 2,
-        fingers: 5,
-      },
+        skillId: "hefesto_001",
+        variantId: "hefesto_progress",
+        variantName: "Hefesto Progress (fase 2)",
+        armsUsed: 2,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
+      }
     ],
+
+    // 🌀 Combos creados por el usuario
+    combos: [
+      {
+        comboId: "combo_001",
+        comboName: "Static Power Flow",
+        description: "Transición entre Full Planche y Front Lever.",
+        type: "static",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 6,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "frontlever_001",
+            variantId: "front_full_hold",
+            holdSeconds: 5,
+            auraUsed: 100,
+            energyCost: 80
+          }
+        ],
+        totalAuraUsed: 220,
+        totalEnergyCost: 180,
+        totalDamage: 190,
+        createdAt: new Date("2025-10-21")
+      },
+      {
+        comboId: "combo_002",
+        comboName: "Dynamic Explosion Flow",
+        description: "Secuencia explosiva de Hefesto con transición controlada.",
+        type: "dynamic",
+        skills: [
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 3,
+            auraUsed: 150,
+            energyCost: 140
+          },
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 4,
+            auraUsed: 100,
+            energyCost: 90
+          }
+        ],
+        totalAuraUsed: 250,
+        totalEnergyCost: 230,
+        totalDamage: 260,
+        createdAt: new Date("2025-10-27")
+      },
+      {
+        comboId: "combo_003",
+        comboName: "Mixed Titan Flow",
+        description: "Combinación de control y potencia entre estáticos y dinámicos.",
+        type: "mixed",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 5,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 2,
+            auraUsed: 150,
+            energyCost: 120
+          }
+        ],
+        totalAuraUsed: 270,
+        totalEnergyCost: 220,
+        totalDamage: 280,
+        createdAt: new Date("2025-11-03")
+      }
+    ],
+
+    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
+    favoriteCombos: {
+      static: "combo_001",
+      dynamic: "combo_002",
+      mixed: "combo_003"
+    }
   },
    {
     _id: "u4",
@@ -193,35 +466,124 @@ export const users = [
     staticAu: 2589,
     dynamicAu: 100,
     level: 2689,
-    skills: [
+     skills: [
       {
-        skillName: "Full Planche",
-        variant: "Full Planche",
-        type: "static",
-        seconds: 5,
-        cleanliness: 0.9,
-        arms: 2,
-        fingers: 5,
+        skillId: "planche_001",
+        variantId: "planche_full_hold",
+        variantName: "Full Planche Hold (2 dedos, ambas manos)",
+        armsUsed: 2,
+        fingersUsed: 2,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4"
       },
       {
-        skillName: "Full Planche Pushups",
-        variant: "Full Planche Pushups",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.85,
-        arms: 2,
-        fingers: 5,
+        skillId: "frontlever_001",
+        variantId: "front_full_hold",
+        variantName: "Full Front Lever Hold (1 brazo)",
+        armsUsed: 1,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
       },
       {
-        skillName: "Hefesto",
-        variant: "Hefesto completo",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.8,
-        arms: 2,
-        fingers: 5,
-      },
+        skillId: "hefesto_001",
+        variantId: "hefesto_progress",
+        variantName: "Hefesto Progress (fase 2)",
+        armsUsed: 2,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
+      }
     ],
+
+    // 🌀 Combos creados por el usuario
+    combos: [
+      {
+        comboId: "combo_001",
+        comboName: "Static Power Flow",
+        description: "Transición entre Full Planche y Front Lever.",
+        type: "static",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 6,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "frontlever_001",
+            variantId: "front_full_hold",
+            holdSeconds: 5,
+            auraUsed: 100,
+            energyCost: 80
+          }
+        ],
+        totalAuraUsed: 220,
+        totalEnergyCost: 180,
+        totalDamage: 190,
+        createdAt: new Date("2025-10-21")
+      },
+      {
+        comboId: "combo_002",
+        comboName: "Dynamic Explosion Flow",
+        description: "Secuencia explosiva de Hefesto con transición controlada.",
+        type: "dynamic",
+        skills: [
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 3,
+            auraUsed: 150,
+            energyCost: 140
+          },
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 4,
+            auraUsed: 100,
+            energyCost: 90
+          }
+        ],
+        totalAuraUsed: 250,
+        totalEnergyCost: 230,
+        totalDamage: 260,
+        createdAt: new Date("2025-10-27")
+      },
+      {
+        comboId: "combo_003",
+        comboName: "Mixed Titan Flow",
+        description: "Combinación de control y potencia entre estáticos y dinámicos.",
+        type: "mixed",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 5,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 2,
+            auraUsed: 150,
+            energyCost: 120
+          }
+        ],
+        totalAuraUsed: 270,
+        totalEnergyCost: 220,
+        totalDamage: 280,
+        createdAt: new Date("2025-11-03")
+      }
+    ],
+
+    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
+    favoriteCombos: {
+      static: "combo_001",
+      dynamic: "combo_002",
+      mixed: "combo_003"
+    }
   },
   {
     _id: "u5",
@@ -250,34 +612,123 @@ export const users = [
     staticAu: 8500,
     dynamicAu: 8500,
     level: 17000,
-    skills: [
+     skills: [
       {
-        skillName: "Full Planche",
-        variant: "Full Planche",
-        type: "static",
-        seconds: 5,
-        cleanliness: 0.9,
-        arms: 2,
-        fingers: 5,
+        skillId: "planche_001",
+        variantId: "planche_full_hold",
+        variantName: "Full Planche Hold (2 dedos, ambas manos)",
+        armsUsed: 2,
+        fingersUsed: 2,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4"
       },
       {
-        skillName: "Full Planche Pushups",
-        variant: "Full Planche Pushups",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.85,
-        arms: 2,
-        fingers: 5,
+        skillId: "frontlever_001",
+        variantId: "front_full_hold",
+        variantName: "Full Front Lever Hold (1 brazo)",
+        armsUsed: 1,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
       },
       {
-        skillName: "Hefesto",
-        variant: "Hefesto completo",
-        type: "reps",
-        reps: 2,
-        cleanliness: 0.8,
-        arms: 2,
-        fingers: 5,
-      },
+        skillId: "hefesto_001",
+        variantId: "hefesto_progress",
+        variantName: "Hefesto Progress (fase 2)",
+        armsUsed: 2,
+        fingersUsed: 5,
+        videoUrl:
+          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4"
+      }
     ],
+
+    // 🌀 Combos creados por el usuario
+    combos: [
+      {
+        comboId: "combo_001",
+        comboName: "Static Power Flow",
+        description: "Transición entre Full Planche y Front Lever.",
+        type: "static",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 6,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "frontlever_001",
+            variantId: "front_full_hold",
+            holdSeconds: 5,
+            auraUsed: 100,
+            energyCost: 80
+          }
+        ],
+        totalAuraUsed: 220,
+        totalEnergyCost: 180,
+        totalDamage: 190,
+        createdAt: new Date("2025-10-21")
+      },
+      {
+        comboId: "combo_002",
+        comboName: "Dynamic Explosion Flow",
+        description: "Secuencia explosiva de Hefesto con transición controlada.",
+        type: "dynamic",
+        skills: [
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 3,
+            auraUsed: 150,
+            energyCost: 140
+          },
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 4,
+            auraUsed: 100,
+            energyCost: 90
+          }
+        ],
+        totalAuraUsed: 250,
+        totalEnergyCost: 230,
+        totalDamage: 260,
+        createdAt: new Date("2025-10-27")
+      },
+      {
+        comboId: "combo_003",
+        comboName: "Mixed Titan Flow",
+        description: "Combinación de control y potencia entre estáticos y dinámicos.",
+        type: "mixed",
+        skills: [
+          {
+            skillId: "planche_001",
+            variantId: "planche_full_hold",
+            holdSeconds: 5,
+            auraUsed: 120,
+            energyCost: 100
+          },
+          {
+            skillId: "hefesto_001",
+            variantId: "hefesto_progress",
+            reps: 2,
+            auraUsed: 150,
+            energyCost: 120
+          }
+        ],
+        totalAuraUsed: 270,
+        totalEnergyCost: 220,
+        totalDamage: 280,
+        createdAt: new Date("2025-11-03")
+      }
+    ],
+
+    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
+    favoriteCombos: {
+      static: "combo_001",
+      dynamic: "combo_002",
+      mixed: "combo_003"
+    }
   },
 ]

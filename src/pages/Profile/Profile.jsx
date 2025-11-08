@@ -108,7 +108,7 @@ const Profile = () => {
         <img
           src="/vsimage.png"
           alt="imagen de vs" 
-          className="h-[140px]"
+          className="h-20 border-white border rounded-full backdrop-blur-md"
           />
       </section>
     </div>
