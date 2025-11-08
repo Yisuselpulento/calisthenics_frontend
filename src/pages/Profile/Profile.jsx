@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ProgressBar from "../components/ProgressBar";
-import { getLevelColor } from "../helpers/getLevelColor";
-import { tailwindColors } from "../helpers/tailwindColor";
-import { users } from "../helpers/users";
+import ProgressBar from "../../components/ProgressBar";
+import { getLevelColor } from "../../helpers/getLevelColor";
+import { tailwindColors } from "../../helpers/tailwindColor";
+import { users } from "../../helpers/users";
 import { useParams } from "react-router-dom";
 import { IoEyeSharp } from "react-icons/io5";
 import { HiMiniEyeSlash } from "react-icons/hi2";
@@ -23,7 +23,7 @@ const Profile = () => {
 
   return (
     <div className="p-2 flex flex-col gap-4 min-h-screen">
-      <div className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
+      <section className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
         <img
           src={user.avatar}
           alt={user.name}
@@ -87,11 +87,11 @@ const Profile = () => {
             )}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Videos de habilidades favoritas */}
       {user.favoriteSkills?.length > 0 && (
-        <div className="flex gap-3 justify-center">
+        <section className="flex gap-3 justify-center">
           {user.favoriteSkills.map((video, index) => (
             <div key={index}>
               <video
@@ -102,8 +102,15 @@ const Profile = () => {
               />
             </div>
           ))}
-        </div>
+        </section>
       )}
+      <section className="flex items-center justify-center h-full mt-20">
+        <img
+          src="/vsimage.png"
+          alt="imagen de vs" 
+          className="h-[140px]"
+          />
+      </section>
     </div>
   );
 };
