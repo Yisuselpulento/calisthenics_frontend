@@ -3,13 +3,16 @@ import ProgressBar from "../../components/ProgressBar";
 import { getLevelColor } from "../../helpers/getLevelColor";
 import { tailwindColors } from "../../helpers/tailwindColor";
 import { users } from "../../helpers/users";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { IoEyeSharp } from "react-icons/io5";
 import { HiMiniEyeSlash } from "react-icons/hi2";
+import { useAuth } from "../../context/AuthContext";
+import VsButton from "../../components/VsButton";
 
 
 const Profile = () => {
   const { username } = useParams();
+  const { currentUser } = useAuth();
   const user = users.find((u) => u.username === username);
 
   // 🔘 Estado para mostrar/ocultar estadísticas
@@ -17,6 +20,7 @@ const Profile = () => {
 
   if (!user) return <p className="text-white">Usuario no encontrado</p>;
 
+  const isCurrentUser = currentUser?._id === user._id;
   const color = getLevelColor(user.level);
   const bgColor = tailwindColors[color] || "#eab308";
   const borderColor = bgColor + "CC";
@@ -53,6 +57,14 @@ const Profile = () => {
             <p>Peso: {user.peso}</p>
             <p>Altura: {user.altura}</p>
           </div>
+
+          {isCurrentUser && (
+            <Link 
+            to={`/profile/${user.username}/edit`}
+            className="text-xs px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-md transition">
+              Upgrade
+            </Link>
+          )}
 
           {/* Barra principal y botón */}
           <div >
@@ -104,13 +116,11 @@ const Profile = () => {
           ))}
         </section>
       )}
-      <section className="flex items-center justify-center h-full mt-20">
-        <img
-          src="/vsimage.png"
-          alt="imagen de vs" 
-          className="h-20 border-white border rounded-full backdrop-blur-md"
-          />
-      </section>
+      {!isCurrentUser && (
+        <section className="flex items-center justify-center h-full mt-20">
+          <VsButton opponent={user} />
+        </section>
+      )}
     </div>
   );
 };

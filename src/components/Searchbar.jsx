@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { users } from "../helpers/users";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Searchbar = () => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
+   const { currentUser } = useAuth();
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
@@ -16,11 +18,13 @@ const Searchbar = () => {
     }
 
     // Filtrar usuarios por nombre o username
-    const filtered = users.filter(
+      const filtered = users.filter(
       (u) =>
-        u.name.toLowerCase().includes(value) ||
-        u.username.toLowerCase().includes(value)
+        u._id !== currentUser._id && // ⬅️ excluir al usuario actual
+        (u.name.toLowerCase().includes(value) ||
+          u.username.toLowerCase().includes(value))
     );
+
     setResults(filtered);
   };
 

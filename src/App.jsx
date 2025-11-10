@@ -8,10 +8,15 @@ import BottomNavbar from "./components/Navbar/BottomNavbar"
 import ProfileSkills from "./pages/Profile/ProfileSkills"
 import ProfileHistorial from "./pages/Profile/ProfileHistorial"
 import ProfileLayout from "./Layouts/ProfileLayout"
+import Match from "./pages/Match"
+import EditProfile from "./pages/Profile/EditProfile"
+import AddSkill from "./pages/Profile/AddSkill"
+import { AuthProvider } from "./context/AuthContext"
 
 function App() {
   return (
    <BrowserRouter>
+   <AuthProvider>
    <ScrollToTop/>
           <Routes>
               <Route  path="/" element={<Layout />}>
@@ -20,11 +25,15 @@ function App() {
                         <Route index element={<Profile />} /> 
                         <Route path="skills" element={<ProfileSkills />} /> 
                         <Route path="historial" element={<ProfileHistorial />} />
+                         <Route path="edit" element={<EditProfile />} />      
+                        <Route path="add-skill" element={<AddSkill />} />  
                     </Route>
+                  <Route path="vs/:matchId" element={<Match />} />
                   <Route path="*" element={<NotFound />} />
               </Route>
           </Routes>
           <BottomNavbar/>
+    </AuthProvider>
    </BrowserRouter>
   )
 }
