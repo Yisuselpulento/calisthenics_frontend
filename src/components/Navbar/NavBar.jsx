@@ -1,21 +1,42 @@
 import { Link } from "react-router-dom";
 import Searchbar from "../Searchbar";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaBell } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
-
+import { useState } from "react";
+import NotificationsDropdown from "../notificationsDropdown";
 
 const NavBar = () => {
   const { currentUser } = useAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <div className="p-5">
-      <div className="flex gap-10 items-center">
+      <div className="flex gap-6 items-center relative">
         <Searchbar />
-     <Link 
-        className="p-2 bg-stone-800 rounded-full"
-       to={`/profile/${currentUser.username}`}>
-          <FaUser className="text-xl cursor-pointer hover:text-blue-700 transition-colors" />
-        </Link> 
+
+        {/* 🔔 Botón de notificaciones */}
+        <div className="relative">
+          <button
+            onClick={() => setShowDropdown((prev) => !prev)}
+            className={`p-2 rounded-full transition-colors ${
+              showDropdown
+                ? "bg-blue-600 text-white"
+                : "bg-stone-800 text-gray-300 hover:text-white"
+            }`}
+          >
+            <FaBell className="text-xl" />
+          </button>
+
+          {showDropdown && <NotificationsDropdown currentUser={currentUser} />}
+        </div>
+
+        {/* 👤 Perfil */}
+        <Link
+          className="p-2 bg-stone-800 rounded-full hover:text-blue-500 transition-colors"
+          to={`/profile/${currentUser.username}`}
+        >
+          <FaUser className="text-xl cursor-pointer" />
+        </Link>
       </div>
     </div>
   );

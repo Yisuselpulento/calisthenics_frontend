@@ -4,7 +4,6 @@ import Home from "./pages/Home"
 import ScrollToTop from "./components/ScrollToTop"
 import Profile from "./pages/Profile/Profile"
 import NotFound from "./pages/NotFound"
-import BottomNavbar from "./components/Navbar/BottomNavbar"
 import ProfileSkills from "./pages/Profile/ProfileSkills"
 import ProfileHistorial from "./pages/Profile/ProfileHistorial"
 import ProfileLayout from "./Layouts/ProfileLayout"
@@ -18,6 +17,8 @@ import EditCombo from "./pages/Profile/EditCombo"
 import CombosLayout from "./Layouts/CombosLayout"
 import AddCombo from "./pages/Profile/AddCombo"
 import VsDetails from "./pages/VsDetails"
+import Ranks from "./pages/Ranks/Ranks"
+import Notifications from "./pages/Notifications"
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
               <Route  path="/" element={<Layout />}>
                   <Route index element={<Home />} />
                   <Route path="/vs/:matchId" element={<VsDetails />} />
+                  <Route path="/ranks" element={<Ranks />} />
+                  <Route path="/notifications" element={<Notifications />} />
                     <Route path="profile/:username" element={<ProfileLayout />}>
                         <Route index element={<Profile />} /> 
                         <Route path="skills" element={<ProfileSkills />} /> 
@@ -45,7 +48,6 @@ function App() {
                   <Route path="*" element={<NotFound />} />
               </Route>
           </Routes>
-          <BottomNavbar/>
     </AuthProvider>
    </BrowserRouter>
   )

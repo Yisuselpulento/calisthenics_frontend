@@ -146,7 +146,20 @@ export const users = [
       dynamic: "combo_002",
       mixed: "combo_003"
     },
-    historialIds: ["h1", "h3", "h4", "h7", "h9"]
+    historialIds: ["h1", "h3", "h4", "h7", "h9"],
+     followers: ["u2", "u3"], // IDs de usuarios que lo siguen
+    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+
+    // 🏆 Sistema de ranking
+    rankPoints: 1320, // puntos de ranking global
+    rankPosition: 12, // posición general actualizada periódicamente
+    totalMatches: 45,
+    wins: 30,
+    losses: 15,
+    winRate: 0.66, // calculado dinámicamente
+
+    // 🧨 Equipos donde participa
+    teamIds: ["t1"], 
   },
    {
     _id: "u2",
@@ -293,7 +306,20 @@ export const users = [
       dynamic: "combo_002",
       mixed: "combo_003"
     },
-     historialIds: ["h1", "h2", "h7", "h10"]
+     historialIds: ["h1", "h2", "h7", "h10"],
+      followers: ["u2", "u3"], // IDs de usuarios que lo siguen
+    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+
+    // 🏆 Sistema de ranking
+    rankPoints: 1320, // puntos de ranking global
+    rankPosition: 12, // posición general actualizada periódicamente
+    totalMatches: 45,
+    wins: 30,
+    losses: 15,
+    winRate: 0.66, // calculado dinámicamente
+
+    // 🧨 Equipos donde participa
+    teamIds: ["t1"], 
   },
    {
     _id: "u3",
@@ -440,7 +466,20 @@ export const users = [
       dynamic: "combo_002",
       mixed: "combo_003"
     },
-     historialIds: ["h2", "h3", "h6", "h8"]
+     historialIds: ["h2", "h3", "h6", "h8"],
+      followers: ["u2", "u3"], // IDs de usuarios que lo siguen
+    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+
+    // 🏆 Sistema de ranking
+    rankPoints: 1320, // puntos de ranking global
+    rankPosition: 12, // posición general actualizada periódicamente
+    totalMatches: 45,
+    wins: 30,
+    losses: 15,
+    winRate: 0.66, // calculado dinámicamente
+
+    // 🧨 Equipos donde participa
+    teamIds: ["t1"], 
   },
    {
     _id: "u4",
@@ -587,7 +626,20 @@ export const users = [
       dynamic: "combo_002",
       mixed: "combo_003"
     },
-     historialIds: ["h4", "h5", "h8", "h10"]
+     historialIds: ["h4", "h5", "h8", "h10"],
+      followers: ["u2", "u3"], // IDs de usuarios que lo siguen
+    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+
+    // 🏆 Sistema de ranking
+    rankPoints: 1320, // puntos de ranking global
+    rankPosition: 12, // posición general actualizada periódicamente
+    totalMatches: 45,
+    wins: 30,
+    losses: 15,
+    winRate: 0.66, // calculado dinámicamente
+
+    // 🧨 Equipos donde participa
+    teamIds: ["t1"], 
   },
   {
     _id: "u5",
@@ -734,6 +786,19 @@ export const users = [
       dynamic: "combo_002",
       mixed: "combo_003"
     },
-    historialIds: ["h5", "h6", "h9"]
+    historialIds: ["h5", "h6", "h9"],
+     followers: ["u2", "u3"], // IDs de usuarios que lo siguen
+    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+
+    // 🏆 Sistema de ranking
+    rankPoints: 1320, // puntos de ranking global
+    rankPosition: 12, // posición general actualizada periódicamente
+    totalMatches: 45,
+    wins: 30,
+    losses: 15,
+    winRate: 0.66, // calculado dinámicamente
+
+    // 🧨 Equipos donde participa
+    teamIds: ["t1"], 
   },
 ]

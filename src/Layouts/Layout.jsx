@@ -2,6 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/Navbar/NavBar";
 import { users } from "../helpers/users";
+import BottomNavbar from "../components/Navbar/BottomNavbar";
 
 const Layout = () => {
   const location = useLocation();
@@ -40,7 +41,7 @@ const Layout = () => {
         <main className="grow">
           <Outlet />
         </main>
-
+        <BottomNavbar/>
         <footer className="mt-20 bg-stone-950 text-white">
           <Footer />
         </footer>
