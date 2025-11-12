@@ -3,7 +3,7 @@ import Searchbar from "../Searchbar";
 import { FaUser, FaBell } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import NotificationsDropdown from "../notificationsDropdown";
+import NotificationsDropdown from "../NotificationsDropdown";
 
 const NavBar = () => {
   const { currentUser } = useAuth();
@@ -26,7 +26,6 @@ const NavBar = () => {
           >
             <FaBell className="text-xl" />
           </button>
-
           {showDropdown && <NotificationsDropdown currentUser={currentUser} />}
         </div>
 
