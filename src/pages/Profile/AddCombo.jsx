@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { users } from "../../helpers/users";
+import BackButton from "../../components/Buttons/BackButton";
 
 const AddCombo = () => {
   const { username } = useParams();
@@ -70,12 +71,7 @@ const AddCombo = () => {
     <div className="text-white min-h-screen p-4">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Crear nuevo Combo</h2>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-sm text-blue-400 hover:underline"
-        >
-          ← Volver
-        </button>
+      <BackButton/>
       </div>
 
       <form
@@ -170,7 +166,7 @@ const AddCombo = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md text-sm font-semibold transition"
+          className="w-full bg-primary hover:bg-primary/80 py-2 cursor-pointer rounded-md text-sm font-semibold transition"
         >
           Crear Combo
         </button>

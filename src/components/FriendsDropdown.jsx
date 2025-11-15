@@ -23,7 +23,7 @@ const FriendsDropdown = ({ currentUser }) => {
           onClick={() => setActiveTab("friends")}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
             activeTab === "friends"
-              ? "bg-blue-600 text-white"
+              ? "bg-primary text-white"
               : "bg-stone-800 text-gray-300 hover:bg-stone-700"
           }`}
         >
@@ -34,7 +34,7 @@ const FriendsDropdown = ({ currentUser }) => {
           onClick={() => setActiveTab("team")}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
             activeTab === "team"
-              ? "bg-blue-600 text-white"
+              ? "bg-primary text-white"
               : "bg-stone-800 text-gray-300 hover:bg-stone-700"
           }`}
         >

@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #1429E3;
+}
+
 body {
   font-family: 'Onest Variable', sans-serif;
 }

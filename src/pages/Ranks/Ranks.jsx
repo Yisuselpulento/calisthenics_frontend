@@ -22,7 +22,7 @@ export default function Ranks() {
           onClick={() => setActiveTab("users")}
           className={`px-4 py-2 rounded-xl flex items-center gap-2 transition ${
             activeTab === "users"
-              ? "bg-blue-600 text-white shadow"
+              ? "bg-primary text-white shadow"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
@@ -34,7 +34,7 @@ export default function Ranks() {
           onClick={() => setActiveTab("teams")}
           className={`px-4 py-2 rounded-xl flex items-center gap-2 transition ${
             activeTab === "teams"
-              ? "bg-blue-600 text-white shadow"
+              ? "bg-primary text-white shadow"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >

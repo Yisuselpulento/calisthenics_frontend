@@ -54,7 +54,7 @@ const EditProfile = () => {
           </button>
           <button
             onClick={() => navigate(`/profile/${currentUser.username}/combos/add`)}
-            className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded-md transition"
+            className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 rounded-md transition"
           >
             + Combo
           </button>
@@ -166,7 +166,7 @@ const EditProfile = () => {
         {/* Botón guardar */}
         <button
           type="submit"
-          className="w-full py-2 mt-3 bg-blue-600 hover:bg-blue-700 rounded-md text-sm transition"
+          className="w-full py-2 mt-3 bg-primary hover:bg-primary/80 rounded-md text-sm transition"
         >
           Guardar cambios
         </button>

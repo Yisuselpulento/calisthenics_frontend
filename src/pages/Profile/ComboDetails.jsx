@@ -67,13 +67,6 @@ const ComboDetails = () => {
           )
         })}
       </div>
-
-      <button
-        onClick={() => navigate(-1)}
-        className="mt-6 text-sm text-blue-400 hover:underline"
-      >
-        ← Volver
-      </button>
     </div>
   )
 }

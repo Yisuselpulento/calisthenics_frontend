@@ -37,7 +37,7 @@ const ProfileSkills = () => {
           {isOwner && (
             <Link
               to={`/profile/${username}/combos`}
-              className="text-sm text-blue-400 hover:underline"
+              className="text-sm text-primary hover:underline"
             >
               Ver todos →
             </Link>

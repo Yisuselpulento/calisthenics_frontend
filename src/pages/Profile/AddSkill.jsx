@@ -80,7 +80,7 @@ const AddSkill = () => {
                 onClick={() => setSelectedVariant(v)}
                 className={`p-3 rounded-xl border transition ${
                   selectedVariant?.variantId === v.variantId
-                    ? "bg-blue-600 border-blue-400"
+                    ? "bg-primary border-blue-700"
                     : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700"
                 }`}
               >
@@ -143,7 +143,7 @@ const AddSkill = () => {
 
               <button
                 onClick={handleAddSkill}
-                className="w-full py-2 mt-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition"
+                className="w-full py-2 mt-2 rounded-lg bg-primary hover:bg-primary/80 transition"
               >
                 Agregar Skill
               </button>

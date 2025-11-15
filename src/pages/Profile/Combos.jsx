@@ -25,7 +25,7 @@ const Combos = () => {
         <h1 className="text-3xl font-bold">Combos de {username}</h1>
         <button
           onClick={() => navigate(`/profile/${username}/combos/add`)}
-          className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded-md transition"
+          className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 cursor-pointer rounded-md transition"
         >
           + Combo
         </button>
@@ -50,13 +50,13 @@ const Combos = () => {
               <div className="flex justify-between">
                 <button
                   onClick={() => handleDetails(combo.comboId)}
-                  className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-3 py-1 rounded-lg"
+                  className="bg-primary hover:bg-primary/80 cursor-pointer text-white text-sm px-3 py-1 rounded-lg"
                 >
                   Ver detalles
                 </button>
                 <button
                   onClick={() => handleEdit(combo.comboId)}
-                  className="bg-yellow-500 hover:bg-yellow-400 text-black text-sm px-3 py-1 rounded-lg"
+                  className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer  text-sm px-3 py-1 rounded-lg"
                 >
                   Editar
                 </button>

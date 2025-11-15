@@ -61,7 +61,7 @@ const Profile = () => {
           {isCurrentUser && (
             <Link 
             to={`/profile/${user.username}/edit`}
-            className="text-xs px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-md transition">
+            className="text-xs px-3 py-1 bg-primary hover:bg-primary/80 rounded-md transition">
               Upgrade
             </Link>
           )}

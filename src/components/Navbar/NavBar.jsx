@@ -20,7 +20,7 @@ const NavBar = () => {
             onClick={() => setShowDropdown((prev) => !prev)}
             className={`p-2 rounded-full transition-colors ${
               showDropdown
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-white"
                 : "bg-stone-800 text-gray-300 hover:text-white"
             }`}
           >

@@ -20,7 +20,7 @@ const BottomNavbar = () => {
       <button
         onClick={() => navigate("/")}
         className={`text-xl transition-colors ${
-          isActive("/") ? "text-blue-500" : "text-white hover:text-blue-400"
+          isActive("/") ? "text-primary" : "text-white hover:text-primary"
         }`}
       >
         <FaHome />
@@ -30,7 +30,7 @@ const BottomNavbar = () => {
       <button
         onClick={() => navigate("/ranks")}
         className={`text-xl transition-colors ${
-          isActive("/ranks") ? "text-blue-500" : "text-white hover:text-blue-400"
+          isActive("/ranks") ?  "text-primary" : "text-white hover:text-primary"
         }`}
       >
         <FaRankingStar />
@@ -41,7 +41,7 @@ const BottomNavbar = () => {
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
           className={`text-xl transition-colors ${
-            showDropdown ? "text-blue-500" : "text-white hover:text-blue-400"
+            showDropdown ?  "text-primary" : "text-white hover:text-primary"
           }`}
         >
           <FaUserFriends />
@@ -54,8 +54,8 @@ const BottomNavbar = () => {
         onClick={() => navigate(`/profile/${currentUser.username}`)}
         className={`text-xl transition-colors ${
           location.pathname.startsWith(`/profile/${currentUser.username}`)
-            ? "text-blue-500"
-            : "text-white hover:text-blue-400"
+            ? "text-primary"
+            : "text-white hover:text-primary"
         }`}
       >
         <FaUser />
