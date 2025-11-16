@@ -1,9 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { users } from "../../helpers/users"
 
 const Combos = () => {
   const { username } = useParams()
-  const navigate = useNavigate()
   const user = users.find((u) => u.username === username)
 
   if (!user)
@@ -11,24 +10,18 @@ const Combos = () => {
 
   const combos = user.combos || []
 
-  const handleEdit = (comboId) => {
-    navigate(`/profile/${username}/combos/${comboId}/edit`)
-  }
-
-  const handleDetails = (comboId) => {
-    navigate(`/profile/${username}/combos/${comboId}`)
-  }
-
   return (
     <div className="max-w-5xl mx-auto text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Combos de {username}</h1>
-        <button
-          onClick={() => navigate(`/profile/${username}/combos/add`)}
+
+        {/* ➕ Agregar Combo */}
+        <Link
+          to={`/profile/${username}/combos/add`}
           className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 cursor-pointer rounded-md transition"
         >
           + Combo
-        </button>
+        </Link>
       </div>
 
       {combos.length > 0 ? (
@@ -48,18 +41,21 @@ const Combos = () => {
               </div>
 
               <div className="flex justify-between">
-                <button
-                  onClick={() => handleDetails(combo.comboId)}
+                {/* Ver detalles */}
+                <Link
+                  to={`/profile/${username}/combos/${combo.comboId}`}
                   className="bg-primary hover:bg-primary/80 cursor-pointer text-white text-sm px-3 py-1 rounded-lg"
                 >
                   Ver detalles
-                </button>
-                <button
-                  onClick={() => handleEdit(combo.comboId)}
-                  className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer  text-sm px-3 py-1 rounded-lg"
+                </Link>
+
+                {/* Editar */}
+                <Link
+                  to={`/profile/${username}/combos/${combo.comboId}/edit`}
+                  className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-sm px-3 py-1 rounded-lg"
                 >
                   Editar
-                </button>
+                </Link>
               </div>
             </div>
           ))}

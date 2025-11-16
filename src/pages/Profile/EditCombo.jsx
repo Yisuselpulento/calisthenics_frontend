@@ -72,12 +72,6 @@ const EditCombo = () => {
     <div className="max-w-4xl mx-auto text-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Editar Combo</h1>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-sm text-blue-400 hover:underline"
-        >
-          ← Volver
-        </button>
       </div>
 
       <form

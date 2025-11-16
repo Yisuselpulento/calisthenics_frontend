@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, Link } from "react-router-dom"
 import { users } from "../../helpers/users"
 
 const ComboDetails = () => {
@@ -15,12 +15,12 @@ const ComboDetails = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{combo.comboName}</h1>
-        <button
-          onClick={() => navigate(`/profile/${username}/combos/${combo.comboId}/edit`)}
-          className="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-4 py-2 rounded-lg"
-        >
-          Editar
-        </button>
+        <Link
+            to={`/profile/${username}/combos/${combo.comboId}/edit`}
+            className="bg-yellow-500 hover:bg-yellow-400 px-2 py-1 rounded-lg"
+          >
+            Editar
+          </Link>
       </div>
 
       <p className="text-gray-300 mb-4">{combo.description}</p>

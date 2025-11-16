@@ -65,7 +65,7 @@ const AddSkill = () => {
         <div className="mt-4">
           <button
             onClick={() => setSelectedSkill(null)}
-            className="text-sm text-gray-400 mb-3 hover:text-white"
+            className="text-sm text-blue-500 mb-3 hover:text-white "
           >
             ← Volver
           </button>

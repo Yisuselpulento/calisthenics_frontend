@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { historial } from "../helpers/historial";
 import { users } from "../helpers/users";
+import BackButton from "../components/Buttons/BackButton";
 
 const VsDetails = () => {
   const { matchId } = useParams();
@@ -19,12 +20,7 @@ const VsDetails = () => {
     <div className="max-w-4xl mx-auto text-white p-4 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Detalles del VS</h1>
-        <button
-          onClick={() => navigate(-1)}
-          className="text-sm text-blue-400 hover:underline"
-        >
-          ← Volver
-        </button>
+       <BackButton />
       </div>
 
       {/* === Información general === */}

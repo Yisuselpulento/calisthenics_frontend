@@ -28,14 +28,6 @@ const NavBar = () => {
           </button>
           {showDropdown && <NotificationsDropdown currentUser={currentUser} />}
         </div>
-
-        {/* 👤 Perfil */}
-        <Link
-          className="p-2 bg-stone-800 rounded-full hover:text-blue-500 transition-colors"
-          to={`/profile/${currentUser.username}`}
-        >
-          <FaUser className="text-xl cursor-pointer" />
-        </Link>
       </div>
     </div>
   );

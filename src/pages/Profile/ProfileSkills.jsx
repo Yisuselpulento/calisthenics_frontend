@@ -23,21 +23,21 @@ const ProfileSkills = () => {
     a.isFavorite === b.isFavorite ? 0 : a.isFavorite ? -1 : 1
   )
 
-  // ✅ verifica si el perfil pertenece al currentUser
+  // Verifica si el perfil pertenece al currentUser
   const isOwner = currentUser?.username === username
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
+
       {/* === SECCIÓN COMBOS === */}
       <section className="mb-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">Combos</h2>
 
-          {/* 👇 Solo muestra el link si el perfil es del usuario actual */}
           {isOwner && (
             <Link
               to={`/profile/${username}/combos`}
-              className="text-sm text-primary hover:underline"
+              className="text-sm text-blue-500 hover:underline"
             >
               Ver todos →
             </Link>
@@ -61,6 +61,8 @@ const ProfileSkills = () => {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">Skills Desbloqueadas</h2>
+
+          {/* Botón para alternar vista */}
           <button
             onClick={() => setCardView(!cardView)}
             className="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg"
@@ -69,31 +71,23 @@ const ProfileSkills = () => {
           </button>
         </div>
 
+        {/* Listado de skills */}
         {user.skills?.length > 0 ? (
-          cardView ? (
-            <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-              {user.skills.map((skill) => (
-                <div
-                  key={skill.variantId}
-                  className="bg-gray-800 p-3 rounded-xl border border-gray-700"
-                >
-                  <p className="font-bold">{skill.name}</p>
-                  <p className="text-sm text-gray-400">
-                    Static AU: {skill.staticAura || 0}
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Dynamic AU: {skill.dynamicAura || 0}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-              {user.skills.map((skill) => (
-                <SkillCard key={skill.variantId} skill={skill} />
-              ))}
-            </div>
-          )
+          <div
+    className={
+      cardView
+        ? "grid grid-cols-2 gap-2"              // Vista detallada → SIEMPRE 2 columnas
+        : "grid gap-2 sm:grid-cols-2 md:grid-cols-3" // Vista tarjeta → igual que antes
+    }
+  >
+            {user.skills.map((skill) => (
+              <SkillCard
+                key={skill.variantId}
+                skill={skill}
+                view={cardView ? "detail" : "card"}
+              />
+            ))}
+          </div>
         ) : (
           <p className="text-gray-400 italic">
             Aún no tienes skills desbloqueadas.

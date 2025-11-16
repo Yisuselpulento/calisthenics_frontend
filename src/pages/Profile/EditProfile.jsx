@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { users } from "../../helpers/users";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import SelectCustom from "../../components/SelectCustom";
 
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
@@ -46,21 +47,21 @@ const EditProfile = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Editar perfil</h2>
         <div className="flex gap-2">
-          <button
-            onClick={() => navigate(`/profile/${currentUser.username}/add-skill`)}
-            className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 rounded-md transition"
-          >
-            + Skill
-          </button>
-          <button
-            onClick={() => navigate(`/profile/${currentUser.username}/combos/add`)}
-            className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 rounded-md transition"
-          >
-            + Combo
-          </button>
-        </div>
-      </div>
+              <Link
+                to={`/profile/${currentUser.username}/add-skill`}
+                className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 rounded-md transition"
+              >
+                + Skill
+              </Link>
 
+              <Link
+                to={`/profile/${currentUser.username}/combos/add`}
+                className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 rounded-md transition"
+              >
+                + Combo
+              </Link>
+            </div>
+      </div>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 max-w-md mx-auto bg-white/10 p-4 rounded-md backdrop-blur-md border border-white/20"
@@ -150,18 +151,21 @@ const EditProfile = () => {
 
         {/* Tipo */}
         <div>
-          <label className="block text-sm mb-1">Tipo de atleta</label>
-          <select
-            name="type"
+         <label className="block text-sm mb-1">Tipo de atleta</label>
+
+          <SelectCustom
             value={formData.type}
-            onChange={handleChange}
-            className="w-full p-2 bg-black/30 rounded-md text-sm border border-white/20 focus:border-white/40"
-          >
-            <option value="static">Static</option>
-            <option value="dynamic">Dynamic</option>
-            <option value="mixed">Mixed</option>
-          </select>
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, type: value }))
+            }
+            options={[
+              { value: "static", label: "Static" },
+              { value: "dynamic", label: "Dynamic" },
+              { value: "mixed", label: "Mixed" },
+            ]}
+          />
         </div>
+
 
         {/* Botón guardar */}
         <button

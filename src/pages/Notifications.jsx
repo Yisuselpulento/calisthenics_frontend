@@ -9,7 +9,7 @@ const Notifications = () => {
     .sort((a, b) => b.createdAt - a.createdAt);
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className="p-2 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold text-white mb-4">Tus notificaciones</h1>
 
       {userNotifications.length === 0 ? (
