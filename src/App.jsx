@@ -44,7 +44,7 @@ function App() {
                             <Route path=":comboId/edit" element={<EditCombo />} /> 
                           </Route>    
                     </Route>
-                  <Route path="vs/:matchId" element={<Match />} />
+                  <Route path="match/:matchId" element={<Match />} />
                   <Route path="*" element={<NotFound />} />
               </Route>
           </Routes>

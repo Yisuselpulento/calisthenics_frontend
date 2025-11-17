@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { users } from "../../helpers/users"
 import ButtonSubmit from "../../components/Buttons/ButtonSubmit"
+import SelectCustom from "../../components/SelectCustom"
 
 const EditCombo = () => {
   const { username, comboId } = useParams()
@@ -103,16 +104,15 @@ const EditCombo = () => {
 
         <div>
           <label className="block mb-1 font-semibold">Tipo</label>
-          <select
-            name="type"
+          <SelectCustom
             value={form.type}
-            onChange={handleChange}
-            className="w-full bg-black/30 border border-gray-700 p-2 rounded-lg"
-          >
-            <option value="static">Static</option>
-            <option value="dynamic">Dynamic</option>
-            <option value="mixed">Mixed</option>
-          </select>
+            onChange={(e) => setForm({ ...form, type: e.target.value })}
+            options={[
+              { label: "Static", value: "static" },
+              { label: "Dynamic", value: "dynamic" },
+              { label: "Mixed", value: "mixed" },
+            ]}
+          />
         </div>
 
         {/* === Skills === */}
@@ -133,24 +133,22 @@ const EditCombo = () => {
               key={index}
               className="bg-black/30 border border-gray-700 p-3 rounded-xl mb-3"
             >
-              <div className="flex justify-between items-center mb-2">
-                <select
+            <div className="flex justify-between items-center mb-2">
+                <SelectCustom
                   value={skill.skillId}
                   onChange={(e) =>
                     handleSkillChange(index, "skillId", e.target.value)
                   }
-                  className="bg-black/30 border border-gray-700 p-2 rounded-lg flex-1 mr-2"
-                >
-                  {allSkills.map((s) => (
-                    <option key={s.skillId} value={s.skillId}>
-                      {s.variantName}
-                    </option>
-                  ))}
-                </select>
+                  options={allSkills.map((s) => ({
+                    label: s.variantName,
+                    value: s.skillId,
+                  }))}
+                />
+
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(index)}
-                  className="text-red-400 text-sm"
+                  className="text-red-400 text-sm ml-2"
                 >
                   ✕
                 </button>
