@@ -40,7 +40,7 @@ export const skills = [
         energyPerSecond: 20,
         energy: 0,
         staticAU: 50,
-        dynamicAU: 15,
+        dynamicAU: 0,
         energyReward: 40,
         difficulty: "elite",
         videoRequired: true,

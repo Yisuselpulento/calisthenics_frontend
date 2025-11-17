@@ -4,11 +4,27 @@ import { users } from "../../helpers/users";
 import BackButton from "../../components/Buttons/BackButton";
 import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
 
+// 👉 Convierte "planche_full_hold" en "Planche Full Hold"
+const formatVariantName = (str) => {
+  return str
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (l) => l.toUpperCase());
+};
+
 const AddCombo = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const user = users.find((u) => u.username === username);
-  const userSkills = user?.skills || [];
+
+  if (!user)
+    return (
+      <p className="text-white text-center mt-10">
+        Usuario no encontrado.
+      </p>
+    );
+
+  // 👉 Skills reales del usuario
+  const userSkills = user.skills || [];
 
   const [form, setForm] = useState({
     comboName: "",
@@ -20,13 +36,6 @@ const AddCombo = () => {
     totalDamage: 0,
   });
 
-  if (!user)
-    return (
-      <p className="text-white text-center mt-10">
-        Usuario no encontrado.
-      </p>
-    );
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -35,13 +44,20 @@ const AddCombo = () => {
   const toggleSkill = (skillId) => {
     setForm((prev) => {
       const already = prev.selectedSkills.includes(skillId);
-      if (already)
+
+      if (already) {
         return {
           ...prev,
           selectedSkills: prev.selectedSkills.filter((id) => id !== skillId),
         };
-      if (prev.selectedSkills.length >= 5) return prev; // máximo 5
-      return { ...prev, selectedSkills: [...prev.selectedSkills, skillId] };
+      }
+
+      if (prev.selectedSkills.length >= 5) return prev; // máximo 5 skills
+
+      return {
+        ...prev,
+        selectedSkills: [...prev.selectedSkills, skillId],
+      };
     });
   };
 
@@ -55,16 +71,18 @@ const AddCombo = () => {
       type: form.type,
       skills: form.selectedSkills.map((id) => ({
         skillId: id,
+        // 👉 Tus skills reales no tienen AU ni energyCost individuales, así que dejamos valores genéricos
         auraUsed: 100,
         energyCost: 80,
       })),
-      totalAuraUsed: form.totalAuraUsed,
-      totalEnergyCost: form.totalEnergyCost,
-      totalDamage: form.totalDamage,
+      totalAuraUsed: Number(form.totalAuraUsed),
+      totalEnergyCost: Number(form.totalEnergyCost),
+      totalDamage: Number(form.totalDamage),
       createdAt: new Date(),
     };
 
     user.combos.push(newCombo);
+
     navigate(`/profile/${username}/combos`);
   };
 
@@ -72,13 +90,14 @@ const AddCombo = () => {
     <div className="text-white min-h-screen p-4">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Crear nuevo Combo</h2>
-      <BackButton/>
+        <BackButton />
       </div>
 
       <form
         onSubmit={handleSubmit}
         className="max-w-xl mx-auto bg-white/10 p-5 rounded-md backdrop-blur-md border border-white/20 flex flex-col gap-4"
       >
+        {/* NOMBRE */}
         <div>
           <label className="block text-sm mb-1">Nombre del Combo</label>
           <input
@@ -90,6 +109,7 @@ const AddCombo = () => {
           />
         </div>
 
+        {/* DESCRIPTION */}
         <div>
           <label className="block text-sm mb-1">Descripción</label>
           <textarea
@@ -100,6 +120,7 @@ const AddCombo = () => {
           />
         </div>
 
+        {/* TYPE */}
         <div>
           <label className="block text-sm mb-1">Tipo</label>
           <select
@@ -114,11 +135,12 @@ const AddCombo = () => {
           </select>
         </div>
 
-        {/* Skills */}
+        {/* SKILLS */}
         <div>
           <label className="block text-sm mb-2">
             Skills del usuario (máx. 5)
           </label>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {userSkills.map((skill) => (
               <button
@@ -131,13 +153,13 @@ const AddCombo = () => {
                     : "bg-black/30 border-white/20 hover:border-blue-300"
                 }`}
               >
-                {skill.variantName}
+                {formatVariantName(skill.variantId)}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Totales */}
+        {/* TOTALS */}
         <div className="grid grid-cols-3 gap-2">
           <input
             type="number"
@@ -147,6 +169,7 @@ const AddCombo = () => {
             onChange={handleChange}
             className="bg-black/30 rounded-md border border-white/20 p-2 text-sm"
           />
+
           <input
             type="number"
             name="totalEnergyCost"
@@ -155,6 +178,7 @@ const AddCombo = () => {
             onChange={handleChange}
             className="bg-black/30 rounded-md border border-white/20 p-2 text-sm"
           />
+
           <input
             type="number"
             name="totalDamage"
@@ -165,9 +189,9 @@ const AddCombo = () => {
           />
         </div>
 
-      <ButtonSubmit type="submit" className="text-sm">
+        <ButtonSubmit type="submit" className="text-sm">
           Crear Combo
-      </ButtonSubmit>
+        </ButtonSubmit>
       </form>
     </div>
   );

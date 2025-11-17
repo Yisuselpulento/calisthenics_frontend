@@ -1,74 +1,86 @@
-import { useParams, useNavigate } from "react-router-dom"
-import { useState } from "react"
-import { users } from "../../helpers/users"
-import ButtonSubmit from "../../components/Buttons/ButtonSubmit"
-import SelectCustom from "../../components/SelectCustom"
+import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { users } from "../../helpers/users";
+import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
+import SelectCustom from "../../components/SelectCustom";
+
+// ✔ Convierte "planche_full_hold" → "Planche Full Hold"
+const formatVariantName = (str) =>
+  str.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const EditCombo = () => {
-  const { username, comboId } = useParams()
-  const navigate = useNavigate()
+  const { username, comboId } = useParams();
+  const navigate = useNavigate();
 
-  const user = users.find((u) => u.username === username)
-  const combo = user?.combos?.find((c) => c.comboId === comboId)
-  const allSkills = user?.skills || []
-
-  const [form, setForm] = useState(
-    combo || {
-      comboName: "",
-      description: "",
-      type: "static",
-      skills: [],
-      totalAuraUsed: 0,
-      totalEnergyCost: 0,
-      totalDamage: 0,
-    }
-  )
+  const user = users.find((u) => u.username === username);
+  const combo = user?.combos?.find((c) => c.comboId === comboId);
+  const userSkills = user?.skills || [];
 
   if (!user || !combo)
     return (
       <p className="text-white text-center mt-10">
         Combo no encontrado.
       </p>
-    )
+    );
 
-  // === Handlers ===
+  // Inicialización limpia del formulario
+  const [form, setForm] = useState({
+    comboName: combo.comboName,
+    description: combo.description,
+    type: combo.type,
+    skills: combo.skills,
+    totalAuraUsed: combo.totalAuraUsed,
+    totalEnergyCost: combo.totalEnergyCost,
+    totalDamage: combo.totalDamage,
+  });
+
+  // === Handle cambios generales ===
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
+  // === Modificación de skills individuales ===
   const handleSkillChange = (index, field, value) => {
-    const updated = [...form.skills]
-    updated[index][field] = value
-    setForm({ ...form, skills: updated })
-  }
+    const updated = [...form.skills];
+    updated[index][field] = value;
+    setForm({ ...form, skills: updated });
+  };
 
+  // === Agregar skill al combo ===
   const handleAddSkill = () => {
     setForm({
       ...form,
       skills: [
         ...form.skills,
         {
-          skillId: allSkills[0]?.skillId || "",
-          variantId: allSkills[0]?.variantId || "",
+          skillId: userSkills[0]?.skillId || "",
+          variantId: userSkills[0]?.variantId || "",
           auraUsed: 0,
           energyCost: 0,
+          holdSeconds: 0,
+          reps: 0,
         },
       ],
-    })
-  }
+    });
+  };
 
+  // === Eliminar skill del combo ===
   const handleRemoveSkill = (index) => {
-    const updated = [...form.skills]
-    updated.splice(index, 1)
-    setForm({ ...form, skills: updated })
-  }
+    const updated = [...form.skills];
+    updated.splice(index, 1);
+    setForm({ ...form, skills: updated });
+  };
 
+  // === Guardar combo modificado ===
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("✅ Combo actualizado:", form)
-    navigate(`/profile/${username}/combos/${comboId}`)
-  }
+    e.preventDefault();
+
+    const comboIndex = user.combos.findIndex((c) => c.comboId === comboId);
+    user.combos[comboIndex] = form;
+
+    navigate(`/profile/${username}/combos/${comboId}`);
+  };
 
   return (
     <div className="max-w-4xl mx-auto text-white">
@@ -78,7 +90,7 @@ const EditCombo = () => {
 
       <form
         onSubmit={handleSubmit}
-        className=" bg-white/10 p-4 backdrop-blur-md border border-white/20 rounded-2xl   space-y-5"
+        className="bg-white/10 p-4 backdrop-blur-md border border-white/20 rounded-2xl space-y-5"
       >
         {/* === Info principal === */}
         <div>
@@ -133,14 +145,18 @@ const EditCombo = () => {
               key={index}
               className="bg-black/30 border border-gray-700 p-3 rounded-xl mb-3"
             >
-            <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between items-center mb-2">
                 <SelectCustom
                   value={skill.skillId}
-                  onChange={(e) =>
-                    handleSkillChange(index, "skillId", e.target.value)
-                  }
-                  options={allSkills.map((s) => ({
-                    label: s.variantName,
+                  onChange={(e) => {
+                    const selected = userSkills.find(
+                      (s) => s.skillId === e.target.value
+                    );
+                    handleSkillChange(index, "skillId", selected.skillId);
+                    handleSkillChange(index, "variantId", selected.variantId);
+                  }}
+                  options={userSkills.map((s) => ({
+                    label: formatVariantName(s.variantId),
                     value: s.skillId,
                   }))}
                 />
@@ -164,24 +180,35 @@ const EditCombo = () => {
                   }
                   className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
+
                 <input
                   type="number"
                   placeholder="Energía usada"
                   value={skill.energyCost || ""}
                   onChange={(e) =>
-                    handleSkillChange(index, "energyCost", Number(e.target.value))
+                    handleSkillChange(
+                      index,
+                      "energyCost",
+                      Number(e.target.value)
+                    )
                   }
                   className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
+
                 <input
                   type="number"
                   placeholder="Hold (s)"
                   value={skill.holdSeconds || ""}
                   onChange={(e) =>
-                    handleSkillChange(index, "holdSeconds", Number(e.target.value))
+                    handleSkillChange(
+                      index,
+                      "holdSeconds",
+                      Number(e.target.value)
+                    )
                   }
                   className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
+
                 <input
                   type="number"
                   placeholder="Reps"
@@ -206,6 +233,7 @@ const EditCombo = () => {
             onChange={handleChange}
             className="bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
+
           <input
             type="number"
             name="totalEnergyCost"
@@ -214,6 +242,7 @@ const EditCombo = () => {
             onChange={handleChange}
             className="bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
+
           <input
             type="number"
             name="totalDamage"
@@ -224,12 +253,10 @@ const EditCombo = () => {
           />
         </div>
 
-         <ButtonSubmit type="submit">
-          Guardar cambios
-        </ButtonSubmit>
+        <ButtonSubmit type="submit">Guardar cambios</ButtonSubmit>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default EditCombo
+export default EditCombo;
