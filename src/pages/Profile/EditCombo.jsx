@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { users } from "../../helpers/users"
+import ButtonSubmit from "../../components/Buttons/ButtonSubmit"
 
 const EditCombo = () => {
   const { username, comboId } = useParams()
@@ -86,7 +87,7 @@ const EditCombo = () => {
             name="comboName"
             value={form.comboName}
             onChange={handleChange}
-            className="w-full bg-gray-900 border border-gray-700 p-2 rounded-lg"
+            className="w-full bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
         </div>
 
@@ -96,7 +97,7 @@ const EditCombo = () => {
             name="description"
             value={form.description}
             onChange={handleChange}
-            className="w-full bg-gray-900 border border-gray-700 p-2 rounded-lg"
+            className="w-full bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
         </div>
 
@@ -106,7 +107,7 @@ const EditCombo = () => {
             name="type"
             value={form.type}
             onChange={handleChange}
-            className="w-full bg-gray-900 border border-gray-700 p-2 rounded-lg"
+            className="w-full bg-black/30 border border-gray-700 p-2 rounded-lg"
           >
             <option value="static">Static</option>
             <option value="dynamic">Dynamic</option>
@@ -121,7 +122,7 @@ const EditCombo = () => {
             <button
               type="button"
               onClick={handleAddSkill}
-              className="text-sm bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-lg"
+              className="text-sm bg-primary hover:bg-primary/80 px-3 py-1"
             >
               + Agregar Skill
             </button>
@@ -130,7 +131,7 @@ const EditCombo = () => {
           {form.skills.map((skill, index) => (
             <div
               key={index}
-              className="bg-gray-900 border border-gray-700 p-3 rounded-xl mb-3"
+              className="bg-black/30 border border-gray-700 p-3 rounded-xl mb-3"
             >
               <div className="flex justify-between items-center mb-2">
                 <select
@@ -138,7 +139,7 @@ const EditCombo = () => {
                   onChange={(e) =>
                     handleSkillChange(index, "skillId", e.target.value)
                   }
-                  className="bg-gray-800 border border-gray-700 p-2 rounded-lg flex-1 mr-2"
+                  className="bg-black/30 border border-gray-700 p-2 rounded-lg flex-1 mr-2"
                 >
                   {allSkills.map((s) => (
                     <option key={s.skillId} value={s.skillId}>
@@ -163,7 +164,7 @@ const EditCombo = () => {
                   onChange={(e) =>
                     handleSkillChange(index, "auraUsed", Number(e.target.value))
                   }
-                  className="bg-gray-800 border border-gray-700 p-2 rounded-lg"
+                  className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
                 <input
                   type="number"
@@ -172,7 +173,7 @@ const EditCombo = () => {
                   onChange={(e) =>
                     handleSkillChange(index, "energyCost", Number(e.target.value))
                   }
-                  className="bg-gray-800 border border-gray-700 p-2 rounded-lg"
+                  className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
                 <input
                   type="number"
@@ -181,7 +182,7 @@ const EditCombo = () => {
                   onChange={(e) =>
                     handleSkillChange(index, "holdSeconds", Number(e.target.value))
                   }
-                  className="bg-gray-800 border border-gray-700 p-2 rounded-lg"
+                  className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
                 <input
                   type="number"
@@ -190,7 +191,7 @@ const EditCombo = () => {
                   onChange={(e) =>
                     handleSkillChange(index, "reps", Number(e.target.value))
                   }
-                  className="bg-gray-800 border border-gray-700 p-2 rounded-lg"
+                  className="bg-black/30 border border-gray-700 p-2 rounded-lg"
                 />
               </div>
             </div>
@@ -205,7 +206,7 @@ const EditCombo = () => {
             placeholder="Total Aura"
             value={form.totalAuraUsed}
             onChange={handleChange}
-            className="bg-gray-900 border border-gray-700 p-2 rounded-lg"
+            className="bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
           <input
             type="number"
@@ -213,7 +214,7 @@ const EditCombo = () => {
             placeholder="Total Energía"
             value={form.totalEnergyCost}
             onChange={handleChange}
-            className="bg-gray-900 border border-gray-700 p-2 rounded-lg"
+            className="bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
           <input
             type="number"
@@ -221,16 +222,13 @@ const EditCombo = () => {
             placeholder="Total Daño"
             value={form.totalDamage}
             onChange={handleChange}
-            className="bg-gray-900 border border-gray-700 p-2 rounded-lg"
+            className="bg-black/30 border border-gray-700 p-2 rounded-lg"
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-500 py-2 rounded-lg font-semibold"
-        >
+         <ButtonSubmit type="submit">
           Guardar cambios
-        </button>
+        </ButtonSubmit>
       </form>
     </div>
   )

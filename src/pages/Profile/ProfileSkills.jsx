@@ -4,6 +4,7 @@ import ComboCard from "../../components/Profile/ComboCard"
 import SkillCard from "../../components/Profile/SkillCard"
 import { users } from "../../helpers/users"
 import { useAuth } from "../../context/AuthContext"
+import { PiCards, PiCardsFill  } from "react-icons/pi";
 
 const ProfileSkills = () => {
   const { username } = useParams()
@@ -65,9 +66,9 @@ const ProfileSkills = () => {
           {/* Botón para alternar vista */}
           <button
             onClick={() => setCardView(!cardView)}
-            className="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg"
+            className="text-sm bg-stone-800 hover:bg-gray-600 px-3 py-1 rounded-lg"
           >
-            {cardView ? "Vista detallada" : "Vista en tarjeta"}
+            {cardView ? <PiCards /> : <PiCardsFill />}
           </button>
         </div>
 

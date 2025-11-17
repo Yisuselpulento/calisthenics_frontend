@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { skills } from "../../helpers/skills";
 import { useAuth } from "../../context/AuthContext";
+import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
 
 const AddSkill = () => {
   const { currentUser, updateCurrentUser } = useAuth();
@@ -141,12 +142,9 @@ const AddSkill = () => {
                 <p className="text-red-400 text-sm text-center">{error}</p>
               )}
 
-              <button
-                onClick={handleAddSkill}
-                className="w-full py-2 mt-2 rounded-lg bg-primary hover:bg-primary/80 transition"
-              >
-                Agregar Skill
-              </button>
+            <ButtonSubmit onClick={handleAddSkill} className="mt-2">
+              Agregar Skill
+            </ButtonSubmit>
             </div>
           )}
         </div>

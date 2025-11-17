@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { users } from "../../helpers/users";
 import { useNavigate, Link } from "react-router-dom";
 import SelectCustom from "../../components/SelectCustom";
+import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
 
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
@@ -168,12 +169,9 @@ const EditProfile = () => {
 
 
         {/* Botón guardar */}
-        <button
-          type="submit"
-          className="w-full py-2 mt-3 bg-primary hover:bg-primary/80 rounded-md text-sm transition"
-        >
+        <ButtonSubmit type="submit">
           Guardar cambios
-        </button>
+        </ButtonSubmit>
       </form>
     </div>
   );

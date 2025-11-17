@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { users } from "../../helpers/users";
 import BackButton from "../../components/Buttons/BackButton";
+import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
 
 const AddCombo = () => {
   const { username } = useParams();
@@ -164,12 +165,9 @@ const AddCombo = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-primary hover:bg-primary/80 py-2 cursor-pointer rounded-md text-sm font-semibold transition"
-        >
+      <ButtonSubmit type="submit" className="text-sm">
           Crear Combo
-        </button>
+      </ButtonSubmit>
       </form>
     </div>
   );
