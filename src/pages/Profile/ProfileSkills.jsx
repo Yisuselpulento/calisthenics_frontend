@@ -32,7 +32,7 @@ const ProfileSkills = () => {
       {/* === COMBOS === */}
       <section className="mb-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Combos</h2>
+          <h2 className="text-xl font-bold">Combos</h2>
 
           {isOwner && (
             <Link
@@ -52,7 +52,9 @@ const ProfileSkills = () => {
           </div>
         ) : (
           <p className="text-gray-400 italic">
-            Este usuario aún no ha creado combos.
+            {isOwner
+              ? "Aún no has creado combos."
+              : "Este usuario aún no ha creado combos."}
           </p>
         )}
       </section>
@@ -60,7 +62,7 @@ const ProfileSkills = () => {
       {/* === SKILLS === */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Skills Desbloqueadas</h2>
+          <h2 className="text-xl font-bold">Skills Desbloqueadas</h2>
 
           <button
             onClick={() => setCardView(!cardView)}
@@ -88,7 +90,9 @@ const ProfileSkills = () => {
           </div>
         ) : (
           <p className="text-gray-400 italic">
-            Aún no tienes skills desbloqueadas.
+            {isOwner
+              ? "Aún no tienes skills desbloqueadas."
+              : "Este usuario aún no tiene skills desbloqueadas."}
           </p>
         )}
       </section>

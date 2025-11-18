@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Searchbar from "../Searchbar";
-import { FaUser, FaBell } from "react-icons/fa";
+import { FaUser, FaBell, FaChartBar } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import NotificationsDropdown from "../NotificationsDropdown";
@@ -10,11 +10,11 @@ const NavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
-    <div className="p-5">
-      <div className="flex gap-6 items-center relative">
+    <div className="p-2">
+      <div className="flex gap-2 items-center relative">
         <Searchbar />
 
-        {/* 🔔 Botón de notificaciones */}
+        {/* 🔔 Notificaciones */}
         <div className="relative">
           <button
             onClick={() => setShowDropdown((prev) => !prev)}
@@ -26,8 +26,17 @@ const NavBar = () => {
           >
             <FaBell className="text-xl" />
           </button>
+
           {showDropdown && <NotificationsDropdown currentUser={currentUser} />}
         </div>
+
+        {/* 📊 Botón de Stats */}
+        <Link
+          to="/skills-stats"
+          className="p-2 rounded-full bg-stone-800 text-gray-300 hover:text-white hover:bg-primary transition-colors"
+        >
+          <FaChartBar className="text-xl" />
+        </Link>
       </div>
     </div>
   );

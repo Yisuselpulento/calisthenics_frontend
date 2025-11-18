@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { users } from "../../helpers/users";
+import { skills as skillsBase } from "../../helpers/skills";
 import BackButton from "../../components/Buttons/BackButton";
 import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
-
-// 👉 Convierte "planche_full_hold" en "Planche Full Hold"
-const formatVariantName = (str) => {
-  return str
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase());
-};
 
 const AddCombo = () => {
   const { username } = useParams();
@@ -23,67 +17,65 @@ const AddCombo = () => {
       </p>
     );
 
-  // 👉 Skills reales del usuario
   const userSkills = user.skills || [];
 
   const [form, setForm] = useState({
     comboName: "",
-    description: "",
     type: "static",
     selectedSkills: [],
-    totalAuraUsed: 0,
-    totalEnergyCost: 0,
-    totalDamage: 0,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const findVariantData = (skillId, variantId) => {
+    const baseSkill = skillsBase.find((s) => s.skillId === skillId);
+    if (!baseSkill) return null;
+    return baseSkill.variants.find((v) => v.variantId === variantId);
   };
 
-  const toggleSkill = (skillId) => {
+  const toggleSkill = (skill) => {
     setForm((prev) => {
-      const already = prev.selectedSkills.includes(skillId);
+      const isAdded = prev.selectedSkills.some(
+        (s) => s.skillId === skill.skillId
+      );
 
-      if (already) {
+      if (isAdded) {
         return {
           ...prev,
-          selectedSkills: prev.selectedSkills.filter((id) => id !== skillId),
+          selectedSkills: prev.selectedSkills.filter(
+            (s) => s.skillId !== skill.skillId
+          ),
         };
       }
 
-      if (prev.selectedSkills.length >= 5) return prev; // máximo 5 skills
+      if (prev.selectedSkills.length >= 5) return prev;
 
       return {
         ...prev,
-        selectedSkills: [...prev.selectedSkills, skillId],
+        selectedSkills: [
+          ...prev.selectedSkills,
+          {
+            skillId: skill.skillId,
+            variantId: skill.variantId,
+            holdSeconds: 0,
+            reps: 0,
+          },
+        ],
       };
     });
   };
 
+  const updateSkillField = (skillId, field, value) => {
+    setForm((prev) => ({
+      ...prev,
+      selectedSkills: prev.selectedSkills.map((s) =>
+        s.skillId === skillId ? { ...s, [field]: value } : s
+      ),
+    }));
+    console.log("Update skill:", skillId, field, value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newCombo = {
-      comboId: `combo_${Math.random().toString(36).slice(2, 8)}`,
-      comboName: form.comboName,
-      description: form.description,
-      type: form.type,
-      skills: form.selectedSkills.map((id) => ({
-        skillId: id,
-        // 👉 Tus skills reales no tienen AU ni energyCost individuales, así que dejamos valores genéricos
-        auraUsed: 100,
-        energyCost: 80,
-      })),
-      totalAuraUsed: Number(form.totalAuraUsed),
-      totalEnergyCost: Number(form.totalEnergyCost),
-      totalDamage: Number(form.totalDamage),
-      createdAt: new Date(),
-    };
-
-    user.combos.push(newCombo);
-
-    navigate(`/profile/${username}/combos`);
+    console.log("FORM DATA:", form);
   };
 
   return (
@@ -99,23 +91,13 @@ const AddCombo = () => {
       >
         {/* NOMBRE */}
         <div>
-          <label className="block text-sm mb-1">Nombre del Combo</label>
+          <label className="block text-sm mb-1">Nombre</label>
           <input
             type="text"
-            name="comboName"
             value={form.comboName}
-            onChange={handleChange}
-            className="w-full bg-black/30 rounded-md border border-white/20 p-2 text-sm"
-          />
-        </div>
-
-        {/* DESCRIPTION */}
-        <div>
-          <label className="block text-sm mb-1">Descripción</label>
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, comboName: e.target.value }))
+            }
             className="w-full bg-black/30 rounded-md border border-white/20 p-2 text-sm"
           />
         </div>
@@ -124,9 +106,10 @@ const AddCombo = () => {
         <div>
           <label className="block text-sm mb-1">Tipo</label>
           <select
-            name="type"
             value={form.type}
-            onChange={handleChange}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, type: e.target.value }))
+            }
             className="w-full bg-black/30 rounded-md border border-white/20 p-2 text-sm"
           >
             <option value="static">Static</option>
@@ -142,55 +125,91 @@ const AddCombo = () => {
           </label>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {userSkills.map((skill) => (
-              <button
-                key={skill.skillId}
-                type="button"
-                onClick={() => toggleSkill(skill.skillId)}
-                className={`p-2 rounded-md text-left text-sm border transition ${
-                  form.selectedSkills.includes(skill.skillId)
-                    ? "bg-blue-600 border-blue-400"
-                    : "bg-black/30 border-white/20 hover:border-blue-300"
-                }`}
-              >
-                {formatVariantName(skill.variantId)}
-              </button>
-            ))}
+            {userSkills.map((skill) => {
+              const isSelected = form.selectedSkills.some(
+                (s) => s.skillId === skill.skillId
+              );
+              const variantData = findVariantData(skill.skillId, skill.variantId);
+
+              return (
+                <button
+                  key={skill.skillId}
+                  type="button"
+                  onClick={() => toggleSkill(skill)}
+                  className={`p-2 rounded-md text-left text-sm border transition ${
+                    isSelected
+                      ? "bg-blue-600 border-blue-400"
+                      : "bg-black/30 border-white/20 hover:border-blue-300"
+                  }`}
+                >
+                  {variantData?.variant || skill.variantId}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* TOTALS */}
-        <div className="grid grid-cols-3 gap-2">
-          <input
-            type="number"
-            name="totalAuraUsed"
-            placeholder="Aura total"
-            value={form.totalAuraUsed}
-            onChange={handleChange}
-            className="bg-black/30 rounded-md border border-white/20 p-2 text-sm"
-          />
+        {/* Selected Skills */}
+        <div className="flex flex-col gap-4 mt-4">
+          {form.selectedSkills.map((s, index) => {
+            const variantData = findVariantData(s.skillId, s.variantId);
+            const isStatic = variantData?.type === "static";
+            const isDynamic = variantData?.type === "dynamic";
 
-          <input
-            type="number"
-            name="totalEnergyCost"
-            placeholder="Energía total"
-            value={form.totalEnergyCost}
-            onChange={handleChange}
-            className="bg-black/30 rounded-md border border-white/20 p-2 text-sm"
-          />
+            return (
+              <div
+                key={index}
+                className="bg-white/10 border border-white/20 rounded-lg p-4"
+              >
+                <h3 className="font-bold mb-2">
+                  {variantData?.variant || "Skill"}
+                </h3>
 
-          <input
-            type="number"
-            name="totalDamage"
-            placeholder="Daño total"
-            value={form.totalDamage}
-            onChange={handleChange}
-            className="bg-black/30 rounded-md border border-white/20 p-2 text-sm"
-          />
+                <p className="text-xs opacity-80 mb-2">
+                  staticAU: {variantData?.staticAU ?? "?"} | dynamicAU:{" "}
+                  {variantData?.dynamicAU ?? "?"}
+                </p>
+
+                {isStatic && (
+                  <div>
+                    <label className="text-sm">Hold Seconds</label>
+                    <input
+                      type="number"
+                      min={1}
+                      value={s.holdSeconds}
+                      onChange={(e) =>
+                        updateSkillField(
+                          s.skillId,
+                          "holdSeconds",
+                          Number(e.target.value)
+                        )
+                      }
+                      className="w-full bg-black/30 border border-white/20 rounded-md p-2 mt-1"
+                    />
+                  </div>
+                )}
+
+                {isDynamic && (
+                  <div>
+                    <label className="text-sm">Reps</label>
+                    <input
+                      type="number"
+                      min={1}
+                      value={s.reps}
+                      onChange={(e) =>
+                        updateSkillField(s.skillId, "reps", Number(e.target.value))
+                      }
+                      className="w-full bg-black/30 border border-white/20 rounded-md p-2 mt-1"
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        <ButtonSubmit type="submit" className="text-sm">
-          Crear Combo
+        <ButtonSubmit type="submit" className="text-sm mt-4">
+          Crear Combo (solo console.log)
         </ButtonSubmit>
       </form>
     </div>

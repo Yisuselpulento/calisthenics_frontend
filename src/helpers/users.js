@@ -28,111 +28,59 @@ export const users = [
     dynamicAu: 1700,
     level: 10289,
     maxEnergy: 500,
-     skills: [
+    skills: [
+    {
+      skillId: "lsit_001",
+      variantId: "vsit",
+      videoUrl: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4", // si quieres agrego un video
+      fingersUsed: 5
+    },
+    {
+      skillId: "frontlever_001",
+      variantId: "fl_full",
+      videoUrl: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
+      fingersUsed: 5
+    },
+    {
+      skillId: "planche_001",
+      variantId: "planche_full_hold",
+      videoUrl: "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
+      fingersUsed: 5
+    }
+  ],
+
+    // 🌀 Combos creados por el usuario
+   combos: [
+  {
+    comboId: "combo_iliesse_001",
+    comboName: "Elite Static Flow",
+    type: "static",
+
+    skills: [
       {
         skillId: "planche_001",
         variantId: "planche_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
-        fingersUsed: 2
+        holdSeconds: 5,
+        reps: 0,
+        auraUsed: 76,     // Lo que tú definas
+        energyCost: 90    // Lo que tú definas
       },
       {
         skillId: "frontlever_001",
-        variantId: "front_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      },
-      {
-        skillId: "hefesto_001",
-        variantId: "hefesto_progress",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
+        variantId: "fl_full",
+        holdSeconds: 5,
+        reps: 0,
+        auraUsed: 69,
+        energyCost: 80
       }
     ],
 
-    // 🌀 Combos creados por el usuario
-    combos: [
-      {
-        comboId: "combo_001",
-        comboName: "Static Power Flow",
-        description: "Transición entre Full Planche y Front Lever.",
-        type: "static",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 6,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "frontlever_001",
-            variantId: "front_full_hold",
-            holdSeconds: 5,
-            auraUsed: 100,
-            energyCost: 80
-          }
-        ],
-        totalAuraUsed: 220,
-        totalEnergyCost: 180,
-        totalDamage: 190,
-        createdAt: new Date("2025-10-21")
-      },
-      {
-        comboId: "combo_002",
-        comboName: "Dynamic Explosion Flow",
-        description: "Secuencia explosiva de Hefesto con transición controlada.",
-        type: "dynamic",
-        skills: [
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 3,
-            auraUsed: 150,
-            energyCost: 140
-          },
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 4,
-            auraUsed: 100,
-            energyCost: 90
-          }
-        ],
-        totalAuraUsed: 250,
-        totalEnergyCost: 230,
-        totalDamage: 260,
-        createdAt: new Date("2025-10-27")
-      },
-      {
-        comboId: "combo_003",
-        comboName: "Mixed Titan Flow",
-        description: "Combinación de control y potencia entre estáticos y dinámicos.",
-        type: "mixed",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 5,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 2,
-            auraUsed: 150,
-            energyCost: 120
-          }
-        ],
-        totalAuraUsed: 270,
-        totalEnergyCost: 220,
-        totalDamage: 280,
-        createdAt: new Date("2025-11-03")
-      }
-    ],
+    totalAuraUsed: 76 + 69,
+    totalEnergyCost: 90 + 80,
+    totalDamage: (110 * 5) + (105 * 5), // Esto puedes editarlo si quieres que no se calcule por DPS
+    createdAt: new Date("2025-11-18")
+  }
+],
 
     // ⭐ Combo favorito por tipo (usado en VS automáticamente)
     favoriteCombos: {

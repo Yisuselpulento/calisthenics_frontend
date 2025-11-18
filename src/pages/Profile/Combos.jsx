@@ -13,9 +13,7 @@ const Combos = () => {
   return (
     <div className="max-w-5xl mx-auto text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Combos de {username}</h1>
-
-        {/* ➕ Agregar Combo */}
+        <h1 className="text-xl font-bold">Tus Combos</h1>
         <Link
           to={`/profile/${username}/combos/add`}
           className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 cursor-pointer rounded-md transition"
@@ -41,7 +39,6 @@ const Combos = () => {
               </div>
 
               <div className="flex justify-between">
-                {/* Ver detalles */}
                 <Link
                   to={`/profile/${username}/combos/${combo.comboId}`}
                   className="bg-primary hover:bg-primary/80 cursor-pointer text-white text-sm px-3 py-1 rounded-lg"
@@ -49,7 +46,6 @@ const Combos = () => {
                   Ver detalles
                 </Link>
 
-                {/* Editar */}
                 <Link
                   to={`/profile/${username}/combos/${combo.comboId}/edit`}
                   className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-sm px-3 py-1 rounded-lg"
@@ -62,7 +58,7 @@ const Combos = () => {
         </div>
       ) : (
         <p className="text-gray-400 italic text-center">
-          Este usuario no tiene combos aún.
+          Aún no has creado combos.
         </p>
       )}
     </div>

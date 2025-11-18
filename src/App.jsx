@@ -19,6 +19,7 @@ import AddCombo from "./pages/Profile/AddCombo"
 import VsDetails from "./pages/VsDetails"
 import Ranks from "./pages/Ranks/Ranks"
 import Notifications from "./pages/Notifications"
+import SkillsStatsPage from "./pages/SkillStatsPage"
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Routes>
               <Route  path="/" element={<Layout />}>
                   <Route index element={<Home />} />
+                  <Route path="/skills-stats" element={<SkillsStatsPage />} />
                   <Route path="/vs/:matchId" element={<VsDetails />} />
                   <Route path="/ranks" element={<Ranks />} />
                   <Route path="/notifications" element={<Notifications />} />

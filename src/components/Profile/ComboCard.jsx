@@ -14,7 +14,6 @@ const ComboCard = ({ combo }) => {
           {combo.type}
         </span>
       </div>
-      <p className="text-sm text-gray-300 mb-2">{combo.description}</p>
       <p className="text-xs text-gray-400">Skills incluidas: {combo.skills.length}</p>
       <p className="text-xs text-gray-400">Aura total usada: {combo.totalAuraUsed}</p>
     </div>
