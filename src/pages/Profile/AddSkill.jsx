@@ -2,13 +2,14 @@ import { useState } from "react";
 import { skills } from "../../helpers/skills";
 import { useAuth } from "../../context/AuthContext";
 import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
+import ButtonSkill from "../../components/Buttons/ButtonSkill";
+import FilterButton from "../../components/Buttons/Filterbutton";
 
 const AddSkill = () => {
   const { currentUser, updateCurrentUser } = useAuth();
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [videoUrl, setVideoUrl] = useState("");
-  const [armsUsed, setArmsUsed] = useState(2);
   const [fingersUsed, setFingersUsed] = useState(5);
   const [error, setError] = useState("");
 
@@ -26,7 +27,6 @@ const AddSkill = () => {
       skillId: selectedSkill.skillId,
       variantId: selectedVariant.variantId,
       variantName: selectedVariant.variant,
-      armsUsed,
       fingersUsed,
       videoUrl,
     };
@@ -35,7 +35,6 @@ const AddSkill = () => {
       skills: [...(currentUser.skills || []), newSkill],
     });
 
-    // Reset
     setSelectedSkill(null);
     setSelectedVariant(null);
     setVideoUrl("");
@@ -49,16 +48,20 @@ const AddSkill = () => {
 
       {!selectedSkill ? (
         <>
-          <p className="text-gray-400 mb-2 text-center">Selecciona una skill:</p>
+          {/* Header de selección + filtro */}
+          <div className="flex justify-between items-center mb-3">
+            <p className="text-gray-400">Selecciona una skill:</p>
+            <FilterButton onClick={() => console.log("Abrir filtros")} />
+          </div>
+
+          {/* Lista de skills */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {skills.map((s) => (
-              <button
+              <ButtonSkill
                 key={s.skillId}
+                skill={s}
                 onClick={() => setSelectedSkill(s)}
-                className="p-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 transition"
-              >
-                {s.skillName}
-              </button>
+              />
             ))}
           </div>
         </>
@@ -72,7 +75,6 @@ const AddSkill = () => {
           </button>
 
           <h2 className="text-xl font-semibold mb-2">{selectedSkill.skillName}</h2>
-          <p className="text-gray-400 mb-3">{selectedSkill.description}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {selectedSkill.variants.map((v) => (
@@ -108,43 +110,27 @@ const AddSkill = () => {
                 />
               </div>
 
-              <div className="flex gap-3">
-                <div>
-                  <label className="block text-sm mb-1 text-gray-300">
-                    Brazos usados
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="2"
-                    value={armsUsed}
-                    onChange={(e) => setArmsUsed(parseInt(e.target.value))}
-                    className="w-20 p-2 rounded-lg bg-neutral-900 border border-neutral-700"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm mb-1 text-gray-300">
-                    Dedos usados
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="5"
-                    value={fingersUsed}
-                    onChange={(e) => setFingersUsed(parseInt(e.target.value))}
-                    className="w-20 p-2 rounded-lg bg-neutral-900 border border-neutral-700"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm mb-1 text-gray-300">
+                  Dedos usados
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="5"
+                  value={fingersUsed}
+                  onChange={(e) => setFingersUsed(parseInt(e.target.value))}
+                  className="w-20 p-2 rounded-lg bg-neutral-900 border border-neutral-700"
+                />
               </div>
 
               {error && (
                 <p className="text-red-400 text-sm text-center">{error}</p>
               )}
 
-            <ButtonSubmit onClick={handleAddSkill} className="mt-2">
-              Agregar Skill
-            </ButtonSubmit>
+              <ButtonSubmit onClick={handleAddSkill} className="mt-2">
+                Agregar Skill
+              </ButtonSubmit>
             </div>
           )}
         </div>
