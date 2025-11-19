@@ -33,7 +33,7 @@ const ProfileSkills = () => {
       {/* === COMBOS FAVORITOS === */}
       <section className="mb-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Combos Favoritos</h2>
+          <h2 className="text-xl font-bold">Combos</h2>
           {isOwner && (
             <Link
               to={`/profile/${username}/combos`}
@@ -55,7 +55,7 @@ const ProfileSkills = () => {
           <p className="text-gray-400 italic">
             {isOwner
               ? "Aún no tienes combos favoritos."
-              : "Este usuario aún no tiene combos favoritos."}
+              : "Este usuario aún no tiene combos."}
           </p>
         )}
       </section>

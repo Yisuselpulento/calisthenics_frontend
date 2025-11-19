@@ -3,7 +3,7 @@ export const users = [
     _id: "u1",
     name: "Iliesse Ns",
     username: "iliesse_ns",
-    country: "Chile",
+    country: "Francia",
     videoProfile:
       "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762447550/AQMAMjfgJ-Ku3cSSckQ1-sv7IvLSSBiIgJ_8j6icCaDXRyF1RfaANvTKb15jzNYH9CqXAnyo9XOYQ5OEG8eAt0dL7QQ0bN2P_lzb1fc.mp4",
     avatar: "/users/iliesse.jpg",
@@ -27,7 +27,7 @@ export const users = [
     staticAu: 8589,
     dynamicAu: 1700,
     level: 10289,
-    maxEnergy: 500,
+    energy: 500,
     skills: [
     {
       userSkillId: "us_001",
@@ -125,6 +125,7 @@ export const users = [
   staticAu: 5589,
   dynamicAu: 7500,
   level: 13089,
+  energy: 600,
   skills: [
     {
       userSkillId: "js_001",
@@ -256,124 +257,26 @@ export const users = [
       },
     ],
     type: "static",
-         staticAu: 4589,
+    staticAu: 4589,
     dynamicAu: 1500,
     level: 6089,
+    energy: 400,
       skills: [
-      {
-        skillId: "planche_001",
-        variantId: "planche_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
-        fingersUsed: 2
-      },
-      {
-        skillId: "frontlever_001",
-        variantId: "front_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      },
-      {
-        skillId: "hefesto_001",
-        variantId: "hefesto_progress",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      }
+     
     ],
 
-    // 🌀 Combos creados por el usuario
     combos: [
-      {
-        comboId: "combo_001",
-        comboName: "Static Power Flow",
-        description: "Transición entre Full Planche y Front Lever.",
-        type: "static",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 6,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "frontlever_001",
-            variantId: "front_full_hold",
-            holdSeconds: 5,
-            auraUsed: 100,
-            energyCost: 80
-          }
-        ],
-        totalAuraUsed: 220,
-        totalEnergyCost: 180,
-        totalDamage: 190,
-        createdAt: new Date("2025-10-21")
-      },
-      {
-        comboId: "combo_002",
-        comboName: "Dynamic Explosion Flow",
-        description: "Secuencia explosiva de Hefesto con transición controlada.",
-        type: "dynamic",
-        skills: [
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 3,
-            auraUsed: 150,
-            energyCost: 140
-          },
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 4,
-            auraUsed: 100,
-            energyCost: 90
-          }
-        ],
-        totalAuraUsed: 250,
-        totalEnergyCost: 230,
-        totalDamage: 260,
-        createdAt: new Date("2025-10-27")
-      },
-      {
-        comboId: "combo_003",
-        comboName: "Mixed Titan Flow",
-        description: "Combinación de control y potencia entre estáticos y dinámicos.",
-        type: "mixed",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 5,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 2,
-            auraUsed: 150,
-            energyCost: 120
-          }
-        ],
-        totalAuraUsed: 270,
-        totalEnergyCost: 220,
-        totalDamage: 280,
-        createdAt: new Date("2025-11-03")
-      }
+     
     ],
 
-    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
     favoriteCombos: {
-      static: "combo_001",
-      dynamic: "combo_002",
-      mixed: "combo_003"
+      static: "",
+      dynamic: "",
+      mixed: ""
     },
-     historialIds: ["h2", "h3", "h6", "h8"],
-      followers: ["u2", "u3"], // IDs de usuarios que lo siguen
-    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+    historialIds: [],
+    followers: [],
+    following: [],
 
     // 🏆 Sistema de ranking
     rankPoints: 1320, // puntos de ranking global
@@ -384,7 +287,7 @@ export const users = [
     winRate: 0.66, // calculado dinámicamente
 
     // 🧨 Equipos donde participa
-    teamIds: ["t1"], 
+    teamIds: [], 
   },
    {
     _id: "u4",
@@ -413,121 +316,22 @@ export const users = [
     staticAu: 2589,
     dynamicAu: 100,
     level: 2689,
-      skills: [
-      {
-        skillId: "planche_001",
-        variantId: "planche_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
-        fingersUsed: 2
-      },
-      {
-        skillId: "frontlever_001",
-        variantId: "front_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      },
-      {
-        skillId: "hefesto_001",
-        variantId: "hefesto_progress",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      }
+       skills: [
+     
     ],
 
-    // 🌀 Combos creados por el usuario
     combos: [
-      {
-        comboId: "combo_001",
-        comboName: "Static Power Flow",
-        description: "Transición entre Full Planche y Front Lever.",
-        type: "static",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 6,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "frontlever_001",
-            variantId: "front_full_hold",
-            holdSeconds: 5,
-            auraUsed: 100,
-            energyCost: 80
-          }
-        ],
-        totalAuraUsed: 220,
-        totalEnergyCost: 180,
-        totalDamage: 190,
-        createdAt: new Date("2025-10-21")
-      },
-      {
-        comboId: "combo_002",
-        comboName: "Dynamic Explosion Flow",
-        description: "Secuencia explosiva de Hefesto con transición controlada.",
-        type: "dynamic",
-        skills: [
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 3,
-            auraUsed: 150,
-            energyCost: 140
-          },
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 4,
-            auraUsed: 100,
-            energyCost: 90
-          }
-        ],
-        totalAuraUsed: 250,
-        totalEnergyCost: 230,
-        totalDamage: 260,
-        createdAt: new Date("2025-10-27")
-      },
-      {
-        comboId: "combo_003",
-        comboName: "Mixed Titan Flow",
-        description: "Combinación de control y potencia entre estáticos y dinámicos.",
-        type: "mixed",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 5,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 2,
-            auraUsed: 150,
-            energyCost: 120
-          }
-        ],
-        totalAuraUsed: 270,
-        totalEnergyCost: 220,
-        totalDamage: 280,
-        createdAt: new Date("2025-11-03")
-      }
+     
     ],
 
-    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
     favoriteCombos: {
-      static: "combo_001",
-      dynamic: "combo_002",
-      mixed: "combo_003"
+      static: "",
+      dynamic: "",
+      mixed: ""
     },
-     historialIds: ["h4", "h5", "h8", "h10"],
-      followers: ["u2", "u3"], // IDs de usuarios que lo siguen
-    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+    historialIds: [],
+    followers: [],
+    following: [],
 
     // 🏆 Sistema de ranking
     rankPoints: 1320, // puntos de ranking global
@@ -538,7 +342,7 @@ export const users = [
     winRate: 0.66, // calculado dinámicamente
 
     // 🧨 Equipos donde participa
-    teamIds: ["t1"], 
+    teamIds: [], 
   },
   {
     _id: "u5",
@@ -567,121 +371,22 @@ export const users = [
     staticAu: 8500,
     dynamicAu: 8500,
     level: 17000,
-     skills: [
-      {
-        skillId: "planche_001",
-        variantId: "planche_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455261/AQPThx860RbajyCeqUspjK-eN9dehUyufJVrqM4rp1vYiyZ93tOKoFBNNcrmAun8ayoj5CVJSs7Mi6AARGAfnxIBEioxfanu_nqxpih.mp4",
-        fingersUsed: 2
-      },
-      {
-        skillId: "frontlever_001",
-        variantId: "front_full_hold",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      },
-      {
-        skillId: "hefesto_001",
-        variantId: "hefesto_progress",
-        videoUrl:
-          "https://res.cloudinary.com/dztgbn3qa/video/upload/v1762455256/AQP4JsJgU0lKD31VJIM0yF8QY1zPa2Kvel08273FTq8oNTwoeNvgDj4gJxCTEXjnY3uD0b8vL-JV9b8rFVuD0FZeKCj32Lmg_lpqykx.mp4",
-        fingersUsed: 5
-      }
+      skills: [
+     
     ],
 
-    // 🌀 Combos creados por el usuario
     combos: [
-      {
-        comboId: "combo_001",
-        comboName: "Static Power Flow",
-        description: "Transición entre Full Planche y Front Lever.",
-        type: "static",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 6,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "frontlever_001",
-            variantId: "front_full_hold",
-            holdSeconds: 5,
-            auraUsed: 100,
-            energyCost: 80
-          }
-        ],
-        totalAuraUsed: 220,
-        totalEnergyCost: 180,
-        totalDamage: 190,
-        createdAt: new Date("2025-10-21")
-      },
-      {
-        comboId: "combo_002",
-        comboName: "Dynamic Explosion Flow",
-        description: "Secuencia explosiva de Hefesto con transición controlada.",
-        type: "dynamic",
-        skills: [
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 3,
-            auraUsed: 150,
-            energyCost: 140
-          },
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 4,
-            auraUsed: 100,
-            energyCost: 90
-          }
-        ],
-        totalAuraUsed: 250,
-        totalEnergyCost: 230,
-        totalDamage: 260,
-        createdAt: new Date("2025-10-27")
-      },
-      {
-        comboId: "combo_003",
-        comboName: "Mixed Titan Flow",
-        description: "Combinación de control y potencia entre estáticos y dinámicos.",
-        type: "mixed",
-        skills: [
-          {
-            skillId: "planche_001",
-            variantId: "planche_full_hold",
-            holdSeconds: 5,
-            auraUsed: 120,
-            energyCost: 100
-          },
-          {
-            skillId: "hefesto_001",
-            variantId: "hefesto_progress",
-            reps: 2,
-            auraUsed: 150,
-            energyCost: 120
-          }
-        ],
-        totalAuraUsed: 270,
-        totalEnergyCost: 220,
-        totalDamage: 280,
-        createdAt: new Date("2025-11-03")
-      }
+     
     ],
 
-    // ⭐ Combo favorito por tipo (usado en VS automáticamente)
     favoriteCombos: {
-      static: "combo_001",
-      dynamic: "combo_002",
-      mixed: "combo_003"
+      static: "",
+      dynamic: "",
+      mixed: ""
     },
-    historialIds: ["h5", "h6", "h9"],
-     followers: ["u2", "u3"], // IDs de usuarios que lo siguen
-    following: ["u2", "u4"], // IDs de usuarios a los que sigue
+    historialIds: [],
+    followers: [],
+    following: [],
 
     // 🏆 Sistema de ranking
     rankPoints: 1320, // puntos de ranking global
@@ -692,6 +397,6 @@ export const users = [
     winRate: 0.66, // calculado dinámicamente
 
     // 🧨 Equipos donde participa
-    teamIds: ["t1"], 
+    teamIds: [], 
   },
 ]

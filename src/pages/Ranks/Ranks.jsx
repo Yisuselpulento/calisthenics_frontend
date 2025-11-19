@@ -87,7 +87,7 @@ export default function Ranks() {
 
       {/* 👥 Ranking de equipos */}
       {activeTab === "teams" && (
-        <div className="bg-stone-900 rounded-xl p-4 space-y-3 border border-stone-700">
+        <div className="bg-stone-900 rounded-xl p-2 space-y-1 border border-stone-700">
           {sortedTeams.map((team, i) => (
             <Link
               to={`/team/${team._id}`}

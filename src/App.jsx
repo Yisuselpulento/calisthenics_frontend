@@ -20,6 +20,7 @@ import VsDetails from "./pages/VsDetails"
 import Ranks from "./pages/Ranks/Ranks"
 import Notifications from "./pages/Notifications"
 import SkillsStatsPage from "./pages/SkillStatsPage"
+import TeamPage from "./pages/Teampage"
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                   <Route index element={<Home />} />
                   <Route path="/skills-stats" element={<SkillsStatsPage />} />
                   <Route path="/vs/:matchId" element={<VsDetails />} />
+                  <Route path="/teams/:teamId" element={<TeamPage />} />
                   <Route path="/ranks" element={<Ranks />} />
                   <Route path="/notifications" element={<Notifications />} />
                     <Route path="profile/:username" element={<ProfileLayout />}>

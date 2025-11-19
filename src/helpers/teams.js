@@ -18,6 +18,6 @@ export const teams = [
     totalWins: 10,
     totalLosses: 3,
     teamRank: 4,
-    logo: "/teams/static_legends.png",
+    logo: "/users/logoteam.png",
   },
 ];
