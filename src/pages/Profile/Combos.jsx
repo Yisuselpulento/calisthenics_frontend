@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom"
 import { users } from "../../helpers/users"
+import { calculateComboStats } from "../../helpers/skillUtils"
 
 const Combos = () => {
   const { username } = useParams()
@@ -24,37 +25,51 @@ const Combos = () => {
 
       {combos.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {combos.map((combo) => (
-            <div
-              key={combo.comboId}
-              className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:border-blue-500 transition-all"
-            >
-              <h3 className="text-xl font-bold mb-2">{combo.comboName}</h3>
-              <p className="text-sm text-gray-300 mb-3">{combo.description}</p>
+          {combos.map((combo) => {
+            const { totalAura, totalEnergy } = calculateComboStats(combo)
 
-              <div className="text-sm space-y-1 mb-4">
-                <p><span className="font-semibold text-blue-300">Tipo:</span> {combo.type}</p>
-                <p><span className="font-semibold text-blue-300">Total Aura:</span> {combo.totalAuraUsed}</p>
-                <p><span className="font-semibold text-blue-300">Energía:</span> {combo.totalEnergyCost}</p>
+            return (
+              <div
+                key={combo.comboId}
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:border-blue-500 transition-all"
+              >
+                <h3 className="text-xl font-bold mb-2">{combo.comboName}</h3>
+
+                <div className="text-sm space-y-1 mb-4">
+                  <p>
+                    <span className="font-semibold text-blue-300">Tipo:</span>{" "}
+                    {combo.type}
+                  </p>
+
+                  <p>
+                    <span className="font-semibold text-blue-300">Total Aura:</span>{" "}
+                    {totalAura}
+                  </p>
+
+                  <p>
+                    <span className="font-semibold text-blue-300">Energía:</span>{" "}
+                    {totalEnergy}
+                  </p>
+                </div>
+
+                <div className="flex justify-between">
+                  <Link
+                    to={`/profile/${username}/combos/${combo.comboId}`}
+                    className="bg-primary hover:bg-primary/80 cursor-pointer text-white text-sm px-3 py-1 rounded-lg"
+                  >
+                    Ver detalles
+                  </Link>
+
+                  <Link
+                    to={`/profile/${username}/combos/${combo.comboId}/edit`}
+                    className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-sm px-3 py-1 rounded-lg"
+                  >
+                    Editar
+                  </Link>
+                </div>
               </div>
-
-              <div className="flex justify-between">
-                <Link
-                  to={`/profile/${username}/combos/${combo.comboId}`}
-                  className="bg-primary hover:bg-primary/80 cursor-pointer text-white text-sm px-3 py-1 rounded-lg"
-                >
-                  Ver detalles
-                </Link>
-
-                <Link
-                  to={`/profile/${username}/combos/${combo.comboId}/edit`}
-                  className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-sm px-3 py-1 rounded-lg"
-                >
-                  Editar
-                </Link>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       ) : (
         <p className="text-gray-400 italic text-center">

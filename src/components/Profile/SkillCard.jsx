@@ -30,6 +30,10 @@ const SkillCard = ({ skill, view = "card" }) => {
           <video
             src={skill.videoUrl}
             controls
+             autoPlay
+            loop
+            muted
+            playsInline
             className="rounded-lg mt-2 w-full"
           />
         )}

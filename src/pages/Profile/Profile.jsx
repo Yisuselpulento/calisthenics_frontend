@@ -117,7 +117,7 @@ const Profile = () => {
         </section>
       )}
       {!isCurrentUser && (
-        <section className="flex items-center justify-center h-full mt-20">
+        <section className="flex items-center justify-center h-full mt-10">
           <VsButton opponent={user} />
         </section>
       )}

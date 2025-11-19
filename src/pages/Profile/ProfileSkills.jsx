@@ -1,10 +1,11 @@
-import { useState } from "react"
-import { Link, useParams } from "react-router-dom"
-import ComboCard from "../../components/Profile/ComboCard"
-import SkillCard from "../../components/Profile/SkillCard"
-import { users } from "../../helpers/users"
-import { useAuth } from "../../context/AuthContext"
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import ComboCard from "../../components/Profile/ComboCard";
+import SkillCard from "../../components/Profile/SkillCard";
+import { users } from "../../helpers/users";
+import { useAuth } from "../../context/AuthContext";
 import { PiCards, PiCardsFill } from "react-icons/pi";
+import { calculateComboStats } from "../../helpers/skillUtils";
 
 const ProfileSkills = () => {
   const { username } = useParams();
@@ -15,25 +16,24 @@ const ProfileSkills = () => {
 
   if (!user)
     return (
-      <p className="text-white text-center mt-10">
-        Usuario no encontrado
-      </p>
+      <p className="text-white text-center mt-10">Usuario no encontrado</p>
     );
 
-  const sortedCombos = [...(user.combos || [])].sort((a, b) =>
-    a.isFavorite === b.isFavorite ? 0 : a.isFavorite ? -1 : 1
-  );
-
   const isOwner = currentUser?.username === username;
+
+  // Obtener combos favoritos
+  const favoriteCombos = Object.values(user.favoriteCombos)
+    .filter(Boolean)
+    .map((favId) => user.combos.find((c) => c.comboId === favId))
+    .filter(Boolean);
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
 
-      {/* === COMBOS === */}
+      {/* === COMBOS FAVORITOS === */}
       <section className="mb-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Combos</h2>
-
+          <h2 className="text-xl font-bold">Combos Favoritos</h2>
           {isOwner && (
             <Link
               to={`/profile/${username}/combos`}
@@ -44,17 +44,18 @@ const ProfileSkills = () => {
           )}
         </div>
 
-        {sortedCombos.length > 0 ? (
+        {favoriteCombos.length > 0 ? (
           <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-            {sortedCombos.map((combo) => (
-              <ComboCard key={combo.comboId} combo={combo} />
-            ))}
+            {favoriteCombos.map((combo) => {
+              const stats = calculateComboStats(combo);
+              return <ComboCard key={combo.comboId} combo={{ ...combo, ...stats }} />;
+            })}
           </div>
         ) : (
           <p className="text-gray-400 italic">
             {isOwner
-              ? "Aún no has creado combos."
-              : "Este usuario aún no ha creado combos."}
+              ? "Aún no tienes combos favoritos."
+              : "Este usuario aún no tiene combos favoritos."}
           </p>
         )}
       </section>
@@ -63,7 +64,6 @@ const ProfileSkills = () => {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Skills Desbloqueadas</h2>
-
           <button
             onClick={() => setCardView(!cardView)}
             className="text-sm bg-stone-800 hover:bg-gray-600 px-3 py-1 rounded-lg"
@@ -96,7 +96,6 @@ const ProfileSkills = () => {
           </p>
         )}
       </section>
-
     </div>
   );
 };
