@@ -1,8 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { users } from "../../helpers/users";
-import SkillCard from "../../components/Profile/SkillCard";
 import BackButton from "../../components/Buttons/BackButton";
 import { useAuth } from "../../context/AuthContext";
+import UserSkillCard from "../../components/Profile/UserSkillCard";
 
 const SkillsUser = () => {
   const { username } = useParams();
@@ -17,13 +17,21 @@ const SkillsUser = () => {
 
   const isOwner = currentUser?.username === username;
 
+  const handleDeleteSkill = (variantId) => {
+    const confirmDelete = confirm("¿Seguro que deseas eliminar esta skill?");
+    if (!confirmDelete) return;
+
+    user.skills = user.skills.filter((s) => s.variantId !== variantId);
+
+    alert("Skill eliminada");
+  };
+
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
       <div className="flex justify-between items-center mb-5">
         <h1 className="text-xl font-bold">Skills</h1>
 
         <div className="flex items-center gap-5">
-
           {isOwner && (
             <Link
               to={`/profile/${currentUser.username}/add-skill`}
@@ -32,15 +40,19 @@ const SkillsUser = () => {
               + Skill
             </Link>
           )}
-
-        <BackButton />
+          <BackButton />
         </div>
       </div>
 
       {user.skills?.length > 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid gap-1 sm:grid-cols-2 grid-cols-3">
           {user.skills.map((skill) => (
-            <SkillCard key={skill.variantId} skill={skill} view="card" />
+            <UserSkillCard
+              key={skill.variantId}
+              skill={skill}
+              ownerUsername={user.username}
+              onDelete={handleDeleteSkill}
+            />
           ))}
         </div>
       ) : (

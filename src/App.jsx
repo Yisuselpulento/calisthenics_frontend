@@ -23,6 +23,8 @@ import SkillsStatsPage from "./pages/SkillStatsPage"
 import TeamPage from "./pages/Teampage"
 import CreateTeamPage from "./pages/Teams/CreateTeamPage"
 import SkillsUser from "./pages/Profile/SkillsUser"
+import SkillDetail from "./pages/Profile/SkillDetail"
+import EditSkill from "./pages/Profile/EditSkill"
 
 function App() {
   return (
@@ -42,9 +44,11 @@ function App() {
                         <Route index element={<Profile />} /> 
                         <Route path="skills" element={<ProfileSkills />} /> 
                         <Route path="historial" element={<ProfileHistorial />} />
-                        <Route path="edit" element={<EditProfile />} />      
+                        <Route path="edit" element={<EditProfile />} />    
+                        <Route path="edit-skill/:variantId" element={<EditSkill/>} />  
                         <Route path="add-skill" element={<AddSkill />} />  
                         <Route path="combos/add" element={<AddCombo />} />
+                        <Route path="skills/:skillId/:variantId" element={<SkillDetail />} />
                         <Route path="skills/all-skills" element={<SkillsUser />} />
                           <Route path="combos" element={<CombosLayout />}>
                             <Route index element={<Combos />} /> 

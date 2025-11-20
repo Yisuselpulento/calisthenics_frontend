@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom"
 import { users } from "../../helpers/users"
 import { calculateComboStats } from "../../helpers/skillUtils"
+import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton"
 
 const Combos = () => {
   const { username } = useParams()
@@ -60,12 +61,11 @@ const Combos = () => {
                     Ver detalles
                   </Link>
 
-                  <Link
-                    to={`/profile/${username}/combos/${combo.comboId}/edit`}
-                    className="bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-sm px-3 py-1 rounded-lg"
-                  >
-                    Editar
-                  </Link>
+                  <EditAndDeleteButton
+                    editLink={`/profile/${username}/combos/${combo.comboId}/edit`}
+                    onDeleteClick={() => alert("Eliminar combo pronto")}  
+                    className="px-2 rounded"
+                  />
                 </div>
               </div>
             )
