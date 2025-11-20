@@ -4,6 +4,7 @@ import { users } from "../../helpers/users";
 import { useNavigate, Link } from "react-router-dom";
 import SelectCustom from "../../components/SelectCustom";
 import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
+import TeamButtonProfile from "../../components/Profile/TeamButtonProfile";
 
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
@@ -32,37 +33,45 @@ const EditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 🔹 Actualiza el currentUser en contexto
     updateCurrentUser(formData);
 
-    // 🔹 Actualiza también el array users (solo simulación local)
     const index = users.findIndex((u) => u._id === currentUser._id);
     if (index !== -1) users[index] = { ...users[index], ...formData };
 
-    // 🔹 Redirigir al perfil
     navigate(`/profile/${formData.username}`);
   };
 
+  const hasTeam = currentUser.teamIds && currentUser.teamIds.length > 0;
+
   return (
-     <div className="p-2 text-white min-h-screen">
+    <div className="p-2 text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Editar perfil</h2>
-        <div className="flex gap-2">
-              <Link
-                to={`/profile/${currentUser.username}/add-skill`}
-                className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 rounded-md transition"
-              >
-                + Skill
-              </Link>
 
-              <Link
-                to={`/profile/${currentUser.username}/combos/add`}
-                className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 rounded-md transition"
-              >
-                + Combo
-              </Link>
-            </div>
+        {/* 🔘 BOTONES DE ACCIÓN */}
+        <div className="flex gap-2">
+
+          {/* + Skill */}
+          <Link
+            to={`/profile/${currentUser.username}/add-skill`}
+            className="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 rounded-md transition"
+          >
+            + Skill
+          </Link>
+
+          {/* + Combo */}
+          <Link
+            to={`/profile/${currentUser.username}/combos/add`}
+            className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 rounded-md transition"
+          >
+            + Combo
+          </Link>
+
+           <TeamButtonProfile />
+        </div>
       </div>
+
+      {/* FORMULARIO */}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 max-w-md mx-auto bg-white/10 p-4 rounded-md backdrop-blur-md border border-white/20"
@@ -152,7 +161,7 @@ const EditProfile = () => {
 
         {/* Tipo */}
         <div>
-         <label className="block text-sm mb-1">Tipo de atleta</label>
+          <label className="block text-sm mb-1">Tipo de atleta</label>
 
           <SelectCustom
             value={formData.type}
@@ -167,11 +176,7 @@ const EditProfile = () => {
           />
         </div>
 
-
-        {/* Botón guardar */}
-        <ButtonSubmit type="submit">
-          Guardar cambios
-        </ButtonSubmit>
+        <ButtonSubmit type="submit">Guardar cambios</ButtonSubmit>
       </form>
     </div>
   );
