@@ -33,7 +33,7 @@ const NavBar = () => {
         {/* 📊 Botón de Stats */}
         <Link
           to="/skills-stats"
-          className="p-2 rounded-full bg-stone-800 text-gray-300 hover:text-white hover:bg-primary transition-colors"
+          className="hidden p-2 rounded-full bg-stone-800 text-gray-300 hover:text-white hover:bg-primary transition-colors"
         >
           <FaChartBar className="text-xl" />
         </Link>

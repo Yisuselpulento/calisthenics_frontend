@@ -10,6 +10,7 @@ import { HiMiniEyeSlash } from "react-icons/hi2";
 import { useAuth } from "../../context/AuthContext";
 import VsButton from "../../components/VsButton";
 import ButtonFollow from "../../components/Profile/ButtonFollow";
+import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 
 const Profile = () => {
   const { username } = useParams();
@@ -36,6 +37,19 @@ const Profile = () => {
   return (
     <div className="p-2 flex flex-col gap-2 min-h-screen">
       <section className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
+          {!isCurrentUser && (
+            <div className="absolute top-2 left-2 z-50">
+              <ButtonConfigProfile
+                isFollowing={isFollowing}
+                onUnfollowConfirmed={() =>
+                  console.log("Dejar de seguir a:", user._id)
+                }
+                onReportSend={(reason) =>
+                  console.log("Reporte enviado:", reason)
+                }
+              />
+            </div>
+          )}
         <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
             <img
               src={user.avatar}
