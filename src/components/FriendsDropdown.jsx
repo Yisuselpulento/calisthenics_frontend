@@ -106,7 +106,7 @@ const FriendsDropdown = ({ currentUser }) => {
             <div className="flex flex-col items-center justify-center h-28">
               <p className="text-gray-400 mb-3 text-sm">No tienes un team todavía</p>
               <button
-                onClick={() => navigate("/create-team")}
+                onClick={() => navigate("/teams/create")}
                 className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
               >
                 <FaPlus /> Crear Team

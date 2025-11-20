@@ -90,7 +90,7 @@ export default function Ranks() {
         <div className="bg-stone-900 rounded-xl p-2 space-y-1 border border-stone-700">
           {sortedTeams.map((team, i) => (
             <Link
-              to={`/team/${team._id}`}
+              to={`/teams/${team._id}`}
               key={team._id}
               className="block"
             >

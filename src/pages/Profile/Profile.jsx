@@ -9,6 +9,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { HiMiniEyeSlash } from "react-icons/hi2";
 import { useAuth } from "../../context/AuthContext";
 import VsButton from "../../components/VsButton";
+import ButtonFollow from "../../components/Profile/ButtonFollow";
 
 const Profile = () => {
   const { username } = useParams();
@@ -20,6 +21,7 @@ const Profile = () => {
   if (!user) return <p className="text-white">Usuario no encontrado</p>;
 
   const isCurrentUser = currentUser?._id === user._id;
+  const isFollowing = currentUser?.following?.includes(user._id);
 
   const color = getLevelColor(user.level);
   const bgColor = tailwindColors[color] || "#eab308";
@@ -34,13 +36,24 @@ const Profile = () => {
   return (
     <div className="p-2 flex flex-col gap-2 min-h-screen">
       <section className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
-        <img
-          src={user.avatar}
-          alt={user.name}
-          className="aspect-square w-34 h-34 xs:w-20 xs:h-20 rounded-full border object-cover"
-          style={{ borderColor: bgColor }}
-        />
-
+        <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
+            <img
+              src={user.avatar}
+              alt={user.name}
+              className="w-full h-full object-cover rounded-full border"
+              style={{ borderColor: bgColor }}
+            />
+            {!isCurrentUser && (
+          <ButtonFollow
+            targetUserId={user._id}
+            isFollowing={isFollowing}
+            onFollow={(id) => {
+              console.log("Seguir usuario:", id);
+              // Aquí luego puedes agregar lógica para backend o state global
+            }}
+          />
+        )}
+        </div>
         <div className="w-full">
           <div className="flex gap-3 items-center">
             <p className="text-xl mt-2">{user.name}</p>

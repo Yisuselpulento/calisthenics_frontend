@@ -21,6 +21,7 @@ import Ranks from "./pages/Ranks/Ranks"
 import Notifications from "./pages/Notifications"
 import SkillsStatsPage from "./pages/SkillStatsPage"
 import TeamPage from "./pages/Teampage"
+import CreateTeamPage from "./pages/Teams/CreateTeamPage"
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                   <Route path="/teams/:teamId" element={<TeamPage />} />
                   <Route path="/ranks" element={<Ranks />} />
                   <Route path="/notifications" element={<Notifications />} />
+                  <Route path="/teams/create" element={<CreateTeamPage />} />
                     <Route path="profile/:username" element={<ProfileLayout />}>
                         <Route index element={<Profile />} /> 
                         <Route path="skills" element={<ProfileSkills />} /> 
