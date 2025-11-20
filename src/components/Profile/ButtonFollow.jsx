@@ -8,7 +8,7 @@ const ButtonFollow = ({ targetUserId, isFollowing, onFollow }) => {
     <button
       onClick={() => onFollow(targetUserId)}
       className="
-        absolute -bottom-0 right-2
+        absolute bottom-0 right-2
         bg-primary hover:bg-primary/80
         text-white p-1 rounded-full
         shadow-md shadow-black/40

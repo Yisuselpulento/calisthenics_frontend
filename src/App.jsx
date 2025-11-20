@@ -22,6 +22,7 @@ import Notifications from "./pages/Notifications"
 import SkillsStatsPage from "./pages/SkillStatsPage"
 import TeamPage from "./pages/Teampage"
 import CreateTeamPage from "./pages/Teams/CreateTeamPage"
+import SkillsUser from "./pages/Profile/SkillsUser"
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                         <Route path="edit" element={<EditProfile />} />      
                         <Route path="add-skill" element={<AddSkill />} />  
                         <Route path="combos/add" element={<AddCombo />} />
+                        <Route path="skills/all-skills" element={<SkillsUser />} />
                           <Route path="combos" element={<CombosLayout />}>
                             <Route index element={<Combos />} /> 
                             <Route path=":comboId" element={<ComboDetails />} /> 

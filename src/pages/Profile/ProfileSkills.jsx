@@ -64,12 +64,22 @@ const ProfileSkills = () => {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Skills Desbloqueadas</h2>
-          <button
-            onClick={() => setCardView(!cardView)}
-            className="text-sm bg-stone-800 hover:bg-gray-600 px-3 py-1 rounded-lg"
-          >
-            {cardView ? <PiCards /> : <PiCardsFill />}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCardView(!cardView)}
+              className="text-sm bg-stone-800 hover:bg-gray-600 px-3 py-1 rounded-lg"
+            >
+              {cardView ? <PiCards /> : <PiCardsFill />}
+            </button>
+
+            {/* ➡ LINK A LA PÁGINA DE TODAS LAS SKILLS */}
+            <Link
+              to={`all-skills`}
+              className="text-sm text-blue-500 hover:underline"
+            >
+              Ver todas →
+            </Link>
+          </div>
         </div>
 
         {user.skills?.length > 0 ? (
