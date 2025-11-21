@@ -1,5 +1,3 @@
-// components/Profile/ConfirmUnfollowModal.jsx
-import React from "react";
 
 const ConfirmUnfollowModal = ({ isOpen, onCancel, onConfirm }) => {
   if (!isOpen) return null;

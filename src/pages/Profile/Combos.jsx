@@ -1,16 +1,31 @@
-import { useParams, Link } from "react-router-dom"
-import { users } from "../../helpers/users"
-import { calculateComboStats } from "../../helpers/skillUtils"
-import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton"
+import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { users } from "../../helpers/users";
+import { calculateComboStats } from "../../helpers/skillUtils";
+import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
+import ConfirmDeleteModal from "../../components/Modals/ConfirmDeleteModal";
 
 const Combos = () => {
-  const { username } = useParams()
-  const user = users.find((u) => u.username === username)
+  const { username } = useParams();
+  const user = users.find((u) => u.username === username);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [comboToDelete, setComboToDelete] = useState(null);
 
   if (!user)
-    return <p className="text-white text-center mt-10">Usuario no encontrado</p>
+    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
 
-  const combos = user.combos || []
+  const combos = user.combos || [];
+
+  const handleDeleteClick = (comboId) => {
+    setComboToDelete(comboId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    console.log("Eliminar combo:", comboToDelete);
+    setShowDeleteModal(false);
+  };
 
   return (
     <div className="max-w-5xl mx-auto text-white min-h-screen">
@@ -27,7 +42,7 @@ const Combos = () => {
       {combos.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {combos.map((combo) => {
-            const { totalAura, totalEnergy } = calculateComboStats(combo)
+            const { totalAura, totalEnergy } = calculateComboStats(combo);
 
             return (
               <div
@@ -41,12 +56,10 @@ const Combos = () => {
                     <span className="font-semibold text-blue-300">Tipo:</span>{" "}
                     {combo.type}
                   </p>
-
                   <p>
                     <span className="font-semibold text-blue-300">Total Aura:</span>{" "}
                     {totalAura}
                   </p>
-
                   <p>
                     <span className="font-semibold text-blue-300">Energía:</span>{" "}
                     {totalEnergy}
@@ -63,12 +76,12 @@ const Combos = () => {
 
                   <EditAndDeleteButton
                     editLink={`/profile/${username}/combos/${combo.comboId}/edit`}
-                    onDeleteClick={() => alert("Eliminar combo pronto")}  
+                    onDeleteClick={() => handleDeleteClick(combo.comboId)}
                     className="px-2 rounded"
                   />
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       ) : (
@@ -76,8 +89,17 @@ const Combos = () => {
           Aún no has creado combos.
         </p>
       )}
-    </div>
-  )
-}
 
-export default Combos
+      {/* MODAL */}
+      {showDeleteModal && (
+        <ConfirmDeleteModal
+          isOpen={showDeleteModal}
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={confirmDelete}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Combos;

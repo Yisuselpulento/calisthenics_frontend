@@ -25,6 +25,7 @@ import CreateTeamPage from "./pages/Teams/CreateTeamPage"
 import SkillsUser from "./pages/Profile/SkillsUser"
 import SkillDetail from "./pages/Profile/SkillDetail"
 import EditSkill from "./pages/Profile/EditSkill"
+import UserFriendsPage from "./pages/Profile/UserFriendsPage"
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                         <Route path="combos/add" element={<AddCombo />} />
                         <Route path="skills/:skillId/:variantId" element={<SkillDetail />} />
                         <Route path="skills/all-skills" element={<SkillsUser />} />
+                        <Route path="friends" element={<UserFriendsPage />} />
                           <Route path="combos" element={<CombosLayout />}>
                             <Route index element={<Combos />} /> 
                             <Route path=":comboId" element={<ComboDetails />} /> 

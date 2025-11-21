@@ -95,6 +95,7 @@ const ProfileSkills = () => {
                 key={skill.variantId}
                 skill={skill}
                 view={cardView ? "detail" : "card"}
+                ownerUsername={username}
               />
             ))}
           </div>

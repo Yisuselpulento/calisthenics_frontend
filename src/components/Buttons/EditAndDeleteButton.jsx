@@ -19,7 +19,7 @@ const EditAndDeleteButton = ({
       {/* ELIMINAR */}
       <button
         onClick={onDeleteClick}
-        className={`${className} bg-red-500` }
+        className={`${className} bg-red-500 cursor-pointer` }
       >
         Eliminar
       </button>
