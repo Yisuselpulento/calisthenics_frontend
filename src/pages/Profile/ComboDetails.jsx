@@ -70,10 +70,17 @@ const ComboDetails = () => {
               />
             )}
 
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              {skill.holdSeconds > 0 && <p>⏱ Hold: {skill.hholdSeconds}s</p>}
-              {skill.reps > 0 && <p>🔁 Reps: {skill.reps}</p>}
-              <p>💫 Aura: {skill.damage}</p>
+           <div className="grid grid-cols-2 gap-2 text-sm">
+              {skill.holdSeconds > 0 && (
+                <p>⏱ Hold: {skill.holdSeconds}s</p>
+              )}
+
+              {skill.reps > 0 && (
+                <p>🔁 Reps: {skill.reps}</p>
+              )}
+
+              <p>💫 Aura generada: {skill.damage}</p>
+              <p>⚡ Energía usada: {skill.energy}</p>
             </div>
           </div>
         ))}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { notifications } from "../helpers/notifications";
 
-const NotificationsDropdown = ({ currentUser }) => {
+const NotificationsDropdown = ({ currentUser, closeDropdown  }) => {
   const userNotifications = notifications
     .filter((n) => n.userId === currentUser._id)
     .sort((a, b) => b.createdAt - a.createdAt);
@@ -34,11 +34,12 @@ const NotificationsDropdown = ({ currentUser }) => {
 
       <div className="border-t border-stone-700 mt-3 pt-2 text-center">
         <Link
-          to="/notifications"
-          className="text-blue-400 text-sm hover:underline"
-        >
-          Ver todas
-        </Link>
+            to="/notifications"
+            onClick={closeDropdown}
+            className="text-blue-400 text-sm hover:underline"
+          >
+            Ver todas
+          </Link>
       </div>
     </div>
   );

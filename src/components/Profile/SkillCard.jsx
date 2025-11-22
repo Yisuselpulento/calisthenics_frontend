@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { skills } from "../../helpers/skills";
 import { useAuth } from "../../context/AuthContext";
-import { FaFlag } from "react-icons/fa";
 import ReportSkillUserModal from "../Modals/ReportSkillUserModal";
+import { GoReport } from "react-icons/go";
 
 const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   const { currentUser } = useAuth();
@@ -38,9 +38,9 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
         {!isOwner && (
           <button
             onClick={() => setShowReportModal(true)}
-            className="absolute top-2 right-2 text-red-500 hover:text-red-400"
+            className="absolute top-2 right-2 bg-stone-800 p-1 rounded-full hover:bg-stone-700"
           >
-            <FaFlag className="text-lg" />
+            <GoReport />
           </button>
         )}
 

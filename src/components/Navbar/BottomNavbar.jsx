@@ -13,12 +13,17 @@ const BottomNavbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const isActive = (path) => location.pathname === path;
+  const closeDropdown = () => setShowDropdown(false);
 
   return (
     <div className="fixed h-[55px] bottom-0 rounded-t-xl left-0 w-full bg-stone-900 border-t border-stone-700 flex justify-around items-center py-2 z-50">
+
       {/* 🏠 HOME */}
       <button
-        onClick={() => navigate("/")}
+        onClick={() => {
+          closeDropdown();
+          navigate("/");
+        }}
         className={`text-xl transition-colors ${
           isActive("/") ? "text-primary" : "text-white hover:text-primary"
         }`}
@@ -28,30 +33,39 @@ const BottomNavbar = () => {
 
       {/* 🏆 RANKS */}
       <button
-        onClick={() => navigate("/ranks")}
+        onClick={() => {
+          closeDropdown();
+          navigate("/ranks");
+        }}
         className={`text-xl transition-colors ${
-          isActive("/ranks") ?  "text-primary" : "text-white hover:text-primary"
+          isActive("/ranks") ? "text-primary" : "text-white hover:text-primary"
         }`}
       >
         <FaRankingStar />
       </button>
 
       {/* 👥 FRIENDS */}
-      <div className="relative">
+     <div className="relative flex items-center justify-center h-[28px]">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
           className={`text-xl transition-colors ${
-            showDropdown ?  "text-primary" : "text-white hover:text-primary"
+            showDropdown ? "text-primary" : "text-white hover:text-primary"
           }`}
         >
           <FaUserFriends />
         </button>
-        {showDropdown && <FriendsDropdown currentUser={currentUser} />}
+
+        {showDropdown && (
+          <FriendsDropdown currentUser={currentUser} />
+        )}
       </div>
 
       {/* 👤 PROFILE */}
       <button
-        onClick={() => navigate(`/profile/${currentUser.username}`)}
+        onClick={() => {
+          closeDropdown();
+          navigate(`/profile/${currentUser.username}`);
+        }}
         className={`text-xl transition-colors ${
           location.pathname.startsWith(`/profile/${currentUser.username}`)
             ? "text-primary"

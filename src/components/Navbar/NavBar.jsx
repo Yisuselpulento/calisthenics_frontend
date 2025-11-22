@@ -27,7 +27,11 @@ const NavBar = () => {
             <FaBell className="text-xl" />
           </button>
 
-          {showDropdown && <NotificationsDropdown currentUser={currentUser} />}
+          {showDropdown && (
+            <NotificationsDropdown
+              currentUser={currentUser}
+              closeDropdown={() => setShowDropdown(false)}
+            /> )}
         </div>
 
         {/* 📊 Botón de Stats */}

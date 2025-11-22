@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { GoReport } from "react-icons/go";
 import { users } from "../../helpers/users";
 import { skills } from "../../helpers/skills";
 import BackButton from "../../components/Buttons/BackButton";
@@ -68,9 +69,9 @@ const SkillDetail = () => {
           /* NO OWNER = Botón de Reportar */
           <button
             onClick={() => setShowReportModal(true)}
-            className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition"
+            className="px-3 py-1 bg-stone-800 text-white rounded-lg text-sm hover:bg-stone-700 transition"
           >
-            Reportar
+            <GoReport />
           </button>
         )}
       </div>
