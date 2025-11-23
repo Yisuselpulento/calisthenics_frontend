@@ -6,7 +6,8 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
     users.find((u) => u._id === "u1")
-  );
+  ); 
+ /*  const [currentUser, setCurrentUser] = useState(null); */
 
   const updateCurrentUser = (updatedData) => {
     setCurrentUser((prev) => ({ ...prev, ...updatedData }));
