@@ -1,8 +1,10 @@
 const ComboCard = ({ combo }) => {
+  if (!combo) return null; 
+
   return (
     <div className="bg-white/5 border border-white/10 rounded-2xl p-4 shadow-md hover:shadow-lg transition-all">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold text-white">{combo.comboName}</h3>
+        <h3 className="text-lg font-semibold text-white">{combo.name || "Combo sin nombre"}</h3>
         <span
           className={`text-xs px-2 py-1 rounded-full ${
             combo.type === "static"
@@ -12,17 +14,15 @@ const ComboCard = ({ combo }) => {
               : "bg-yellow-500/50 text-yellow-300"
           }`}
         >
-          {combo.type}
+          {combo.type || "unknown"}
         </span>
       </div>
+
       <p className="text-xs text-gray-400">
-        Skills incluidas: {combo.skills.length}
+        Skills incluidas: {Array.isArray(combo.elements) ? combo.elements.length : 0}
       </p>
       <p className="text-xs text-gray-400">
-        Aura total usada: {combo.totalAura || 0}
-      </p>
-      <p className="text-xs text-gray-400">
-        Energía total usada: {combo.totalEnergy || 0}
+        Energía total : {combo.totalEnergyCost || 0}
       </p>
     </div>
   );

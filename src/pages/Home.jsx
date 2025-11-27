@@ -1,18 +1,36 @@
-import { activities } from "../helpers/activities";
+import { useEffect, useState } from "react";
+import { getFeedEventsService } from "../Services/feedFetching.js";
 import PostCard from "../components/Cards/PostCard";
 
 const Home = () => {
-  // Ordena las actividades más recientes
-  const sortedActivities = [...activities].sort(
-    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-  );
+  const [feed, setFeed] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadFeed = async () => {
+      const res = await getFeedEventsService();
+
+      if (res.success) {
+        setFeed(res.data);
+        console.log("Feed cargado:", res.data);
+      } else {
+        console.error(res.message);
+      }
+
+      setLoading(false);
+    };
+
+    loadFeed();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center text-gray-400 mt-20">Cargando feed...</p>;
+  }
 
   return (
     <div className="p-2 flex flex-col gap-4">
-      {sortedActivities.length > 0 ? (
-        sortedActivities.map((activity) => (
-          <PostCard key={activity._id} activity={activity} />
-        ))
+      {feed.length > 0 ? (
+        feed.map((event) => <PostCard key={event._id} activity={event} />)
       ) : (
         <p className="text-gray-400 text-center mt-20">
           No hay actividades recientes.

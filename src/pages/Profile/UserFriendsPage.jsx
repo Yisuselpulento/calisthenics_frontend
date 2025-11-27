@@ -1,38 +1,87 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useMemo } from "react";
-import { users } from "../../helpers/users";
+import { useState, useEffect, useMemo } from "react";
+
+import {
+  getFollowersService,
+  getFollowingService,
+  toggleFollowService,
+} from "../../Services/followFetching.js";
+
 import ConfirmUnfollowModal from "../../components/Modals/ConfirmUnfollowModal";
+import { useAuth } from "../../context/AuthContext";
 
 const UserFriendsPage = () => {
   const { username } = useParams();
+  const { viewedProfile, profileLoading, loadProfile, updateCurrentUser } =
+    useAuth();
 
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [tab, setTab] = useState("following");
   const [search, setSearch] = useState("");
-
-  // 🔥 Estado para el modal de "unfollow"
   const [unfollowTarget, setUnfollowTarget] = useState(null);
 
-  const user = users.find((u) => u.username === username);
+  // 🔍 Cargar perfil al cambiar username
+  useEffect(() => {
+    loadProfile(username);
+  }, [username]);
 
-  if (!user)
-    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
+  // 🔍 Cargar seguidores / seguidos
+  useEffect(() => {
+    if (!viewedProfile?._id) return;
 
-  const followers = users.filter((u) => user.followers?.includes(u._id));
-  const following = users.filter((u) => user.following?.includes(u._id));
+    const loadData = async () => {
+      const f1 = await getFollowersService(viewedProfile._id);
+      const f2 = await getFollowingService(viewedProfile._id);
 
+      if (f1.success) setFollowers(f1.followers);
+      if (f2.success) setFollowing(f2.following);
+    };
+
+    loadData();
+  }, [viewedProfile]);
+
+  // 🔍 Filtrar lista según tab y búsqueda
   const filteredList = useMemo(() => {
     const base = tab === "following" ? following : followers;
-
     return base.filter(
       (u) =>
-        u.name.toLowerCase().includes(search.toLowerCase()) ||
+        u.fullName.toLowerCase().includes(search.toLowerCase()) ||
         u.username.toLowerCase().includes(search.toLowerCase())
     );
   }, [tab, search, following, followers]);
 
+  if (profileLoading)
+    return <p className="text-white text-center mt-10">Cargando…</p>;
+  if (!viewedProfile)
+    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
+
+  const user = viewedProfile;
+
+  // 🔄 Manejar toggle follow / unfollow
+  const handleToggleFollow = async (targetUser) => {
+    const res = await toggleFollowService(targetUser._id);
+    if (res.success) {
+      // Actualizar lista local de following
+      setFollowing((prev) =>
+        prev.some((u) => u._id === targetUser._id)
+          ? prev.filter((u) => u._id !== targetUser._id)
+          : [...prev, targetUser]
+      );
+
+      // Si estamos viendo nuestro propio perfil, actualizar en el context
+      if (user._id === viewedProfile._id) {
+        const updatedFollowing = following.some((u) => u._id === targetUser._id)
+          ? following.filter((u) => u._id !== targetUser._id)
+          : [...following, targetUser];
+        updateCurrentUser({ ...viewedProfile, following: updatedFollowing });
+      }
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto text-white p-2">
-      {/* 🔥 Tabs */}
+      {/* TABS */}
       <div className="flex justify-center gap-4 mb-6">
         <button
           onClick={() => setTab("following")}
@@ -57,46 +106,48 @@ const UserFriendsPage = () => {
         </button>
       </div>
 
-      {/* 🔍 Buscador */}
+      {/* BUSCADOR */}
       <input
-        type="text"
-        placeholder="Buscar usuario..."
+        placeholder="Buscar usuario…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full mb-4 px-4 py-2 bg-stone-800 text-white rounded-lg border border-stone-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
 
-      {/* 🔥 Lista */}
+      {/* LISTA */}
       <div className="space-y-1 max-h-[70vh] overflow-y-auto pr-1">
-        {filteredList.map((f) => {
-          const isFollowing = user.following.includes(f._id);
+        {filteredList.map((person) => {
+          const isFollowing = following.some((f) => f._id === person._id);
 
           return (
             <div
-              key={f._id}
+              key={person._id}
               className="flex items-center justify-between bg-stone-800 p-3 rounded-lg hover:bg-stone-700"
             >
-              <Link to={`/profile/${f.username}`} className="flex items-center gap-3">
+              <Link
+                to={`/profile/${person.username}`}
+                className="flex items-center gap-3"
+              >
                 <img
-                  src={f.avatar}
-                  alt={f.name}
+                  src={person.avatar}
                   className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-medium">{f.name}</p>
-                  <p className="text-xs text-gray-400">@{f.username}</p>
+                  <p className="font-medium">{person.fullName}</p>
+                  <p className="text-xs text-gray-400">@{person.username}</p>
                 </div>
               </Link>
 
-              {/* 🔘 Botón "Dejar de seguir" — solo si lo sigue */}
-              {isFollowing && (
-                <button
-                  onClick={() => setUnfollowTarget(f)}
-                  className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 rounded"
-                >
-                  Dejar de seguir
-                </button>
-              )}
+              <button
+                onClick={() => handleToggleFollow(person)}
+                className={`px-3 py-1 text-xs rounded ${
+                  isFollowing
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
+              >
+                {isFollowing ? "Dejar de seguir" : "Seguir"}
+              </button>
             </div>
           );
         })}
@@ -108,14 +159,15 @@ const UserFriendsPage = () => {
         )}
       </div>
 
-      {/* 🔥 Modal de Confirmación */}
+      {/* MODAL CONFIRM UNFOLLOW */}
       <ConfirmUnfollowModal
         isOpen={!!unfollowTarget}
         onCancel={() => setUnfollowTarget(null)}
-        onConfirm={() => {
-          // Aquí luego harás la lógica real para dejar de seguir
-          console.log("Dejaste de seguir a:", unfollowTarget?.username);
-          setUnfollowTarget(null);
+        onConfirm={async () => {
+          if (unfollowTarget) {
+            await handleToggleFollow(unfollowTarget);
+            setUnfollowTarget(null);
+          }
         }}
       />
     </div>

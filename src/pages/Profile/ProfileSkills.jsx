@@ -1,31 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import ComboCard from "../../components/Profile/ComboCard";
 import SkillCard from "../../components/Profile/SkillCard";
-import { users } from "../../helpers/users";
 import { useAuth } from "../../context/AuthContext";
 import { PiCards, PiCardsFill } from "react-icons/pi";
-import { calculateComboStats } from "../../helpers/skillUtils";
 
 const ProfileSkills = () => {
   const { username } = useParams();
+  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
   const [cardView, setCardView] = useState(false);
-  const { currentUser } = useAuth();
 
-  const user = users.find((u) => u.username === username);
+  // 🔍 Cargar perfil al cambiar username
+  useEffect(() => {
+    loadProfile(username);
+  }, [username]);
 
-  if (!user)
-    return (
-      <p className="text-white text-center mt-10">Usuario no encontrado</p>
-    );
+  if (profileLoading) 
+    return <p className="text-white text-center mt-10">Cargando...</p>;
+  if (!viewedProfile) 
+    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
 
+  const user = viewedProfile;
   const isOwner = currentUser?.username === username;
 
-  // Obtener combos favoritos
-  const favoriteCombos = Object.values(user.favoriteCombos)
+  // Combos favoritos reconstruidos desde IDs
+  const favoriteCombos = Object.values(user.favoriteCombos || {})
     .filter(Boolean)
-    .map((favId) => user.combos.find((c) => c.comboId === favId))
+    .map((favId) => user.combos?.find((c) => c._id === favId))
     .filter(Boolean);
+
+  // Skills desbloqueadas
+  const userVariants = [];
+  user.skills?.forEach((userSkill) => {
+    userSkill.variants.forEach((variant) => {
+      userVariants.push({
+        _id: variant._id,       // id de la variante del usuario
+        skill: userSkill.skill, // objeto skill completo
+        variantKey: variant.variantKey,
+        fingers: variant.fingers,
+        video: variant.video,
+        staticAU: variant.staticAU,
+        dynamicAU: variant.dynamicAU,
+        type: variant.type,
+        name: variant.name
+      });
+    });
+  });
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
@@ -46,16 +66,15 @@ const ProfileSkills = () => {
 
         {favoriteCombos.length > 0 ? (
           <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-            {favoriteCombos.map((combo) => {
-              const stats = calculateComboStats(combo);
-              return <ComboCard key={combo.comboId} combo={{ ...combo, ...stats }} />;
-            })}
+            {favoriteCombos.map((combo) => (
+              <ComboCard key={combo._id} combo={combo} />
+            ))}
           </div>
         ) : (
           <p className="text-gray-400 italic">
             {isOwner
               ? "Aún no tienes combos favoritos."
-              : "Este usuario aún no tiene combos."}
+              : "Este usuario aún no tiene combos favoritos."}
           </p>
         )}
       </section>
@@ -72,7 +91,6 @@ const ProfileSkills = () => {
               {cardView ? <PiCards /> : <PiCardsFill />}
             </button>
 
-            {/* ➡ LINK A LA PÁGINA DE TODAS LAS SKILLS */}
             <Link
               to={`all-skills`}
               className="text-sm text-blue-500 hover:underline"
@@ -82,7 +100,7 @@ const ProfileSkills = () => {
           </div>
         </div>
 
-        {user.skills?.length > 0 ? (
+        {userVariants.length > 0 ? (
           <div
             className={
               cardView
@@ -90,10 +108,10 @@ const ProfileSkills = () => {
                 : "grid gap-2 sm:grid-cols-2 md:grid-cols-3"
             }
           >
-            {user.skills.map((skill) => (
+            {userVariants.map((us) => (
               <SkillCard
-                key={skill.variantId}
-                skill={skill}
+                key={us._id}
+                skill={us} // ya contiene skill + variants
                 view={cardView ? "detail" : "card"}
                 ownerUsername={username}
               />

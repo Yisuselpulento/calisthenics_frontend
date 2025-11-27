@@ -1,79 +1,74 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import { Link, useParams } from "react-router-dom";
+import { HiMiniEyeSlash } from "react-icons/hi2";
+import { IoEyeSharp } from "react-icons/io5";
+import { useAuth } from "../../context/AuthContext";
 import ProgressBar from "../../components/ProgressBar";
 import { getLevelColor } from "../../helpers/getLevelColor";
 import { tailwindColors } from "../../helpers/tailwindColor";
-import { users } from "../../helpers/users";
-import { teams } from "../../helpers/teams"; // 👈 AGREGA ESTO
-import { Link, useParams } from "react-router-dom";
-import { IoEyeSharp } from "react-icons/io5";
-import { HiMiniEyeSlash } from "react-icons/hi2";
-import { useAuth } from "../../context/AuthContext";
 import VsButton from "../../components/VsButton";
 import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 
 const Profile = () => {
   const { username } = useParams();
-  const { currentUser } = useAuth();
-  const user = users.find((u) => u.username === username);
-
+  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
   const [showMore, setShowMore] = useState(false);
 
-  if (!user) return <p className="text-white">Usuario no encontrado</p>;
+  // 🔍 Cargar perfil cuando cambia el username
+  useEffect(() => {
+    loadProfile(username);
+  }, [username]); 
 
+  if (profileLoading) return <p className="text-white">Cargando...</p>;
+  if (!viewedProfile) return <p className="text-white">Usuario no encontrado</p>;
+
+  const user = viewedProfile; // Alias para no cambiar todo el código
   const isCurrentUser = currentUser?._id === user._id;
   const isFollowing = currentUser?.following?.includes(user._id);
 
-  const color = getLevelColor(user.level);
+  const color = getLevelColor(user);
   const bgColor = tailwindColors[color] || "#eab308";
   const borderColor = bgColor + "CC";
 
-  // 🔍 Buscar TEAM del usuario (usa solo el primero)
-  const userTeam =
-    user.teamIds && user.teamIds.length > 0
-      ? teams.find((t) => t._id === user.teamIds[0])
-      : null;
+  const userTeam = user.teams && user.teams.length > 0 ? user.teams[0] : null;
+  const showPesoAltura = user.peso != null || user.altura != null;
 
   return (
     <div className="p-2 flex flex-col gap-2 min-h-screen">
+      {/* PERFIL */}
       <section className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
-          {!isCurrentUser && (
-            <div className="absolute top-2 left-2 z-50">
-              <ButtonConfigProfile
-                isFollowing={isFollowing}
-                onUnfollowConfirmed={() =>
-                  console.log("Dejar de seguir a:", user._id)
-                }
-                onReportSend={(reason) =>
-                  console.log("Reporte enviado:", reason)
-                }
-              />
-            </div>
-          )}
-        <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
-            <img
-              src={user.avatar}
-              alt={user.name}
-              className="w-full h-full object-cover rounded-full border"
-              style={{ borderColor: bgColor }}
+        {!isCurrentUser && (
+          <div className="absolute top-2 left-2 z-50">
+            <ButtonConfigProfile
+              isFollowing={isFollowing}
+              onUnfollowConfirmed={() => console.log("Dejar de seguir a:", user._id)}
+              onReportSend={(reason) => console.log("Reporte enviado:", reason)}
             />
-            {!isCurrentUser && (
-          <ButtonFollow
-            targetUserId={user._id}
-            isFollowing={isFollowing}
-            onFollow={(id) => {
-              console.log("Seguir usuario:", id);
-              // Aquí luego puedes agregar lógica para backend o state global
-            }}
-          />
+          </div>
         )}
-        </div>
-        <div className="w-full">
-          <div className="flex gap-3 items-center">
-            <p className="text-xl mt-2">{user.name}</p>
 
+        <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
+          <img
+            src={user.avatar}
+            alt={user.fullName}
+            className="w-full h-full object-cover rounded-full border"
+            style={{ borderColor: bgColor }}
+          />
+          {!isCurrentUser && (
+            <ButtonFollow
+              targetUserId={user._id}
+              isFollowing={isFollowing}
+              onFollow={(id) => console.log("Seguir usuario:", id)}
+            />
+          )}
+        </div>
+
+        <div className="w-full">
+          <div className="flex gap-3 items-center relative">
+            <p className="text-xl mt-2">{user.fullName}</p>
             <p
-              className={`rounded-md px-1 text-xs absolute top-2 right-2 border text-center ${
+              className={`rounded-md px-1 text-xs absolute -top-1 -right-1 border text-center ${
                 bgColor === "#ffffff" ? "text-gray-800" : "text-white"
               }`}
               style={{
@@ -81,14 +76,16 @@ const Profile = () => {
                 border: `1px solid ${borderColor}`,
               }}
             >
-              {user.type}
+              {user.profileType}
             </p>
           </div>
 
-          <div className="flex gap-2 text-xs">
-            <p>Peso: {user.peso}</p>
-            <p>Altura: {user.altura}</p>
-          </div>
+          {showPesoAltura && (
+            <div className="flex gap-2 text-xs">
+              {user.peso != null && <p>Peso: {user.peso} kg</p>}
+              {user.altura != null && <p>Altura: {user.altura} m</p>}
+            </div>
+          )}
 
           {isCurrentUser && (
             <Link
@@ -99,10 +96,10 @@ const Profile = () => {
             </Link>
           )}
 
-          <div>
-            <div className="flex items-center gap-2 mt-5">
-              <p className="text-xs font-bold">AU : {user.level}</p>
-
+          {/* AU */}
+          <div className="mt-4">
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-bold">AU: {user.stats?.mainAura || 0}</p>
               <button
                 onClick={() => setShowMore((prev) => !prev)}
                 className="text-[10px] px-2 py-1 border rounded-md hover:bg-gray-700 transition-all"
@@ -111,50 +108,42 @@ const Profile = () => {
               </button>
             </div>
 
-            <ProgressBar level={user.level} maxLevel={18000} label="Main AU" />
+            <ProgressBar level={user.stats?.mainAura || 0} maxLevel={18000} label="Main AU" />
 
             {showMore && (
               <div className="mt-1 flex flex-col animate-fadeIn">
-                <ProgressBar
-                  level={user.staticAu}
-                  maxLevel={9000}
-                  label="Static AU"
-                />
-                <ProgressBar
-                  level={user.dynamicAu}
-                  maxLevel={9000}
-                  label="Dynamic AU"
-                />
+                <ProgressBar level={user.stats?.staticAura || 0} maxLevel={9000} label="Static AU" />
+                <ProgressBar level={user.stats?.dynamicAura || 0} maxLevel={9000} label="Dynamic AU" />
               </div>
             )}
           </div>
         </div>
       </section>
 
-      {/* 🏆 TEAM SECTION */}
-      <section className="flex justify-center items-center">
-        {userTeam && (
+      {/* TEAM */}
+      {userTeam && (
+        <section className="flex justify-center items-center mt-3">
           <Link
             to={`/teams/${userTeam._id}`}
             className="flex flex-col items-center gap-2 w-full h-full"
           >
             <img
-              src={userTeam.logo}
+              src={userTeam.avatar}
               alt={userTeam.name}
               className="w-full h-[80px] object-cover rounded-lg border-[0.2px] border-gray-800 hover:opacity-90 transition"
             />
           </Link>
-        )}
-      </section>
+        </section>
+      )}
 
-      {/* FAVORITE VIDEOS */}
+      {/* FAVORITE SKILLS / VIDEOS */}
       {user.favoriteSkills?.length > 0 && (
-        <section className="flex gap-3 justify-center">
-          {user.favoriteSkills.map((video, index) => (
+        <section className="flex gap-3 justify-center mt-3">
+          {user.favoriteSkills.map((fs, index) => (
             <div key={index}>
               <video
                 className="w-30 h-60 object-cover rounded-md"
-                src={video.url}
+                src={fs.userSkill?.variants?.[0]?.video || ""}
                 controls
                 playsInline
               />
@@ -163,8 +152,9 @@ const Profile = () => {
         </section>
       )}
 
+      {/* VS BUTTON */}
       {!isCurrentUser && (
-        <section className="flex items-center justify-center h-full">
+        <section className="flex items-center justify-center h-full mt-3">
           <VsButton opponent={user} />
         </section>
       )}

@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { users } from "../helpers/users";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { searchUsersService } from "../Services/userFetching.js";
 
 const Searchbar = () => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
-   const { currentUser } = useAuth();
+  const { currentUser } = useAuth();
 
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
+  const handleSearch = async (e) => {
+    const value = e.target.value;
     setSearch(value);
 
     if (value.trim() === "") {
@@ -17,15 +17,18 @@ const Searchbar = () => {
       return;
     }
 
-    // Filtrar usuarios por nombre o username
-      const filtered = users.filter(
-      (u) =>
-        u._id !== currentUser._id && // ⬅️ excluir al usuario actual
-        (u.name.toLowerCase().includes(value) ||
-          u.username.toLowerCase().includes(value))
-    );
+    // Llamada al backend
+    const res = await searchUsersService(value);
 
-    setResults(filtered);
+    if (res.success) {
+      // Excluir al usuario actual
+      const filtered = res.data.filter(u => u._id !== currentUser._id);
+      console.log(filtered);
+      setResults(filtered);
+    } else {
+      setResults([]);
+      console.error(res.message);
+    }
   };
 
   return (
@@ -59,7 +62,7 @@ const Searchbar = () => {
                 className="w-8 h-8 rounded-full object-cover border border-white/30"
               />
               <div>
-                <p className="text-sm text-white">{user.name}</p>
+                <p className="text-sm text-white">{user.fullName}</p>
                 <p className="text-xs text-gray-400">@{user.username}</p>
               </div>
             </Link>

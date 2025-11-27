@@ -1,12 +1,54 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { useAuth } from "../../context/AuthContext"; // 🔥 IMPORTANTE
 
 const Login = () => {
-  const styleInput = "bg-stone-800 mt-1 p-2 w-full border border-gray-300 rounded-md";
+  const navigate = useNavigate();
+  const { login } = useAuth(); // 🔥 Usando login del AuthContext
+
+  const [loading, setLoading] = useState(false);
+
+  const styleInput =
+    "bg-stone-800 mt-1 p-2 w-full border border-gray-300 rounded-md";
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await login(formData);
+
+    if (!res.success) {
+      toast.error(res.message || "Credenciales incorrectas");
+      setLoading(false);
+      return;
+    }
+
+    toast.success("Bienvenido!");
+    navigate("/");
+  };
 
   return (
-    <div className="min-h-screen p-2 h-full flex items-center justify-center flex-col"> 
-      <p className="text-2xl font-bold mb-4">Inicia sesión</p>
-      <form className="backdrop-blur-md border border-white/20 shadow-md p-5 rounded-lg flex flex-col gap-4 w-full">
+    <div className="min-h-screen flex items-center justify-center flex-col p-4">
+      <p className="text-xl font-bold mb-4">Inicia Sesión</p>
+
+      <form
+        className="w-full max-w-md backdrop-blur-md border border-white/20 shadow-md p-5 rounded-lg flex flex-col gap-4"
+        onSubmit={handleSubmit}
+      >
         <div>
           <label htmlFor="email">Email</label>
           <input
@@ -14,42 +56,34 @@ const Login = () => {
             id="email"
             name="email"
             className={styleInput}
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
         </div>
 
         <div>
           <label htmlFor="password">Password</label>
-          <div className="relative">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className={styleInput}
-            />
-          </div>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className={styleInput}
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
         </div>
 
-        <button
-          type="submit"
-          className="bg-primary hover:bg-primary/80 text-white p-2 rounded-md"
-        >
-          Inicia sesión
-        </button>
+        <SubmitButton loading={loading} text="Iniciar sesión" />
 
-        <div className="items-center justify-center flex flex-col mt-4">
+        <div className="text-center mt-4">
           <p>
-            ¿No tienes una cuenta? Regístrate{" "}
+            ¿No tienes cuenta?{" "}
             <Link className="text-primary hover:text-primary/60" to="/signup">
-              aquí
+              registrate
             </Link>
           </p>
-
-          <Link
-            className="text-primary hover:text-primary/60"
-            to="/forgot-password"
-          >
-            Olvidé mi contraseña
-          </Link>
         </div>
       </form>
     </div>

@@ -1,12 +1,29 @@
 import { FaUserPlus } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import { toggleFollowService } from "../../Services/followFetching.js";
 
-const ButtonFollow = ({ targetUserId, isFollowing, onFollow }) => {
-  // ⛔ Si ya sigue, NO mostrar nada
+const ButtonFollow = ({ targetUserId, isFollowing }) => {
+  const { currentUser, updateCurrentUser } = useAuth();
+
+  // ⛔ Si ya sigue, no mostramos nada
   if (isFollowing) return null;
+
+  const handleFollow = async () => {
+    const res = await toggleFollowService(targetUserId);
+    if (res.success) {
+      // Actualizar el currentUser en el context
+      updateCurrentUser({
+        ...currentUser,
+        following: [...(currentUser.following || []), targetUserId],
+      });
+    } else {
+      console.error("Error al seguir al usuario:", res.message);
+    }
+  };
 
   return (
     <button
-      onClick={() => onFollow(targetUserId)}
+      onClick={handleFollow}
       className="
         absolute bottom-0 right-2
         bg-primary hover:bg-primary/80

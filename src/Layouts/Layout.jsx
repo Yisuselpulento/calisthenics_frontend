@@ -1,34 +1,37 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/Navbar/NavBar";
-import { users } from "../helpers/users";
 import BottomNavbar from "../components/Navbar/BottomNavbar";
+import { useAuth } from "../context/AuthContext";
 
 const Layout = () => {
   const location = useLocation();
+  const { currentUser } = useAuth();
 
   // Detecta si estamos en una página de perfil
   const isProfilePage = location.pathname.startsWith("/profile/");
   const username = location.pathname.split("/")[2];
-  const user = users.find((u) => u.username === username);
+
+  // Solo mostramos el video si es la página del usuario logueado
+  const showVideo = isProfilePage && currentUser?.username === username;
 
   return (
     <>
       {/* 🎥 Video de fondo global */}
-      {isProfilePage && user && (
+      {showVideo && currentUser?.videoProfile && (
         <div className="fixed inset-0 -z-10">
-          {/* Video */}
           <video
             className="w-full h-full object-cover"
-            src={user.videoProfile}
+            src={currentUser.videoProfile}
             autoPlay
             loop
             muted
             playsInline
           />
-          {/* Overlay negro */}
-          <div   className="absolute inset-0"
-               style={{ backgroundColor: 'rgba(0,0,0,0.7)' }} />
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+          />
         </div>
       )}
 
@@ -41,7 +44,9 @@ const Layout = () => {
         <main className="grow">
           <Outlet />
         </main>
-        <BottomNavbar/>
+
+        <BottomNavbar />
+
         <footer className="mt-20 bg-stone-950 text-white">
           <Footer />
         </footer>

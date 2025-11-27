@@ -37,10 +37,12 @@ import UpdatePassword from "./pages/AuthPages/UpdatePassword";
 // Middleware
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <BrowserRouter>
+    <Toaster position="top-right" />
       <AuthProvider>
         <ScrollToTop />
 
