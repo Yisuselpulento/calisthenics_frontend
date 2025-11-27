@@ -1,4 +1,4 @@
-/* const ConfirmLogoutModal = ({ isOpen, onCancel, onConfirm }) => {
+ const ConfirmLogoutModal = ({ isOpen, onCancel, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
@@ -31,4 +31,4 @@
 };
 
 export default ConfirmLogoutModal;
- */
+ 

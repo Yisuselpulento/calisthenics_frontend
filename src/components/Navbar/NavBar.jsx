@@ -4,7 +4,7 @@ import { FaUser, FaBell, FaChartBar } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import NotificationsDropdown from "../NotificationsDropdown";
-/* import ButtonLogout from "../Buttons/ButtonLogout"; */
+import ButtonLogout from "../Buttons/ButtonLogout"; 
 
 const NavBar = () => {
   const { currentUser } = useAuth();
@@ -34,7 +34,7 @@ const NavBar = () => {
               closeDropdown={() => setShowDropdown(false)}
             /> )}
         </div>
-      {/*     <ButtonLogout /> */}
+         <ButtonLogout /> 
 
         {/* 📊 Botón de Stats */}
         <Link
