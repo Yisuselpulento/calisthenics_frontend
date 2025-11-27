@@ -1,4 +1,4 @@
-import { useState } from "react";
+/* import { useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ConfirmLogoutModal from "../Modals/ConfirmLogoutModal";
@@ -38,3 +38,4 @@ const ButtonLogout = () => {
 };
 
 export default ButtonLogout;
+ */
