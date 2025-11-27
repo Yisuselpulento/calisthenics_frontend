@@ -121,7 +121,7 @@ function App() {
               <Route path="edit" element={<EditProfile />} />
 
               <Route path="skills/all-skills" element={<SkillsUser />} />
-              <Route path="skills/:skillId/:variantId" element={<SkillDetail />} />
+              <Route path="skills/:variantId" element={<SkillDetail />} />
 
               <Route path="edit-skill/:variantId" element={<EditSkill />} />
               <Route path="add-skill" element={<AddSkill />} />

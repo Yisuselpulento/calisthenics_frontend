@@ -30,22 +30,20 @@ const ProfileSkills = () => {
     .filter(Boolean);
 
   // Skills desbloqueadas
-  const userVariants = [];
-  user.skills?.forEach((userSkill) => {
-    userSkill.variants.forEach((variant) => {
-      userVariants.push({
-        _id: variant._id,       // id de la variante del usuario
-        skill: userSkill.skill, // objeto skill completo
-        variantKey: variant.variantKey,
-        fingers: variant.fingers,
-        video: variant.video,
-        staticAU: variant.staticAU,
-        dynamicAU: variant.dynamicAU,
-        type: variant.type,
-        name: variant.name
-      });
-    });
-  });
+  const userVariants = user.skills?.flatMap((userSkill) =>
+  userSkill.variants.map((variant) => ({        // id de la variante
+    variantKey: variant.variantKey,
+    fingers: variant.fingers,
+    video: variant.video,
+    name: variant.name,           // nombre de la variante
+    type: variant.type,
+    stats: variant.stats,         // stats de la variante
+    staticAU: variant.staticAU,
+    dynamicAU: variant.dynamicAU,
+    skillName: userSkill.skill.name, // nombre de la skill
+    skillId: userSkill.skill._id    // opcional, id de la skill
+  }))
+) || [];
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
@@ -108,10 +106,10 @@ const ProfileSkills = () => {
                 : "grid gap-2 sm:grid-cols-2 md:grid-cols-3"
             }
           >
-            {userVariants.map((us) => (
+            {userVariants.map((variant) => (
               <SkillCard
-                key={us._id}
-                skill={us} // ya contiene skill + variants
+                key={variant.variantKey}
+                skill={variant}        
                 view={cardView ? "detail" : "card"}
                 ownerUsername={username}
               />

@@ -11,16 +11,16 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
 
   if (!skill) return null;
 
-  // ✅ Desestructurando según la estructura real
+  // 🔹 Desestructurando según la nueva estructura
   const {
-    skill: skillInfo,   // objeto padre
+    skillName,
     variantKey,
     name,
     fingers,
     video,
     type,
-    staticAu,
-    dynamicAu,
+    staticAU,
+    dynamicAU,
   } = skill;
 
   const handleReport = (reason) => {
@@ -38,7 +38,6 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   if (view === "card") {
     return (
       <div className="relative bg-white/5 border border-white/10 rounded-2xl p-4 shadow-md hover:shadow-lg transition-all">
-
         {!isOwner && (
           <button
             onClick={() => setShowReportModal(true)}
@@ -49,13 +48,15 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
         )}
 
         <h3 className="text-white mb-1">{name || variantKey}</h3>
-        <p className="text-xs text-gray-400 mb-1">Skill: {skillInfo?.name}</p>
+        <p className="text-xs text-gray-400 mb-1">Skill: {skillName}</p>
+
         <p className="text-sm text-gray-300 mb-2">
-          🔹 Static AU: <span className="text-blue-400">{staticAu ?? 0}</span> | 🔸 Dynamic AU:{" "}
-          <span className="text-green-400">{dynamicAu ?? 0}</span>
+          🔹 Static AU: <span className="text-blue-400">{staticAU ?? 0}</span> | 🔸 Dynamic AU:{" "}
+          <span className="text-green-400">{dynamicAU ?? 0}</span>
         </p>
-        <p className="text-xs text-gray-400 mb-2">Fingers: {fingers}</p>
-        <p className="text-xs text-gray-400 mb-2">Tipo: {type}</p>
+
+        <p className="text-xs text-gray-400 mb-1">Fingers: {fingers}</p>
+        <p className="text-xs text-gray-400 mb-1">Tipo: {type}</p>
 
         {video && (
           <video
@@ -80,13 +81,9 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
     );
   }
 
-  // ===================================================
-  //              🟧 VISTA DETALLADA
-  // ===================================================
   if (view === "detail") {
     return (
       <div className="relative bg-gray-800 p-3 rounded-xl border border-gray-700">
-
         {!isOwner && (
           <button
             onClick={() => setShowReportModal(true)}
@@ -95,13 +92,8 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
             <GoReport className="text-lg" />
           </button>
         )}
-
         <p className="font-bold">{name || variantKey}</p>
-        <p className="text-sm text-gray-400">Skill: {skillInfo?.name}</p>
-        <p className="text-sm text-gray-400">Static AU: {staticAu ?? 0}</p>
-        <p className="text-sm text-gray-400">Dynamic AU: {dynamicAu ?? 0}</p>
         <p className="text-sm text-gray-400">Fingers: {fingers}</p>
-        <p className="text-sm text-gray-400">Tipo: {type}</p>
 
         {showReportModal && (
           <ReportSkillUserModal
