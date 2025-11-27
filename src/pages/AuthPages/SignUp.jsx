@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { signup } = useAuth(); // 🔥 Usando register del AuthContext
+  const { signup } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const styleInput =
@@ -14,10 +14,12 @@ const SignUp = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
     gender: "",
+    profileType: "",
   });
 
   const handleChange = (e) => {
@@ -37,6 +39,11 @@ const SignUp = () => {
 
     if (!formData.gender) {
       toast.error("Debes seleccionar un género");
+      return;
+    }
+
+    if (!formData.profileType) {
+      toast.error("Debes seleccionar un tipo de perfil");
       return;
     }
 
@@ -64,7 +71,7 @@ const SignUp = () => {
         onSubmit={handleSubmit}
       >
         <div>
-          <label htmlFor="fullName">Name</label>
+          <label htmlFor="fullName">Nombre completo</label>
           <input
             type="text"
             id="fullName"
@@ -77,7 +84,21 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="username">Nombre de usuario</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="_monsster_"
+            value={formData.username}
+            onChange={handleChange}
+            className={styleInput}
+            required
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email">Correo</label>
           <input
             type="email"
             id="email"
@@ -90,7 +111,7 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Contraseña</label>
           <input
             type="password"
             id="password"
@@ -103,7 +124,7 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="confirmPassword">Confirm Password</label>
+          <label htmlFor="confirmPassword">Confirmar contraseña</label>
           <input
             type="password"
             id="confirmPassword"
@@ -116,7 +137,7 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="gender">Gender</label>
+          <label htmlFor="gender">Género</label>
           <select
             id="gender"
             name="gender"
@@ -126,10 +147,28 @@ const SignUp = () => {
             required
           >
             <option value="" disabled hidden>
-              Select Gender
+              Seleccionar género
             </option>
             <option value="female">Mujer</option>
             <option value="male">Hombre</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="profileType">Tipo de perfil</label>
+          <select
+            id="profileType"
+            name="profileType"
+            value={formData.profileType}
+            onChange={handleChange}
+            className={styleInput}
+            required
+          >
+            <option value="" disabled hidden>
+              Seleccionar tipo de perfil
+            </option>
+            <option value="static">Static</option>
+            <option value="dynamic">Dynamic</option>
           </select>
         </div>
 

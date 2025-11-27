@@ -4,7 +4,7 @@ import { users } from "../helpers/users";
 
 const TeamPage = () => {
   const { teamId } = useParams();
-
+ 
   const team = teams.find((t) => t._id === teamId);
 
   if (!team) {
