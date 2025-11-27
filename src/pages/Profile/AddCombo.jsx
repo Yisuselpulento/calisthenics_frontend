@@ -1,12 +1,12 @@
-import { useState } from "react";
+/* import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { users } from "../../helpers/users";
 import { skills as skillsBase } from "../../helpers/skills";
 import BackButton from "../../components/Buttons/BackButton";
-import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
+import ButtonSubmit from "../../components/Buttons/ButtonSubmit"; */
 
 const AddCombo = () => {
-  const { username } = useParams();
+ /*  const { username } = useParams();
   const navigate = useNavigate();
   const user = users.find((u) => u.username === username);
 
@@ -76,11 +76,11 @@ const AddCombo = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("FORM DATA:", form);
-  };
+  }; */
 
   return (
     <div className="text-white min-h-screen p-4">
-      <div className="flex justify-between items-center mb-6">
+  {/*     <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Crear nuevo Combo</h2>
         <BackButton />
       </div>
@@ -89,7 +89,7 @@ const AddCombo = () => {
         onSubmit={handleSubmit}
         className="max-w-xl mx-auto bg-white/10 p-5 rounded-md backdrop-blur-md border border-white/20 flex flex-col gap-4"
       >
-        {/* NOMBRE */}
+    
         <div>
           <label className="block text-sm mb-1">Nombre</label>
           <input
@@ -102,7 +102,6 @@ const AddCombo = () => {
           />
         </div>
 
-        {/* TYPE */}
         <div>
           <label className="block text-sm mb-1">Tipo</label>
           <select
@@ -118,7 +117,7 @@ const AddCombo = () => {
           </select>
         </div>
 
-        {/* SKILLS */}
+       
         <div>
           <label className="block text-sm mb-2">
             Skills del usuario (máx. 5)
@@ -149,7 +148,7 @@ const AddCombo = () => {
           </div>
         </div>
 
-        {/* Selected Skills */}
+     
         <div className="flex flex-col gap-4 mt-4">
           {form.selectedSkills.map((s, index) => {
             const variantData = findVariantData(s.skillId, s.variantId);
@@ -211,7 +210,7 @@ const AddCombo = () => {
         <ButtonSubmit type="submit" className="text-sm mt-4">
           Crear Combo (solo console.log)
         </ButtonSubmit>
-      </form>
+      </form> */}
     </div>
   );
 };

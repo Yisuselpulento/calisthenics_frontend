@@ -1,21 +1,20 @@
-import { skills } from "../helpers/skills"; 
 
 const SkillsStatsPage = () => {
   return (
     <div className="w-full min-h-screen p-6 bg-neutral-950 text-white">
-      <h1 className="text-3xl font-bold mb-6">Skills Stats</h1>
+    {/*   <h1 className="text-3xl font-bold mb-6">Skills Stats</h1>
 
-      {/* Lista de skills */}
+      
       <div className="flex flex-col gap-8">
         {skills.map((skill) => (
           <div
             key={skill.skillId}
             className="w-full p-4 bg-neutral-900 rounded-xl shadow-lg"
           >
-            {/* Título Skill */}
+           
             <h2 className="text-2xl font-bold mb-4">{skill.skillName}</h2>
 
-            {/* Tabla Variantes */}
+           
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -62,7 +61,7 @@ const SkillsStatsPage = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

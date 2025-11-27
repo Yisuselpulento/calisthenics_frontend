@@ -1,12 +1,12 @@
-import { useParams, Link } from "react-router-dom";
+/* import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { users } from "../../helpers/users";
 import { calculateComboStats } from "../../helpers/skillUtils";
 import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
-import ConfirmDeleteModal from "../../components/Modals/ConfirmDeleteModal";
+import ConfirmDeleteModal from "../../components/Modals/ConfirmDeleteModal"; */
 
 const Combos = () => {
-  const { username } = useParams();
+/*   const { username } = useParams();
   const user = users.find((u) => u.username === username);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,11 +25,11 @@ const Combos = () => {
   const confirmDelete = () => {
     console.log("Eliminar combo:", comboToDelete);
     setShowDeleteModal(false);
-  };
+  }; */
 
   return (
     <div className="max-w-5xl mx-auto text-white min-h-screen">
-      <div className="flex justify-between items-center mb-6">
+   {/*    <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-bold">Tus Combos</h1>
         <Link
           to={`/profile/${username}/combos/add`}
@@ -90,14 +90,14 @@ const Combos = () => {
         </p>
       )}
 
-      {/* MODAL */}
+     
       {showDeleteModal && (
         <ConfirmDeleteModal
           isOpen={showDeleteModal}
           onCancel={() => setShowDeleteModal(false)}
           onConfirm={confirmDelete}
         />
-      )}
+      )} */}
     </div>
   );
 };

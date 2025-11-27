@@ -75,7 +75,11 @@ const Login = () => {
           />
         </div>
 
-        <SubmitButton loading={loading} text="Iniciar sesión" />
+        <SubmitButton 
+          loading={loading} 
+          text="Iniciar Sesión" 
+          type="submit"
+        />
 
         <div className="text-center mt-4">
           <p>

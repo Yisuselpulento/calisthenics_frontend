@@ -16,12 +16,12 @@ const handleRequest = async (request) => {
 
 /* -------------------- GET USER SKILLS -------------------- */
 export const getUserSkillsService = async () =>
-  handleRequest(axiosInstance.get("/api/skills"));
+  handleRequest(axiosInstance.get("/api/user-skills"));
 
 /* -------------------- ADD SKILL VARIANT -------------------- */
 export const addSkillVariantService = async (formData) =>
   handleRequest(
-    axiosInstance.post("/api/skills/add", formData, {
+    axiosInstance.post("/api/user-skills/add", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     })
   );
@@ -30,7 +30,7 @@ export const addSkillVariantService = async (formData) =>
 export const editSkillVariantService = async (userSkillId, variantKey, fingers, formData) =>
   handleRequest(
     axiosInstance.put(
-      `/api/skills/edit/${userSkillId}/${variantKey}/${fingers}`,
+      `/api/user-skills/edit/${userSkillId}/${variantKey}/${fingers}`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     )
@@ -39,15 +39,15 @@ export const editSkillVariantService = async (userSkillId, variantKey, fingers, 
 /* -------------------- DELETE SKILL VARIANT -------------------- */
 export const deleteSkillVariantService = async (userSkillId, variantKey, fingers) =>
   handleRequest(
-    axiosInstance.delete(`/api/skills/delete/${userSkillId}/${variantKey}/${fingers}`)
+    axiosInstance.delete(`/api/user-skills/delete/${userSkillId}/${variantKey}/${fingers}`)
   );
 
 /* -------------------- TOGGLE FAVORITE SKILL -------------------- */
 export const toggleFavoriteSkillService = async (userSkillId, variantKey) =>
   handleRequest(
-    axiosInstance.post(`/api/skills/favorites/${userSkillId}/${variantKey}`)
+    axiosInstance.post(`/api/user-skills/favorites/${userSkillId}/${variantKey}`)
   );
 
 /* -------------------- GET FAVORITE SKILLS -------------------- */
 export const getFavoriteSkillsService = async () =>
-  handleRequest(axiosInstance.get("/api/skills/favorites"));
+  handleRequest(axiosInstance.get("/api/user-skills/favorites"));

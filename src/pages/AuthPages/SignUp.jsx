@@ -172,7 +172,11 @@ const SignUp = () => {
           </select>
         </div>
 
-        <SubmitButton loading={loading} text="Registrarme" />
+        <SubmitButton 
+          loading={loading} 
+          text="Registrarse" 
+          type="submit"
+        />
 
         <div className="items-center justify-center flex flex-col mt-4">
           <p>

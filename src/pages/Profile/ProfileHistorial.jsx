@@ -1,11 +1,11 @@
-import { useParams } from "react-router-dom";
+/* import { useParams } from "react-router-dom";
 import { historial } from "../../helpers/historial";
 import { users } from "../../helpers/users";
 import { useAuth } from "../../context/AuthContext";
-import HistorialCard from "../../components/Profile/HistorialCard";
+import HistorialCard from "../../components/Profile/HistorialCard"; */
 
 const ProfileHistorial = () => {
-  const { username } = useParams();
+ /*  const { username } = useParams();
   const { currentUser } = useAuth();
 
   const user = users.find((u) => u.username === username);
@@ -30,10 +30,10 @@ const ProfileHistorial = () => {
   const sortedHistorial = [...userHistorial].sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
-
+ */
   return (
     <div className="p-2 md:p-6">
-      <h2 className="text-xl font-bold text-white mb-4">
+    {/*   <h2 className="text-xl font-bold text-white mb-4">
         Historial de Batallas
       </h2>
 
@@ -47,7 +47,7 @@ const ProfileHistorial = () => {
             ? "Aún no tienes batallas registradas."
             : "Este usuario aún no tiene batallas registradas."}
         </p>
-      )}
+      )} */}
     </div>
   );
 };

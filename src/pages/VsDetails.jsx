@@ -1,10 +1,10 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
+/* import { useParams, useNavigate, Link } from "react-router-dom";
 import { historial } from "../helpers/historial";
 import { users } from "../helpers/users";
-import BackButton from "../components/Buttons/BackButton";
+import BackButton from "../components/Buttons/BackButton"; */
 
 const VsDetails = () => {
-  const { matchId } = useParams();
+  /* const { matchId } = useParams();
   const navigate = useNavigate();
 
   const match = historial.find((m) => m._id === matchId);
@@ -14,16 +14,16 @@ const VsDetails = () => {
     );
 
   const user = users.find((u) => u._id === match.userId);
-  const opponent = users.find((u) => u._id === match.opponentId);
+  const opponent = users.find((u) => u._id === match.opponentId); */
 
   return (
     <div className="max-w-4xl mx-auto text-white p-4 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
+    {/*   <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Detalles del VS</h1>
        <BackButton />
       </div>
 
-      {/* === Información general === */}
+    
       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
@@ -82,7 +82,7 @@ const VsDetails = () => {
         </div>
       </div>
 
-      {/* === Video del enfrentamiento === */}
+   
       {match.videoUrl && (
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
           <h2 className="text-xl font-bold mb-3">Video del Enfrentamiento</h2>
@@ -92,7 +92,7 @@ const VsDetails = () => {
             className="w-full rounded-lg border border-white/20"
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

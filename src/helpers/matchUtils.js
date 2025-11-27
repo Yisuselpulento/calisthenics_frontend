@@ -1,4 +1,4 @@
-import { skills as allSkills } from "../helpers/skills";
+/* import { skills as allSkills } from "../helpers/skills";
 
 export const getFullMatchUserData = (user, type) => {
   if (!user) return null;
@@ -65,3 +65,4 @@ export const getFullMatchUserData = (user, type) => {
     }
   };
 };
+ */

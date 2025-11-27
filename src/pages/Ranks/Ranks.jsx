@@ -1,11 +1,11 @@
-import { useState } from "react"
+/* import { useState } from "react"
 import { FaTrophy, FaUsers, FaUser } from "react-icons/fa"
 import { users } from "../../helpers/users"
 import { teams } from "../../helpers/teams"
 import { Link } from "react-router-dom"
-
+ */
 export default function Ranks() {
-  const [activeTab, setActiveTab] = useState("users")
+ /*  const [activeTab, setActiveTab] = useState("users")
 
   // 🔹 Ordenamos los usuarios por ranking o nivel
   const sortedUsers = [...users].sort(
@@ -14,12 +14,12 @@ export default function Ranks() {
 
   // 🔹 Ordenamos los equipos según su ranking
   const sortedTeams = [...teams].sort((a, b) => a.teamRank - b.teamRank)
-
+ */
   return (
     <div className="p-2 max-w-3xl mx-auto">
-      <h1 className="text-xl text-center mb-6">🏆 Rankings</h1>
+     {/*  <h1 className="text-xl text-center mb-6">🏆 Rankings</h1>
 
-      {/* Selector de pestañas */}
+    
       <div className="flex justify-center gap-2 mb-6">
         <button
           onClick={() => setActiveTab("users")}
@@ -46,7 +46,7 @@ export default function Ranks() {
         </button>
       </div>
 
-      {/* 🧍 Ranking de usuarios */}
+     
       {activeTab === "users" && (
         <div className="bg-stone-900 rounded-xl p-2 space-y-1 border border-stone-700">
           {sortedUsers.map((user, i) => (
@@ -85,7 +85,7 @@ export default function Ranks() {
         </div>
       )}
 
-      {/* 👥 Ranking de equipos */}
+    
       {activeTab === "teams" && (
         <div className="bg-stone-900 rounded-xl p-2 space-y-1 border border-stone-700">
           {sortedTeams.map((team, i) => (
@@ -122,7 +122,7 @@ export default function Ranks() {
             </Link>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   )
 }

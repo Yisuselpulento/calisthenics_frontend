@@ -1,9 +1,9 @@
-import { useParams, Link } from "react-router-dom";
+/* import { useParams, Link } from "react-router-dom";
 import { teams } from "../helpers/teams";
 import { users } from "../helpers/users";
-
+ */
 const TeamPage = () => {
-  const { teamId } = useParams();
+ /*  const { teamId } = useParams();
  
   const team = teams.find((t) => t._id === teamId);
 
@@ -17,12 +17,12 @@ const TeamPage = () => {
       const user = users.find((u) => u._id === m.userId);
       return user ? { ...user, role: m.role } : null;
     })
-    .filter(Boolean);
+    .filter(Boolean); */
 
   return (
     <div className="p-2 flex flex-col gap-4 text-white min-h-screen">
 
-      {/* LOGO DEL EQUIPO */}
+     {/* 
       <section className="w-full flex justify-center">
         <img
           src={team.logo}
@@ -31,7 +31,7 @@ const TeamPage = () => {
         />
       </section>
 
-      {/* INFORMACIÓN DEL TEAM */}
+     
       <section className="text-center">
         <h1 className="text-2xl font-bold">{team.name}</h1>
         <p className="text-gray-300 text-sm mt-1">{team.description}</p>
@@ -43,7 +43,7 @@ const TeamPage = () => {
         </div>
       </section>
 
-      {/* MIEMBROS */}
+    
       <section>
         <h2 className="text-lg font-semibold mb-2">Miembros del equipo</h2>
 
@@ -69,7 +69,7 @@ const TeamPage = () => {
             </Link>
           ))}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

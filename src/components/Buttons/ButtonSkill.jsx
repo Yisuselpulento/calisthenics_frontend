@@ -9,7 +9,7 @@ const ButtonSkill = ({ skill, onClick }) => {
         ${getSkillBorderColor(skill.baseDifficulty)}
       `}
     >
-      {skill.skillName}
+      {skill.name}
     </button>
   );
 };

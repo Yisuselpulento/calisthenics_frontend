@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import SelectCustom from "../../components/SelectCustom";
-import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
 import TeamButtonProfile from "../../components/Profile/TeamButtonProfile";
 import { updateProfileService, updateAdvancedProfileService } from "../../Services/ProfileFetching";
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import toast from "react-hot-toast";
 
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
 
-  console.log("Current User:", currentUser);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -38,48 +38,49 @@ const EditProfile = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      // ------------------ Normal profile ------------------
-      const normalData = new FormData();
-      normalData.append("peso", formData.peso);
-      normalData.append("altura", formData.altura);
-      normalData.append("country", formData.country);
+  try {
+    // ------------------ Normal profile ------------------
+    const normalData = new FormData();
+    normalData.append("peso", formData.peso);
+    normalData.append("altura", formData.altura);
+    normalData.append("country", formData.country);
 
-      if (formData.avatar instanceof File) normalData.append("avatar", formData.avatar);
-      if (formData.videoProfile instanceof File) normalData.append("videoProfile", formData.videoProfile);
+    if (formData.avatar instanceof File) normalData.append("avatar", formData.avatar);
+    if (formData.videoProfile instanceof File) normalData.append("videoProfile", formData.videoProfile);
 
-      const normalRes = await updateProfileService(normalData);
-      if (!normalRes.success) throw new Error(normalRes.message);
+    const normalRes = await updateProfileService(normalData);
+    if (!normalRes.success) throw new Error(normalRes.message);
 
-      // ------------------ Advanced profile ------------------
-      if (showAdvanced) {
-        const advancedData = {
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          profileType: formData.profileType,
-          country: formData.country,
-        };
+    // ------------------ Advanced profile ------------------
+    if (showAdvanced) {
+      const advancedData = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        profileType: formData.profileType,
+        country: formData.country,
+      };
 
-        const advancedRes = await updateAdvancedProfileService(advancedData);
-        if (!advancedRes.success) throw new Error(advancedRes.message);
+      const advancedRes = await updateAdvancedProfileService(advancedData);
+      if (!advancedRes.success) throw new Error(advancedRes.message);
 
-        updateCurrentUser(advancedRes.user);
-      } else {
-        updateCurrentUser(normalRes.user);
-      }
-
-      navigate(`/profile/${formData.username}`);
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      alert(error.message || "Error actualizando perfil");
-    } finally {
-      setLoading(false);
+      updateCurrentUser(advancedRes.user);
+    } else {
+      updateCurrentUser(normalRes.user);
     }
-  };
+
+    toast.success("Perfil actualizado correctamente!");
+    navigate(`/profile/${formData.username}`);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    toast.error(error.message || "Error actualizando perfil");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="p-2 text-white min-h-screen">
@@ -244,9 +245,7 @@ const EditProfile = () => {
           {showAdvanced ? "Ocultar avanzadas" : "mostrar avanzadas"}
         </button>
       </div>
-        <ButtonSubmit type="submit" loading={loading}>
-          Guardar cambios
-        </ButtonSubmit>
+         <SubmitButton loading={loading} text="Guardar Cambios" type="submit"  />
       </form>
     </div>
   );

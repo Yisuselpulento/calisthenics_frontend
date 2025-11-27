@@ -2,18 +2,22 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GoReport } from "react-icons/go";
 import BackButton from "../../components/Buttons/BackButton";
-import { useAuth } from "../../context/AuthContext";
 import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
-import ConfirmDeleteModal from "../../components/Modals/ConfirmDeleteModal";
+import DeleteSkillVariantModal from "../../components/Modals/DeleteSkillVariantModal";
 import ReportSkillUserModal from "../../components/Modals/ReportSkillUserModal";
+import { useAuth } from "../../context/AuthContext";
+import { getUserVariants } from "../../helpers/getUserVariants";
+import { deleteSkillVariantService } from "../../Services/skillFetching";
+import toast from "react-hot-toast";
 
 const SkillDetail = () => {
-  const { username, variantId } = useParams(); // ⚡ variantId = variantKey
-  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
+  const { username, variantId } = useParams(); // variantId = variantKey
+  const { currentUser, viewedProfile, profileLoading, loadProfile, removeVariant } = useAuth();
   const navigate = useNavigate();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Cargar perfil del usuario
   useEffect(() => {
@@ -26,39 +30,35 @@ const SkillDetail = () => {
   const user = viewedProfile;
   const isOwner = currentUser?.username === user.username;
 
-  // Transformar skills en variantes enriquecidas
-  const userVariants = user.skills?.flatMap((userSkill) =>
-    userSkill.variants.map((variant) => ({
-      variantKey: variant.variantKey,
-      fingers: variant.fingers,
-      video: variant.video,
-      name: variant.name,
-      type: variant.type,
-      stats: variant.stats,
-      staticAU: variant.staticAU,
-      dynamicAU: variant.dynamicAU,
-      skillName: userSkill.skill.name,
-      skillId: userSkill.skill._id,
-    }))
-  ) || [];
-
-  // Buscar la variante según variantId (variantKey)
+  const userVariants = getUserVariants(user.skills);
   const variant = userVariants.find((v) => v.variantKey === variantId);
   if (!variant) return <p className="text-white p-5">Skill no encontrada</p>;
 
-  // Eliminar skill
-  const handleConfirmDelete = () => {
-    user.skills.forEach((s) => {
-      s.variants = s.variants.filter((v) => v.variantKey !== variantId);
-    });
-    setShowDeleteModal(false);
-    alert("Skill eliminada");
-    navigate(-1);
+  // 🔹 Delete
+  const handleConfirmDelete = async () => {
+    setLoading(true);
+    try {
+      const response = await deleteSkillVariantService(variant.userSkillId, variant.variantKey, variant.fingers);
+      if (response.success) {
+        // 🔹 Usar removeVariant del contexto
+        removeVariant(variant.userSkillId, variant.variantKey, variant.fingers);
+        toast.success("Skill eliminada correctamente!");
+        setShowDeleteModal(false);
+        navigate(-1); // Volver atrás
+      } else {
+        toast.error("Error al eliminar skill: " + response.message);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error al eliminar skill");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Reportar skill
+  // 🔹 Reportar skill
   const handleSendReport = (reason) => {
-    alert(`Reporte enviado: ${reason}`);
+    toast.success(`Reporte enviado: ${reason}`);
     setShowReportModal(false);
   };
 
@@ -73,6 +73,7 @@ const SkillDetail = () => {
             editLink={`/profile/${username}/edit-skill/${variant.variantKey}`}
             onDeleteClick={() => setShowDeleteModal(true)}
             className="px-2 py-1 text-sm rounded flex items-center justify-center"
+            disabled={loading}
           />
         ) : (
           <button
@@ -108,13 +109,14 @@ const SkillDetail = () => {
       )}
 
       {/* === MODALS === */}
-      {showDeleteModal && (
-        <ConfirmDeleteModal
-          isOpen={showDeleteModal}
-          onCancel={() => setShowDeleteModal(false)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
+      <DeleteSkillVariantModal
+        isOpen={showDeleteModal}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={handleConfirmDelete}
+        loading={loading}
+        skillName={variant.name}
+      />
+
       {showReportModal && (
         <ReportSkillUserModal
           isOpen={showReportModal}

@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+/* import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { teams } from "../../helpers/teams";
 import { users } from "../../helpers/users";  
-import BackButton from "../../components/Buttons/BackButton";
+import BackButton from "../../components/Buttons/BackButton"; */
 
 const CreateTeamPage = () => {
-  const navigate = useNavigate();
+ /*  const navigate = useNavigate();
   const { currentUser } = useAuth();
 
   // 🔎 Buscar si ya tiene team
@@ -61,11 +61,11 @@ const CreateTeamPage = () => {
     const newTeamId = "t" + (teams.length + 1);
 
     navigate(`/teams/${newTeamId}`);
-  };
+  }; */
 
   return (
     <div className="p-2 text-white min-h-screen">
-      <div className="flex justify-between items-center mb-6">
+     {/*  <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">Crear equipo</h2>
 
         <BackButton />
@@ -75,7 +75,7 @@ const CreateTeamPage = () => {
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 max-w-md mx-auto bg-white/10 p-4 rounded-md backdrop-blur-md border border-white/20"
       >
-        {/* LOGO */}
+       
         <div>
           <label className="block text-sm mb-1">Logo del equipo (URL)</label>
           <input
@@ -95,7 +95,7 @@ const CreateTeamPage = () => {
           )}
         </div>
 
-        {/* NOMBRE */}
+       
         <div>
           <label className="block text-sm mb-1">Nombre del equipo</label>
           <input
@@ -107,7 +107,7 @@ const CreateTeamPage = () => {
           />
         </div>
 
-        {/* DESCRIPCIÓN */}
+      
         <div>
           <label className="block text-sm mb-1">Descripción</label>
           <textarea
@@ -118,7 +118,7 @@ const CreateTeamPage = () => {
           />
         </div>
 
-        {/* INVITAR AMIGOS */}
+        
         <div>
           <label className="block text-sm mb-1">
             Invitar amigos que sigues
@@ -151,14 +151,14 @@ const CreateTeamPage = () => {
           )}
         </div>
 
-        {/* BOTÓN CREAR */}
+       
         <button
           type="submit"
           className="w-full py-2 bg-green-600 hover:bg-green-700 rounded-md text-sm font-semibold transition"
         >
           Crear equipo
         </button>
-      </form>
+      </form> */}
     </div>
   );
 };

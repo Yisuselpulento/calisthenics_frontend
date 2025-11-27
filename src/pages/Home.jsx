@@ -12,7 +12,6 @@ const Home = () => {
 
       if (res.success) {
         setFeed(res.data);
-        console.log("Feed cargado:", res.data);
       } else {
         console.error(res.message);
       }

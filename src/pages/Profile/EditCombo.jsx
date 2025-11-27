@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+/* import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { users } from "../../helpers/users";
 import { skills as skillsBase } from "../../helpers/skills";
@@ -6,10 +6,10 @@ import ButtonSubmit from "../../components/Buttons/ButtonSubmit";
 import SelectCustom from "../../components/SelectCustom";
 
 const formatVariantName = (str) =>
-  str.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  str.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()); */
 
 const EditCombo = () => {
-  const { username, comboId } = useParams();
+ /*  const { username, comboId } = useParams();
 
   const user = users.find((u) => u.username === username);
   const combo = user?.combos?.find((c) => c.comboId === comboId);
@@ -44,17 +44,17 @@ const EditCombo = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Combo final:", form);
-  };
+  }; */
 
   return (
     <div className="max-w-xl mx-auto text-white min-h-screen">
-      <h1 className="text-xl font-bold mb-2">Editar Combo</h1>
+    {/*   <h1 className="text-xl font-bold mb-2">Editar Combo</h1>
 
       <form
         onSubmit={handleSubmit}
         className="bg-white/10 p-5 backdrop-blur-md border border-white/20 rounded-2xl space-y-5"
       >
-        {/* Nombre */}
+     
         <div>
           <label className="block mb-1 font-semibold">Nombre del combo</label>
           <input
@@ -65,7 +65,7 @@ const EditCombo = () => {
           />
         </div>
 
-        {/* Tipo */}
+   
         <div>
           <label className="block mb-1 font-semibold">Tipo</label>
           <SelectCustom
@@ -79,7 +79,7 @@ const EditCombo = () => {
           />
         </div>
 
-        {/* Skills */}
+     
         <div>
           <label className="block mb-2 font-semibold">Skills del combo</label>
           {form.skills.map((s, index) => {
@@ -134,7 +134,7 @@ const EditCombo = () => {
         </div>
 
         <ButtonSubmit type="submit">Guardar cambios (console.log)</ButtonSubmit>
-      </form>
+      </form> */}
     </div>
   );
 };

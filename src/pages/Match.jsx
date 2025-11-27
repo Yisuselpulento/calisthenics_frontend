@@ -1,9 +1,9 @@
-import { useLocation, useParams } from "react-router-dom";
+/* import { useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getFullMatchUserData } from "../helpers/matchUtils";
+import { getFullMatchUserData } from "../helpers/matchUtils"; */
 
 const Match = () => {
-  const { matchId } = useParams();
+ /*  const { matchId } = useParams();
   const { state } = useLocation();
 
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
@@ -72,16 +72,16 @@ const Match = () => {
   }, [currentSkillIndex, totalRounds]);
 
   const totalDamage = (skills) =>
-    skills.reduce((acc, s) => acc + (s.damage || 0), 0);
+    skills.reduce((acc, s) => acc + (s.damage || 0), 0); */
 
   return (
     <div className="bg-stone-950 text-white flex flex-col items-center py-5">
-      <h1 className="text-xl font-bold mb-3">🔥 {type.toUpperCase()} MATCH 🔥</h1>
+    {/*   <h1 className="text-xl font-bold mb-3">🔥 {type.toUpperCase()} MATCH 🔥</h1>
       <p className="text-sm text-gray-400 mb-10">ID: {matchId}</p>
 
       <div className="flex items-start justify-center w-full max-w-5xl mb-5">
 
-        {/* PLAYER 1 */}
+       
         <div className="flex flex-col items-center w-3/7">
           <img
             src={userData.avatar}
@@ -92,7 +92,7 @@ const Match = () => {
           <h2 className="text-lg mt-2">{userData.name}</h2>
           <p className="text-gray-400 text-sm">@{userData.username}</p>
 
-          {/* Combo Video */}
+         
           {userVideos.length > 0 && (
             <video
               key={userVideoIndex}
@@ -104,7 +104,7 @@ const Match = () => {
             />
           )}
 
-          {/* Skills */}
+       
           <div className="mt-4 flex flex-col gap-2 w-full">
             {userSkills.slice(0, currentSkillIndex).map((skill, idx) => (
               <div
@@ -131,12 +131,12 @@ const Match = () => {
           </div>
         </div>
 
-        {/* VS */}
+       
         <div className="flex items-center justify-center w-1/6 ">
           <h1 className="text-2xl font-extrabold text-red-500 mt-10">VS</h1>
         </div>
 
-        {/* PLAYER 2 */}
+        
         <div className="flex flex-col items-center w-3/7">
           <img
             src={opponentData.avatar}
@@ -147,7 +147,7 @@ const Match = () => {
           <h2 className="text-lg mt-2">{opponentData.name}</h2>
           <p className="text-gray-400 text-sm">@{opponentData.username}</p>
 
-          {/* Combo Video */}
+      
           {opponentVideos.length > 0 && (
             <video
               key={oppVideoIndex}
@@ -159,7 +159,7 @@ const Match = () => {
             />
           )}
 
-          {/* Skills */}
+        
           <div className="mt-4 flex flex-col gap-2 w-full">
             {opponentSkills.slice(0, currentSkillIndex).map((skill, idx) => (
               <div
@@ -187,7 +187,7 @@ const Match = () => {
         </div>
       </div>
 
-      {/* FINAL DAMAGE + WIN / LOSS */}
+    
       {currentSkillIndex >= totalRounds && (() => {
         const userTotal = totalDamage(userSkills);
         const oppTotal = totalDamage(opponentSkills);
@@ -198,7 +198,7 @@ const Match = () => {
         return (
           <div className="flex gap-5 mt-3 p-2 items-end">
 
-            {/* User */}
+          
             <div className="flex flex-col items-center">
               <p className="text-lg">
                 {userData.name}: {userTotal}
@@ -211,7 +211,7 @@ const Match = () => {
               )}
             </div>
 
-            {/* Opponent */}
+        
             <div className="flex flex-col items-center">
               <p className="text-lg">
                 {opponentData.name}: {oppTotal}
@@ -226,7 +226,7 @@ const Match = () => {
 
           </div>
         );
-      })()}
+      })()} */}
     </div>
   );
 };

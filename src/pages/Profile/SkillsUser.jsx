@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import BackButton from "../../components/Buttons/BackButton";
 import { useAuth } from "../../context/AuthContext";
 import UserSkillCard from "../../components/Profile/UserSkillCard";
+import { getUserVariants } from "../../helpers/getUserVariants";
 
 const SkillsUser = () => {
   const { username } = useParams();
@@ -13,7 +14,6 @@ const SkillsUser = () => {
     if (username) loadProfile(username);
   }, [username]);
 
-  // 🔹 Mostrar loading mientras se trae el perfil
   if (profileLoading)
     return <p className="text-white text-center mt-10">Cargando...</p>;
 
@@ -22,45 +22,13 @@ const SkillsUser = () => {
 
   const user = viewedProfile;
   const isOwner = currentUser?.username === user.username;
-
-  // 🔹 Transformar skills en variantes enriquecidas
-  const userVariants = user.skills?.flatMap((userSkill) =>
-    userSkill.variants.map((variant) => ({
-      variantKey: variant.variantKey,
-      fingers: variant.fingers,
-      video: variant.video,
-      name: variant.name,
-      type: variant.type,
-      stats: variant.stats,
-      staticAU: variant.staticAU,
-      dynamicAU: variant.dynamicAU,
-      skillName: userSkill.skill.name,
-      skillId: userSkill.skill._id,
-    }))
-  ) || [];
-
-  // 🔹 Manejar eliminación de variante (solo si es el owner)
-  const handleDeleteSkill = (variantKey) => {
-    if (!isOwner) return;
-    const confirmDelete = confirm("¿Seguro que deseas eliminar esta skill?");
-    if (!confirmDelete) return;
-
-    // Filtrar la variante específica
-    user.skills.forEach((userSkill) => {
-      userSkill.variants = userSkill.variants.filter(
-        (v) => v.variantKey !== variantKey
-      );
-    });
-
-    alert("Skill eliminada");
-  };
+  const userVariants = getUserVariants(user.skills);
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-5">
         <h1 className="text-xl font-bold">Skills</h1>
-
         <div className="flex items-center gap-5">
           {isOwner && (
             <Link
@@ -79,10 +47,9 @@ const SkillsUser = () => {
         <div className="grid gap-1 sm:grid-cols-2 grid-cols-3">
           {userVariants.map((variant) => (
             <UserSkillCard
-              key={variant.variantKey} // variantKey como ID único
+              key={variant.variantKey + "-" + variant.fingers} // ⚡ asegurar key única si hay variantes con mismo variantKey
               skill={variant}
               ownerUsername={user.username}
-              onDelete={handleDeleteSkill}
             />
           ))}
         </div>

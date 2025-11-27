@@ -4,13 +4,13 @@ import ComboCard from "../../components/Profile/ComboCard";
 import SkillCard from "../../components/Profile/SkillCard";
 import { useAuth } from "../../context/AuthContext";
 import { PiCards, PiCardsFill } from "react-icons/pi";
+import { getUserVariants } from "../../helpers/getUserVariants";
 
 const ProfileSkills = () => {
   const { username } = useParams();
   const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
   const [cardView, setCardView] = useState(false);
 
-  // 🔍 Cargar perfil al cambiar username
   useEffect(() => {
     loadProfile(username);
   }, [username]);
@@ -29,21 +29,7 @@ const ProfileSkills = () => {
     .map((favId) => user.combos?.find((c) => c._id === favId))
     .filter(Boolean);
 
-  // Skills desbloqueadas
-  const userVariants = user.skills?.flatMap((userSkill) =>
-  userSkill.variants.map((variant) => ({        // id de la variante
-    variantKey: variant.variantKey,
-    fingers: variant.fingers,
-    video: variant.video,
-    name: variant.name,           // nombre de la variante
-    type: variant.type,
-    stats: variant.stats,         // stats de la variante
-    staticAU: variant.staticAU,
-    dynamicAU: variant.dynamicAU,
-    skillName: userSkill.skill.name, // nombre de la skill
-    skillId: userSkill.skill._id    // opcional, id de la skill
-  }))
-) || [];
+ const userVariants = getUserVariants(user.skills);
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">

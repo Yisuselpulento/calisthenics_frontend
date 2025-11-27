@@ -6,6 +6,7 @@ import {
   checkAuthService,
 } from "../Services/AuthFetching.js";
 import { getProfileByUsernameService } from "../Services/ProfileFetching.js";
+import { removeVariantFromSkills } from "../helpers/removeVariantFromSkills";
 
 const AuthContext = createContext();
 
@@ -40,6 +41,23 @@ export const AuthProvider = ({ children }) => {
     checkSession();
   }, []);
 
+  
+  // ------------------ CARGAR PERFIL DE USUARIO ------------------
+  const loadProfile = async (username) => {
+    setProfileLoading(true);
+    try {
+      const res = await getProfileByUsernameService(username);
+      if (res.success) setViewedProfile(res.user || res.data); 
+      else setViewedProfile(null);
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+      setViewedProfile(null);
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+
   // ------------------ SIGN UP ------------------
   const signup = async (formData) => {
     const res = await signupService(formData);
@@ -70,20 +88,24 @@ export const AuthProvider = ({ children }) => {
     return res;
   };
 
-  // ------------------ CARGAR PERFIL DE USUARIO ------------------
-  const loadProfile = async (username) => {
-    setProfileLoading(true);
-    try {
-      const res = await getProfileByUsernameService(username);
-      if (res.success) setViewedProfile(res.user || res.data); // depende de tu API
-      else setViewedProfile(null);
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-      setViewedProfile(null);
-    } finally {
-      setProfileLoading(false);
+const removeVariant = (userSkillId, variantKey, fingers) => {
+    // Actualizar viewedProfile
+    if (viewedProfile) {
+      setViewedProfile((prev) => ({
+        ...prev,
+        skills: removeVariantFromSkills(prev.skills, userSkillId, variantKey, fingers),
+      }));
+    }
+    // Actualizar currentUser si es el mismo
+    if (currentUser?.skills.some((s) => s._id === userSkillId)) {
+      setCurrentUser((prev) => ({
+        ...prev,
+        skills: removeVariantFromSkills(prev.skills, userSkillId, variantKey, fingers),
+      }));
     }
   };
+
+ 
 
   return (
     <AuthContext.Provider
@@ -100,6 +122,7 @@ export const AuthProvider = ({ children }) => {
         viewedProfile,
         profileLoading,
         loadProfile,
+        removeVariant
       }}
     >
       {children}
