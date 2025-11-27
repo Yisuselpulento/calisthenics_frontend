@@ -13,7 +13,7 @@ const handleRequest = async (request) => {
     return { success: false, message: errorMessage };
   }
 };
-
+/* fcdscsdcd */
 /* ---------------------- GET FOLLOWERS ---------------------- */
 export const getFollowersService = async (userId) =>
   handleRequest(axiosInstance.get(`/api/user-follow/${userId}/followers`));
