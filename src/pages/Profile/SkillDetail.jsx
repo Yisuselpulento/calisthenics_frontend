@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getUserVariants } from "../../helpers/getUserVariants";
 import { deleteSkillVariantService } from "../../Services/skillFetching";
 import toast from "react-hot-toast";
+import FavoriteToggleButton from "../../components/Buttons/FavoriteToggleButton";
 
 const SkillDetail = () => {
   const { username, variantId } = useParams(); // variantId = variantKey
@@ -70,7 +71,7 @@ const SkillDetail = () => {
 
         {isOwner ? (
           <EditAndDeleteButton
-            editLink={`/profile/${username}/edit-skill/${variant.variantKey}`}
+            editLink={`/profile/${username}/edit-skill/${variant.variantKey}/${variant.fingers}`}
             onDeleteClick={() => setShowDeleteModal(true)}
             className="px-2 py-1 text-sm rounded flex items-center justify-center"
             disabled={loading}
@@ -86,7 +87,17 @@ const SkillDetail = () => {
       </div>
 
       {/* === DETALLES DE LA VARIANTE === */}
-      <h1 className="text-2xl font-bold mb-4">{variant.name}</h1>
+      <div className="flex items-center gap-2 mb-4">
+        <h1 className="text-2xl font-bold">{variant.name}</h1>
+
+        {/* ⭐ FAVORITO */}
+        {isOwner && (
+          <FavoriteToggleButton 
+            userSkillId={variant.userSkillId}
+            variantKey={variant.variantKey}
+          />
+        )}
+      </div>
       <p className="text-gray-400 mb-2">
         <span className="text-blue-400 font-semibold">Skill base:</span> {variant.skillName}
       </p>

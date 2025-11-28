@@ -26,6 +26,8 @@ const ComboDetails = () => {
 
   const combo = user.combos?.find((c) => c._id === comboId);
 
+  console.log("Combo encontrado:", combo);
+
   if (!combo)
     return <p className="text-white text-center mt-10">Combo no encontrado.</p>;
 
@@ -38,8 +40,10 @@ const ComboDetails = () => {
       variantName: el.variantData.name,
       videoUrl: variant?.video || null,
       hold: el.hold || 0,
-      aura: el.variantData.stats?.aura ?? 0,
-      energy: el.variantData.stats?.energy ?? 0,
+      energyPerRep: el.variantData.stats?.energyPerRep ?? 0,
+    energyPerSecond: el.variantData.stats?.energyPerSecond ?? 0,
+    pointsPerRep: el.variantData.stats?.pointsPerRep ?? 0,
+    pointsPerSecond: el.variantData.stats?.pointsPerSecond ?? 0,
     };
   };
 
@@ -101,8 +105,10 @@ const ComboDetails = () => {
             {el.hold > 0 && <p>⏱ Hold: {el.hold}s</p>}
 
             <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-              <p>💫 Aura generada: {el.aura}</p>
-              <p>⚡ Energía usada: {el.energy}</p>
+              <p>⚡ Energía / Rep: {el.energyPerRep}</p>
+              <p>⚡ Energía / Segundo: {el.energyPerSecond}</p>
+              <p>🏅 Puntos / Rep: {el.pointsPerRep}</p>
+              <p>🏅 Puntos / Segundo: {el.pointsPerSecond}</p>
             </div>
           </div>
         ))}
