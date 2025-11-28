@@ -9,16 +9,40 @@ import { tailwindColors } from "../../helpers/tailwindColor";
 import VsButton from "../../components/VsButton";
 import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
+import { createReportService } from "../../services/reportsFetching";
+import { toast } from "react-hot-toast";
 
 const Profile = () => {
   const { username } = useParams();
   const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
+  const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
   // 🔍 Cargar perfil cuando cambia el username
   useEffect(() => {
     loadProfile(username);
   }, [username]); 
+
+const handleReportSend = async (reasonValue) => {
+  try {
+    setLoadingReport(true);
+
+    await createReportService({
+      targetType: "User",   // 👈 la U debe ser mayúscula
+      target: user._id,
+      reason: reasonValue,  
+      description: "",
+    });
+
+    toast.success("Reporte enviado correctamente");
+  } catch (err) {
+    console.error(err);
+    toast.error(err.message || "Error al enviar el reporte");
+  } finally {
+    setLoadingReport(false);
+  }
+};
+
 
   if (profileLoading) return <p className="text-white">Cargando...</p>;
   if (!viewedProfile) return <p className="text-white">Usuario no encontrado</p>;
@@ -43,7 +67,8 @@ const Profile = () => {
             <ButtonConfigProfile
               isFollowing={isFollowing}
               onUnfollowConfirmed={() => console.log("Dejar de seguir a:", user._id)}
-              onReportSend={(reason) => console.log("Reporte enviado:", reason)}
+                onReportSend={handleReportSend} 
+                loadingReport={loadingReport}
             />
           </div>
         )}
@@ -60,6 +85,8 @@ const Profile = () => {
               targetUserId={user._id}
               isFollowing={isFollowing}
               onFollow={(id) => console.log("Seguir usuario:", id)}
+              onReportSend={handleReportSend}
+              loadingReport={loadingReport}
             />
           )}
         </div>

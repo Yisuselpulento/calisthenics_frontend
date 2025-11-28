@@ -3,7 +3,7 @@ import { FaEllipsisV } from "react-icons/fa";
 import ConfirmUnfollowModal from "../Modals/ConfirmUnfollowModal";
 import ReportUserModal from "../Modals/ReportUserModal";
 
-const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend }) => {
+const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, loadingReport }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -65,10 +65,11 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend })
       <ReportUserModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
-        onSend={(reason) => {
-          onReportSend(reason);
+        onSend={async (reason) => {
+          await onReportSend(reason);
           setShowReportModal(false);
         }}
+        loading={loadingReport}
       />
     </div>
   );
