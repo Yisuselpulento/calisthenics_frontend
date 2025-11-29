@@ -1,25 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { getUserNotificationsService, markNotificationAsReadService } from "../Services/notificationFetching";
-
+import { useAuth } from "../context/AuthContext";
+import { markNotificationAsReadService } from "../Services/notificationFetching";
+import toast from "react-hot-toast";
 
 const NotificationsDropdown = ({ closeDropdown }) => {
-  const [notifications, setNotifications] = useState([]);
+  const { currentUser, updateCurrentUser } = useAuth();
+  const notifications = currentUser?.notifications || [];
 
-  useEffect(() => {
-    const load = async () => {
-      const res = await getUserNotificationsService();
-      if (res.success) setNotifications(res.notifications);
-    };
-    load();
-  }, []);
+  console.log(currentUser);
+
+  const [loadingIds, setLoadingIds] = useState([]); // Para manejar botones en loading
 
   const handleMarkRead = async (id) => {
-    const res = await markNotificationAsReadService(id);
-    if (res.success) {
-      setNotifications((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, read: true } : n))
-      );
+    if (!currentUser) return;
+
+    // Optimistic update: marcamos como leído en la UI antes de la llamada al backend
+    const previousNotifications = [...notifications];
+    const updatedNotifications = notifications.map((n) =>
+      n._id === id ? { ...n, read: true } : n
+    );
+
+    updateCurrentUser({
+      ...currentUser,
+      notifications: updatedNotifications,
+    });
+
+    setLoadingIds((prev) => [...prev, id]);
+
+    try {
+      const res = await markNotificationAsReadService(id);
+      if (!res.success) {
+        // Si falla, revertimos el cambio
+        updateCurrentUser({
+          ...currentUser,
+          notifications: previousNotifications,
+        });
+        toast.error(res.message || "No se pudo marcar como leído");
+      }
+    } catch (err) {
+      updateCurrentUser({
+        ...currentUser,
+        notifications: previousNotifications,
+      });
+      toast.error("Error al marcar notificación como leída");
+    } finally {
+      setLoadingIds((prev) => prev.filter((nid) => nid !== id));
     }
   };
 
@@ -50,9 +76,12 @@ const NotificationsDropdown = ({ closeDropdown }) => {
               {!n.read && (
                 <button
                   onClick={() => handleMarkRead(n._id)}
-                  className="ml-2 text-xs text-blue-400 hover:underline"
+                  disabled={loadingIds.includes(n._id)}
+                  className={`ml-2 text-xs text-blue-400 hover:underline ${
+                    loadingIds.includes(n._id) ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  Marcar
+                  {loadingIds.includes(n._id) ? "..." : "Marcar"}
                 </button>
               )}
             </div>

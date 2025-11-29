@@ -123,7 +123,7 @@ function App() {
               <Route path="skills/all-skills" element={<SkillsUser />} />
               <Route path="skills/:variantId" element={<SkillDetail />} />
 
-              <Route path="edit-skill/:variantId/:fingers" element={<EditSkill />} />
+              <Route path="edit-skill/:variantKey/:fingers" element={<EditSkill />} />
               <Route path="add-skill" element={<AddSkill />} />
 
               <Route path="friends" element={<UserFriendsPage />} />

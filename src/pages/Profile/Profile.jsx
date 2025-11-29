@@ -37,7 +37,7 @@ const Profile = () => {
   const borderColor = bgColor + "CC";
 
   const userTeam = user.teams && user.teams.length > 0 ? user.teams[0] : null;
-  const showPesoAltura = user.peso != null || user.altura != null;
+  const showPesoAltura = (user.peso ?? 0) > 0 || (user.altura ?? 0) > 0;
 
     const handleReportSend = async (reasonValue) => {
       try {

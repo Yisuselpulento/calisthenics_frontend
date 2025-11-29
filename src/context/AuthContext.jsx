@@ -44,19 +44,21 @@ export const AuthProvider = ({ children }) => {
   
   // ------------------ CARGAR PERFIL DE USUARIO ------------------
   const loadProfile = async (username) => {
-    setProfileLoading(true);
-    try {
-      const res = await getProfileByUsernameService(username);
-      if (res.success) setViewedProfile(res.user || res.data); 
-      else setViewedProfile(null);
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-      setViewedProfile(null);
-    } finally {
-      setProfileLoading(false);
-    }
-  };
+  // 🟦 Evitar recargar si ya tenemos ese perfil en memoria
+  if (viewedProfile?.username === username) return;
 
+  setProfileLoading(true);
+  try {
+    const res = await getProfileByUsernameService(username);
+    if (res.success) setViewedProfile(res.user || res.data);
+    else setViewedProfile(null);
+  } catch (err) {
+    console.error("Error fetching profile:", err);
+    setViewedProfile(null);
+  } finally {
+    setProfileLoading(false);
+  }
+};
 
   // ------------------ SIGN UP ------------------
   const signup = async (formData) => {
@@ -104,7 +106,6 @@ const removeVariant = (userSkillId, variantKey, fingers) => {
       }));
     }
   };
-
  
 
   return (
@@ -123,6 +124,7 @@ const removeVariant = (userSkillId, variantKey, fingers) => {
         profileLoading,
         loadProfile,
         removeVariant
+        
       }}
     >
       {children}

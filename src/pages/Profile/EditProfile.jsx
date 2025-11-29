@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
 
+  console.log("Current User:", currentUser);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -81,6 +83,7 @@ const EditProfile = () => {
     setLoading(false);
   }
 };
+
 
   return (
     <div className="p-2 text-white min-h-screen">

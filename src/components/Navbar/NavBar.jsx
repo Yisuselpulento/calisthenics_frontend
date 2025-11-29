@@ -4,7 +4,8 @@ import { FaUser, FaBell, FaChartBar } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import NotificationsDropdown from "../NotificationsDropdown";
-import ButtonLogout from "../Buttons/ButtonLogout"; 
+import ButtonLogout from "../Buttons/ButtonLogout";
+import NotificationBadge from "../NotificationBadge"; // 🔔 importamos
 
 const NavBar = () => {
   const { currentUser } = useAuth();
@@ -23,18 +24,21 @@ const NavBar = () => {
               showDropdown
                 ? "bg-primary text-white"
                 : "bg-stone-800 text-gray-300 hover:text-white"
-            }`}
+            } relative`}
           >
             <FaBell className="text-xl" />
+            <NotificationBadge count={currentUser?.notificationsCount} />
           </button>
 
           {showDropdown && (
             <NotificationsDropdown
               currentUser={currentUser}
               closeDropdown={() => setShowDropdown(false)}
-            /> )}
+            />
+          )}
         </div>
-         <ButtonLogout /> 
+
+        <ButtonLogout />
 
         {/* 📊 Botón de Stats */}
         <Link

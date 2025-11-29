@@ -1,88 +1,82 @@
-/* import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { users } from "../../helpers/users";
-import { skills as baseSkills } from "../../helpers/skills";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import BackButton from "../../components/Buttons/BackButton";
-import ButtonSubmit from "../../components/Buttons/ButtonSubmit"; */
+import { useAuth } from "../../context/AuthContext";
+import { getUserVariants } from "../../helpers/getUserVariants";
+import { editSkillVariantService } from "../../Services/skillFetching";
+import toast from "react-hot-toast";
 
 const EditSkill = () => {
- /*  const { username, variantId } = useParams();
+  const { username, variantKey, fingers } = useParams();
   const navigate = useNavigate();
+  const { viewedProfile, profileLoading } = useAuth();
 
-  const user = users.find((u) => u.username === username);
-  const skill = user?.skills?.find((s) => s.variantId === variantId);
+  // 🔥 LOG 1: params recibidos
+  console.log("🔹 Params recibidos:", { username, variantKey, fingers });
 
-  if (!user || !skill)
-    return <p className="text-white text-center mt-10">Skill no encontrada</p>;
+  const user = viewedProfile;
 
-  // Buscar el nombre real de la variant desde helpers/skills
-  const baseSkill = baseSkills.find((s) =>
-    s.variants.some((v) => v.variantId === variantId)
+  // 🔥 LOG 2: perfil crudo recibido
+  console.log("🔹 ViewedProfile crudo:", user);
+
+  // 1️⃣ Aplanar variantes
+  const userVariants = user?.skills ? getUserVariants(user.skills) : [];
+
+  // 🔥 LOG 3: variantes generadas
+  console.log("🔹 Variantes planas generadas:", userVariants);
+
+  // 2️⃣ Buscar variante por params
+  const variant = userVariants.find(
+    (v) =>
+      v.variantKey === variantKey &&
+      Number(v.fingers) === Number(fingers)
   );
 
-  const variantData = baseSkill?.variants.find(
-    (v) => v.variantId === variantId
-  );
+  // 🔥 LOG 4: resultado de la búsqueda de variante
+  console.log("🔹 Variante encontrada:", variant);
 
-  const variantName = variantData?.variant || "Nombre desconocido";
+  // 🔥 LOG 5: estado de loading
+  console.log("🔹 profileLoading:", profileLoading);
 
-  const [form, setForm] = useState({
-    videoUrl: skill.videoUrl || "",
-    fingersUsed: skill.fingersUsed || "",
-  });
+  // 🔥 LOG 6: si user es null
+  if (!user) console.log("⛔ El perfil es NULL antes del render");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // 3️⃣ Loading o errores
+  if (profileLoading) return <p className="text-white">Cargando...</p>;
+  if (!user) return <p className="text-white">Perfil no encontrado</p>;
+  if (!variant) return <p className="text-white">Variante no encontrada</p>;
 
-    skill.videoUrl = form.videoUrl;
-    skill.fingersUsed = form.fingersUsed;
-
-    alert("Skill actualizada");
-    navigate(-1);
-  };
- */
   return (
     <div className="p-2 max-w-xl mx-auto text-white min-h-screen">
-    {/*   <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Editar Skill</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-xl font-bold">Editar variante</h1>
         <BackButton />
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white/10 p-5 backdrop-blur-md border border-white/20 rounded-2xl space-y-5"
-      >
-     
-        <div>
-          <p className="font-bold text-lg">{variantName}</p>
-        </div>
+      {/* 4️⃣ MOSTRAR LA VARIANTE */}
+      <div className="bg-white/10 p-5 border border-white/20 rounded-xl space-y-4">
+        <h2 className="text-lg font-bold">{variant.name}</h2>
 
-   
-        <div>
-          <label className="block mb-1 font-semibold">URL del video</label>
-          <input
-            type="text"
-            value={form.videoUrl}
-            onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
-            className="w-full bg-black/30 border border-gray-700 p-2 rounded-lg"
-            placeholder="https://..."
+        <p className="text-sm text-gray-300">
+          <span className="font-semibold">Skill base:</span> {variant.skillName}
+        </p>
+
+        <p className="text-sm text-gray-300">
+          <span className="font-semibold">Variant Key:</span> {variant.variantKey}
+        </p>
+
+        <p className="text-sm text-gray-300">
+          <span className="font-semibold">Fingers:</span> {variant.fingers}
+        </p>
+
+        {variant.video && (
+          <video
+            src={variant.video}
+            className="rounded-lg w-full mt-3"
+            controls
           />
-        </div>
-
-      
-        <div>
-          <label className="block mb-1 font-semibold">Fingers Used</label>
-          <input
-            type="text"
-            value={form.fingersUsed}
-            onChange={(e) => setForm({ ...form, fingersUsed: e.target.value })}
-            className="w-full bg-black/30 border border-gray-700 p-2 rounded-lg"
-            placeholder="Ej: 3-4 / 2-3-4 ..."
-          />
-        </div>
-
-        <ButtonSubmit type="submit">Guardar cambios</ButtonSubmit>
-      </form> */}
+        )}
+      </div>
     </div>
   );
 };
