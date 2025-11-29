@@ -11,10 +11,11 @@ import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 import { createReportService } from "../../services/reportsFetching";
 import { toast } from "react-hot-toast";
+import { toggleFollowService } from "../../Services/followFetching";
 
 const Profile = () => {
   const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
+  const { currentUser, viewedProfile, profileLoading, loadProfile, updateCurrentUser } = useAuth();
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
@@ -22,26 +23,6 @@ const Profile = () => {
   useEffect(() => {
     loadProfile(username);
   }, [username]); 
-
-const handleReportSend = async (reasonValue) => {
-  try {
-    setLoadingReport(true);
-
-    await createReportService({
-      targetType: "User",   // 👈 la U debe ser mayúscula
-      target: user._id,
-      reason: reasonValue,  
-      description: "",
-    });
-
-    toast.success("Reporte enviado correctamente");
-  } catch (err) {
-    console.error(err);
-    toast.error(err.message || "Error al enviar el reporte");
-  } finally {
-    setLoadingReport(false);
-  }
-};
 
 
   if (profileLoading) return <p className="text-white">Cargando...</p>;
@@ -58,6 +39,44 @@ const handleReportSend = async (reasonValue) => {
   const userTeam = user.teams && user.teams.length > 0 ? user.teams[0] : null;
   const showPesoAltura = user.peso != null || user.altura != null;
 
+    const handleReportSend = async (reasonValue) => {
+      try {
+        setLoadingReport(true);
+
+        await createReportService({
+          targetType: "User",   // 👈 la U debe ser mayúscula
+          target: user._id,
+          reason: reasonValue,  
+          description: "",
+        });
+
+        toast.success("Reporte enviado correctamente");
+      } catch (err) {
+        console.error(err);
+        toast.error(err.message || "Error al enviar el reporte");
+      } finally {
+        setLoadingReport(false);
+      }
+    };
+
+    const handleUnfollow = async () => {
+      try {
+        const res = await toggleFollowService(user._id);
+
+        if (res.success) {
+          updateCurrentUser({
+            ...currentUser,
+            following: (currentUser.following || []).filter((f) => f !== user._id)
+          });
+        } else {
+          toast.error("No se pudo dejar de seguir");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Error en la petición");
+      }
+    };
+
   return (
     <div className="p-2 flex flex-col gap-2 min-h-screen">
       {/* PERFIL */}
@@ -66,7 +85,7 @@ const handleReportSend = async (reasonValue) => {
           <div className="absolute top-2 left-2 z-50">
             <ButtonConfigProfile
               isFollowing={isFollowing}
-              onUnfollowConfirmed={() => console.log("Dejar de seguir a:", user._id)}
+                onUnfollowConfirmed={handleUnfollow}
                 onReportSend={handleReportSend} 
                 loadingReport={loadingReport}
             />
@@ -84,9 +103,6 @@ const handleReportSend = async (reasonValue) => {
             <ButtonFollow
               targetUserId={user._id}
               isFollowing={isFollowing}
-              onFollow={(id) => console.log("Seguir usuario:", id)}
-              onReportSend={handleReportSend}
-              loadingReport={loadingReport}
             />
           )}
         </div>

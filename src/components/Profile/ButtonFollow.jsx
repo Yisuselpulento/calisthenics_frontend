@@ -5,13 +5,13 @@ import { toggleFollowService } from "../../Services/followFetching.js";
 const ButtonFollow = ({ targetUserId, isFollowing }) => {
   const { currentUser, updateCurrentUser } = useAuth();
 
-  // ⛔ Si ya sigue, no mostramos nada
+  // ⛔ Si ya sigue, NO mostramos el botón
   if (isFollowing) return null;
 
   const handleFollow = async () => {
     const res = await toggleFollowService(targetUserId);
+
     if (res.success) {
-      // Actualizar el currentUser en el context
       updateCurrentUser({
         ...currentUser,
         following: [...(currentUser.following || []), targetUserId],
