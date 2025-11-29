@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { FaUserFriends, FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
-const FriendsDropdown = () => {
-  const { currentUser } = useAuth();
+const FriendsDropdown = ({ user }) => {
   const [activeTab, setActiveTab] = useState("friends");
 
-  if (!currentUser) return null; // evita errores si no hay usuario
+  if (!user) return null; // evita errores si no hay usuario
 
-  // Tomamos los primeros 10 following
-  const following = currentUser.following?.slice(0, 10) || [];
-  const followers = currentUser.followers?.slice(0, 10) || [];
+  // Tomamos los primeros 10 following y followers
+  const following = user.following?.slice(0, 10) || [];
+  const followers = user.followers?.slice(0, 10) || [];
 
   return (
     <div className="absolute bottom-[60px] left-1/2 -translate-x-1/2 w-80 bg-stone-900 border border-stone-700 rounded-xl shadow-lg p-4 z-50">
@@ -76,7 +74,7 @@ const FriendsDropdown = () => {
       {/* Link a página completa */}
       <div className="mt-4 text-center">
         <Link
-          to={`/profile/${currentUser.username}/friends`}
+          to={`/profile/${user.username}/friends`}
           className="text-blue-400 hover:underline text-sm"
         >
           Ver todos →
