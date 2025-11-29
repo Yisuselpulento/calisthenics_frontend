@@ -11,6 +11,7 @@ import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 import { createReportService } from "../../Services/reportsFetching";
 import { toast } from "react-hot-toast";
+import Spinner from "../../components/Spinner/Spinner";
 
 const Profile = () => {
   const { username } = useParams();
@@ -25,8 +26,12 @@ const Profile = () => {
   }, [username]); 
 
 
-  if (profileLoading) return <p className="text-white">Cargando...</p>;
-  if (!viewedProfile) return <p className="text-white">Usuario no encontrado</p>;
+  if (!viewedProfile)
+  return (
+    <div className="flex justify-center items-center min-h-screen">
+      <Spinner size="2em" />
+    </div>
+  );
 
   const user = viewedProfile; // Alias para no cambiar todo el código
   const isCurrentUser = currentUser?._id === user._id;

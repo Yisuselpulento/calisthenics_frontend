@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
 
-  console.log("Current User:", currentUser);
 
   const navigate = useNavigate();
 

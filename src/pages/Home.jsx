@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getFeedEventsService } from "../Services/feedFetching.js";
 import PostCard from "../components/Cards/PostCard";
+import Spinner from "../components/Spinner/Spinner.jsx";
 
 const Home = () => {
   const [feed, setFeed] = useState([]);
@@ -22,9 +23,12 @@ const Home = () => {
     loadFeed();
   }, []);
 
-  if (loading) {
-    return <p className="text-center text-gray-400 mt-20">Cargando feed...</p>;
-  }
+   if (loading)
+  return (
+    <div className="flex justify-center items-center min-h-screen">
+      <Spinner size="3em" />
+    </div>
+  );
 
   return (
     <div className="p-2 flex flex-col gap-4">
