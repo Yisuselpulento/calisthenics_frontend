@@ -3,14 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import { useAuth } from "../../context/AuthContext";
+import { HiMiniEyeSlash } from "react-icons/hi2";
+import { IoEyeSharp } from "react-icons/io5";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const styleInput =
-    "bg-stone-800 mt-1 p-2 w-full border border-gray-300 rounded-md";
+    "bg-stone-800 mt-1 flex p-2 w-full border border-gray-300 rounded-md";
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -71,7 +75,7 @@ const SignUp = () => {
         onSubmit={handleSubmit}
       >
         <div>
-          <label htmlFor="fullName">Nombre completo</label>
+          <label htmlFor="fullName">Nombre</label>
           <input
             type="text"
             id="fullName"
@@ -84,7 +88,7 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="username">Nombre de usuario</label>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
             id="username"
@@ -98,7 +102,7 @@ const SignUp = () => {
         </div>
 
         <div>
-          <label htmlFor="email">Correo</label>
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
@@ -110,31 +114,48 @@ const SignUp = () => {
           />
         </div>
 
-        <div>
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={styleInput}
-            required
-          />
-        </div>
+        <div className="relative flex flex-col">
+            <label htmlFor="password" className="mb-1">Contraseña</label>
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={styleInput}
+                required
+              />
+              <span
+                onClick={() => setShowPassword(prev => !prev)}
+                className="absolute right-2 cursor-pointer text-gray-400"
+              >
+                {showPassword ? <HiMiniEyeSlash /> : <IoEyeSharp />}
+              </span>
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="confirmPassword">Confirmar contraseña</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className={styleInput}
-            required
-          />
-        </div>
+          {/* Confirmar Contraseña */}
+          <div className="relative flex flex-col">
+            <label htmlFor="confirmPassword" className="mb-1">Confirmar contraseña</label>
+            <div className="relative flex items-center">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={styleInput} // espacio para el ojo
+                required
+              />
+              <span
+                onClick={() => setShowConfirmPassword(prev => !prev)}
+                className="absolute right-2 cursor-pointer text-gray-400"
+              >
+                {showConfirmPassword ? <HiMiniEyeSlash /> : <IoEyeSharp />}
+              </span>
+            </div>
+          </div>
 
         <div>
           <label htmlFor="gender">Género</label>
@@ -154,7 +175,7 @@ const SignUp = () => {
           </select>
         </div>
 
-        <div>
+        <div className="mb-5">
           <label htmlFor="profileType">Tipo de perfil</label>
           <select
             id="profileType"
