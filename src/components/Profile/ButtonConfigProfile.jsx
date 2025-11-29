@@ -15,8 +15,7 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
 
   return (
     <div className="relative">
-
-      {/* 🔘 BOTÓN PRINCIPAL */}
+      {/* Botón principal */}
       <button
         onClick={() => setOpenMenu(!openMenu)}
         className="rounded-full hover:bg-stone-800 transition"
@@ -24,11 +23,9 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
         <FaEllipsisV className="text-lg" />
       </button>
 
-      {/* 📌 DROPDOWN */}
+      {/* Dropdown */}
       {openMenu && (
         <div className="absolute left-0 mt-2 w-44 bg-stone-900 border border-stone-700 rounded-lg shadow-lg p-2 z-50">
-
-          {/* 🔥 Dejar de seguir */}
           {isFollowing && (
             <button
               onClick={handleUnfollowClick}
@@ -38,7 +35,6 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
             </button>
           )}
 
-          {/* 📝 Reportar */}
           <button
             onClick={() => {
               setShowReportModal(true);
@@ -51,7 +47,7 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
         </div>
       )}
 
-      {/* 🪟 MODAL DE CONFIRMACIÓN - DEJAR DE SEGUIR */}
+      {/* Modal de confirmación de dejar de seguir */}
       <ConfirmUnfollowModal
         isOpen={showUnfollowModal}
         onCancel={() => setShowUnfollowModal(false)}
@@ -61,7 +57,7 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
         }}
       />
 
-      {/* 📝 MODAL DE REPORTE */}
+      {/* Modal de reporte */}
       <ReportUserModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}

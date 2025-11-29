@@ -7,6 +7,7 @@ import {
 } from "../Services/AuthFetching.js";
 import { getProfileByUsernameService } from "../Services/ProfileFetching.js";
 import { removeVariantFromSkills } from "../helpers/removeVariantFromSkills";
+import { toggleFollowService } from "../Services/followFetching.js";
 
 const AuthContext = createContext();
 
@@ -90,6 +91,7 @@ export const AuthProvider = ({ children }) => {
     return res;
   };
 
+  // ------------------ REMOVER VARIANTE DE HABILIDAD ------------------
 const removeVariant = (userSkillId, variantKey, fingers) => {
     // Actualizar viewedProfile
     if (viewedProfile) {
@@ -106,7 +108,37 @@ const removeVariant = (userSkillId, variantKey, fingers) => {
       }));
     }
   };
- 
+
+//SEGUIMIENTO DE USUARIOS TOGGLE FOLLOW
+const toggleFollow = async (targetUser) => {
+  const isAlreadyFollowing = currentUser.following.some(f => f._id === targetUser._id);
+
+  try {
+    const res = await toggleFollowService(targetUser._id); // Llama al backend
+
+    if (res.success) {
+      // Actualizar currentUser
+      const updatedFollowing = isAlreadyFollowing
+        ? currentUser.following.filter(f => f._id !== targetUser._id)
+        : [...currentUser.following, { _id: targetUser._id }];
+
+      setCurrentUser(prev => ({ ...prev, following: updatedFollowing }));
+
+      // Actualizar viewedProfile followers si es el perfil del target
+      if (viewedProfile?._id === targetUser._id) {
+        const updatedFollowers = isAlreadyFollowing
+          ? viewedProfile.followers.filter(f => f._id !== currentUser._id)
+          : [...(viewedProfile.followers || []), { _id: currentUser._id }];
+
+        setViewedProfile(prev => ({ ...prev, followers: updatedFollowers }));
+      }
+    } else {
+      console.error("No se pudo cambiar el follow en el servidor");
+    }
+  } catch (err) {
+    console.error("Error en toggleFollow:", err);
+  }
+};
 
   return (
     <AuthContext.Provider
@@ -123,7 +155,8 @@ const removeVariant = (userSkillId, variantKey, fingers) => {
         viewedProfile,
         profileLoading,
         loadProfile,
-        removeVariant
+        removeVariant,
+        toggleFollow
         
       }}
     >

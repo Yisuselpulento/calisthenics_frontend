@@ -1,7 +1,5 @@
 const NotificationBadge = ({ count }) => {
 
-    console.log("NotificationBadge rendered with count:", count);
-
   if (!count || count <= 0) return null;
 
   return (

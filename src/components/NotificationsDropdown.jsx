@@ -8,8 +8,6 @@ const NotificationsDropdown = ({ closeDropdown }) => {
   const { currentUser, updateCurrentUser } = useAuth();
   const notifications = currentUser?.notifications || [];
 
-  console.log(currentUser);
-
   const [loadingIds, setLoadingIds] = useState([]); // Para manejar botones en loading
 
   const handleMarkRead = async (id) => {

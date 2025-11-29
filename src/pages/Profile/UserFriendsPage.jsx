@@ -1,47 +1,24 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
-
-import {
-  getFollowersService,
-  getFollowingService,
-  toggleFollowService,
-} from "../../Services/followFetching.js";
-
-import ConfirmUnfollowModal from "../../components/Modals/ConfirmUnfollowModal";
+import { useState, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
+import ConfirmUnfollowModal from "../../components/Modals/ConfirmUnfollowModal";
 
 const UserFriendsPage = () => {
+  const { currentUser, updateCurrentUser } = useAuth();
   const { username } = useParams();
-  const { viewedProfile, profileLoading, loadProfile, updateCurrentUser } =
-    useAuth();
 
-  const [followers, setFollowers] = useState([]);
-  const [following, setFollowing] = useState([]);
   const [tab, setTab] = useState("following");
   const [search, setSearch] = useState("");
   const [unfollowTarget, setUnfollowTarget] = useState(null);
 
-  // 🔍 Cargar perfil al cambiar username
-  useEffect(() => {
-    loadProfile(username);
-  }, [username]);
+  if (!currentUser) return <p className="text-white text-center mt-10">Cargando…</p>;
+  if (currentUser.username !== username) return <p className="text-white text-center mt-10">Perfil no disponible</p>;
 
-  // 🔍 Cargar seguidores / seguidos
-  useEffect(() => {
-    if (!viewedProfile?._id) return;
+  // Tomamos followers y following directamente
+  const followers = currentUser.followers || [];
+  const following = currentUser.following || [];
 
-    const loadData = async () => {
-      const f1 = await getFollowersService(viewedProfile._id);
-      const f2 = await getFollowingService(viewedProfile._id);
-
-      if (f1.success) setFollowers(f1.followers);
-      if (f2.success) setFollowing(f2.following);
-    };
-
-    loadData();
-  }, [viewedProfile]);
-
-  // 🔍 Filtrar lista según tab y búsqueda
+  // Filtrar lista según tab y búsqueda
   const filteredList = useMemo(() => {
     const base = tab === "following" ? following : followers;
     return base.filter(
@@ -51,32 +28,17 @@ const UserFriendsPage = () => {
     );
   }, [tab, search, following, followers]);
 
-  if (profileLoading)
-    return <p className="text-white text-center mt-10">Cargando…</p>;
-  if (!viewedProfile)
-    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
+  // Manejar toggle follow / unfollow
+  const handleToggleFollow = (targetUser) => {
+    const isFollowing = following.some((f) => f._id === targetUser._id);
 
-  const user = viewedProfile;
+    // Actualizamos arrays locales
+    const updatedFollowing = isFollowing
+      ? following.filter((u) => u._id !== targetUser._id)
+      : [...following, targetUser];
 
-  // 🔄 Manejar toggle follow / unfollow
-  const handleToggleFollow = async (targetUser) => {
-    const res = await toggleFollowService(targetUser._id);
-    if (res.success) {
-      // Actualizar lista local de following
-      setFollowing((prev) =>
-        prev.some((u) => u._id === targetUser._id)
-          ? prev.filter((u) => u._id !== targetUser._id)
-          : [...prev, targetUser]
-      );
-
-      // Si estamos viendo nuestro propio perfil, actualizar en el context
-      if (user._id === viewedProfile._id) {
-        const updatedFollowing = following.some((u) => u._id === targetUser._id)
-          ? following.filter((u) => u._id !== targetUser._id)
-          : [...following, targetUser];
-        updateCurrentUser({ ...viewedProfile, following: updatedFollowing });
-      }
-    }
+    // Actualizamos currentUser en el context
+    updateCurrentUser({ ...currentUser, following: updatedFollowing });
   };
 
   return (
@@ -131,6 +93,7 @@ const UserFriendsPage = () => {
                 <img
                   src={person.avatar}
                   className="w-10 h-10 rounded-full object-cover"
+                  alt={person.username}
                 />
                 <div>
                   <p className="font-medium">{person.fullName}</p>
@@ -163,9 +126,9 @@ const UserFriendsPage = () => {
       <ConfirmUnfollowModal
         isOpen={!!unfollowTarget}
         onCancel={() => setUnfollowTarget(null)}
-        onConfirm={async () => {
+        onConfirm={() => {
           if (unfollowTarget) {
-            await handleToggleFollow(unfollowTarget);
+            handleToggleFollow(unfollowTarget);
             setUnfollowTarget(null);
           }
         }}

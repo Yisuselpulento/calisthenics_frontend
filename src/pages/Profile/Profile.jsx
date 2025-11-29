@@ -11,11 +11,14 @@ import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 import { createReportService } from "../../services/reportsFetching";
 import { toast } from "react-hot-toast";
-import { toggleFollowService } from "../../Services/followFetching";
 
 const Profile = () => {
   const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile, updateCurrentUser } = useAuth();
+  const { currentUser, viewedProfile, profileLoading, loadProfile, toggleFollow } = useAuth();
+
+  console.log("Viewed Profile:", viewedProfile);
+  console.log("Current User:", currentUser);
+
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
@@ -30,7 +33,7 @@ const Profile = () => {
 
   const user = viewedProfile; // Alias para no cambiar todo el código
   const isCurrentUser = currentUser?._id === user._id;
-  const isFollowing = currentUser?.following?.includes(user._id);
+  const isFollowing = currentUser?.following?.some(f => f._id === user._id);
 
   const color = getLevelColor(user);
   const bgColor = tailwindColors[color] || "#eab308";
@@ -59,23 +62,6 @@ const Profile = () => {
       }
     };
 
-    const handleUnfollow = async () => {
-      try {
-        const res = await toggleFollowService(user._id);
-
-        if (res.success) {
-          updateCurrentUser({
-            ...currentUser,
-            following: (currentUser.following || []).filter((f) => f !== user._id)
-          });
-        } else {
-          toast.error("No se pudo dejar de seguir");
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Error en la petición");
-      }
-    };
 
   return (
     <div className="p-2 flex flex-col gap-2 min-h-screen">
@@ -85,9 +71,9 @@ const Profile = () => {
           <div className="absolute top-2 left-2 z-50">
             <ButtonConfigProfile
               isFollowing={isFollowing}
-                onUnfollowConfirmed={handleUnfollow}
-                onReportSend={handleReportSend} 
-                loadingReport={loadingReport}
+              onUnfollowConfirmed={() => toggleFollow({ _id: user._id })}
+              onReportSend={handleReportSend} 
+              loadingReport={loadingReport}
             />
           </div>
         )}
@@ -101,9 +87,8 @@ const Profile = () => {
           />
           {!isCurrentUser && (
             <ButtonFollow
-              targetUserId={user._id}
-              isFollowing={isFollowing}
-            />
+                targetUserId={user._id}
+              />
           )}
         </div>
 

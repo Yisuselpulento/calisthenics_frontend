@@ -1,38 +1,18 @@
-import { FaUserPlus } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
-import { toggleFollowService } from "../../Services/followFetching.js";
 
-const ButtonFollow = ({ targetUserId, isFollowing }) => {
-  const { currentUser, updateCurrentUser } = useAuth();
+const ButtonFollow = ({ targetUserId }) => {
+  const { currentUser, toggleFollow } = useAuth();
 
-  // ⛔ Si ya sigue, NO mostramos el botón
-  if (isFollowing) return null;
-
-  const handleFollow = async () => {
-    const res = await toggleFollowService(targetUserId);
-
-    if (res.success) {
-      updateCurrentUser({
-        ...currentUser,
-        following: [...(currentUser.following || []), targetUserId],
-      });
-    } else {
-      console.error("Error al seguir al usuario:", res.message);
-    }
-  };
+  // Comprobar si el currentUser ya sigue a este usuario
+  const isFollowing = currentUser?.following?.some(f => f._id === targetUserId);
+  if (isFollowing) return null; // ocultar botón si ya sigue
 
   return (
     <button
-      onClick={handleFollow}
-      className="
-        absolute bottom-0 right-2
-        bg-primary hover:bg-primary/80
-        text-white p-1 rounded-full
-        shadow-md shadow-black/40
-        transition-all flex items-center justify-center
-      "
+      onClick={() => toggleFollow({ _id: targetUserId })}
+      className="px-2 py-1 rounded bg-primary  hover:bg-primary/80 text-xs text-white transition"
     >
-      <FaUserPlus size={13} />
+      Seguir
     </button>
   );
 };
