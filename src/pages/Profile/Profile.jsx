@@ -9,15 +9,12 @@ import { tailwindColors } from "../../helpers/tailwindColor";
 import VsButton from "../../components/VsButton";
 import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
-import { createReportService } from "../../services/reportsFetching";
+import { createReportService } from "../../Services/reportsFetching";
 import { toast } from "react-hot-toast";
 
 const Profile = () => {
   const { username } = useParams();
   const { currentUser, viewedProfile, profileLoading, loadProfile, toggleFollow } = useAuth();
-
-  console.log("Viewed Profile:", viewedProfile);
-  console.log("Current User:", currentUser);
 
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
