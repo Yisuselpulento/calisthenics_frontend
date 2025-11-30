@@ -1,24 +1,26 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
 import ConfirmUnfollowModal from "../../components/Modals/ConfirmUnfollowModal";
+import UserItem from "../../components/Cards/UserItem";
 
 const UserFriendsPage = () => {
-  const { currentUser, updateCurrentUser } = useAuth();
+  const { currentUser, toggleFollow } = useAuth();
   const { username } = useParams();
 
   const [tab, setTab] = useState("following");
   const [search, setSearch] = useState("");
   const [unfollowTarget, setUnfollowTarget] = useState(null);
 
-  if (!currentUser) return <p className="text-white text-center mt-10">Cargando…</p>;
-  if (currentUser.username !== username) return <p className="text-white text-center mt-10">Perfil no disponible</p>;
+  if (!currentUser)
+    return <p className="text-white text-center mt-10">Cargando…</p>;
 
-  // Tomamos followers y following directamente
+  if (currentUser.username !== username)
+    return <p className="text-white text-center mt-10">Perfil no disponible</p>;
+
   const followers = currentUser.followers || [];
   const following = currentUser.following || [];
 
-  // Filtrar lista según tab y búsqueda
   const filteredList = useMemo(() => {
     const base = tab === "following" ? following : followers;
     return base.filter(
@@ -28,17 +30,16 @@ const UserFriendsPage = () => {
     );
   }, [tab, search, following, followers]);
 
-  // Manejar toggle follow / unfollow
-  const handleToggleFollow = (targetUser) => {
-    const isFollowing = following.some((f) => f._id === targetUser._id);
+  const handleToggleFollow = (user) => {
+    const isFollowing = following.some((f) => f._id === user._id);
 
-    // Actualizamos arrays locales
-    const updatedFollowing = isFollowing
-      ? following.filter((u) => u._id !== targetUser._id)
-      : [...following, targetUser];
-
-    // Actualizamos currentUser en el context
-    updateCurrentUser({ ...currentUser, following: updatedFollowing });
+    if (isFollowing) {
+      // Mostrar modal para confirmar dejar de seguir
+      setUnfollowTarget(user);
+    } else {
+      // Seguir directamente
+      toggleFollow(user);
+    }
   };
 
   return (
@@ -78,47 +79,17 @@ const UserFriendsPage = () => {
 
       {/* LISTA */}
       <div className="space-y-1 max-h-[70vh] overflow-y-auto pr-1">
-        {filteredList.map((person) => {
-          const isFollowing = following.some((f) => f._id === person._id);
-
-          return (
-            <div
-              key={person._id}
-              className="flex items-center justify-between bg-stone-800 p-3 rounded-lg hover:bg-stone-700"
-            >
-              <Link
-                to={`/profile/${person.username}`}
-                className="flex items-center gap-3"
-              >
-                <img
-                  src={person.avatar}
-                  className="w-10 h-10 rounded-full object-cover"
-                  alt={person.username}
-                />
-                <div>
-                  <p className="font-medium">{person.fullName}</p>
-                  <p className="text-xs text-gray-400">@{person.username}</p>
-                </div>
-              </Link>
-
-              <button
-                onClick={() => handleToggleFollow(person)}
-                className={`px-3 py-1 text-xs rounded ${
-                  isFollowing
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-              >
-                {isFollowing ? "Dejar de seguir" : "Seguir"}
-              </button>
-            </div>
-          );
-        })}
+        {filteredList.map((person) => (
+          <UserItem
+            key={person._id}
+            user={person}
+            isFollowing={following.some((f) => f._id === person._id)}
+            onToggleFollow={handleToggleFollow}
+          />
+        ))}
 
         {filteredList.length === 0 && (
-          <p className="text-gray-400 text-center mt-6">
-            No se encontraron usuarios.
-          </p>
+          <p className="text-gray-400 text-center mt-6">No se encontraron usuarios.</p>
         )}
       </div>
 
@@ -128,7 +99,7 @@ const UserFriendsPage = () => {
         onCancel={() => setUnfollowTarget(null)}
         onConfirm={() => {
           if (unfollowTarget) {
-            handleToggleFollow(unfollowTarget);
+            toggleFollow(unfollowTarget);
             setUnfollowTarget(null);
           }
         }}

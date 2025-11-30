@@ -10,7 +10,7 @@ const ButtonFollow = ({ targetUserId }) => {
   return (
     <button
       onClick={() => toggleFollow({ _id: targetUserId })}
-      className="px-2 py-1 rounded bg-primary  hover:bg-primary/80 text-xs text-white transition"
+      className="px-2 py-1 rounded bg-primary hover:bg-primary/80 text-xs text-white transition"
     >
       Seguir
     </button>

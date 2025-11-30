@@ -38,6 +38,7 @@ import UpdatePassword from "./pages/AuthPages/UpdatePassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import { Toaster } from "react-hot-toast";
+import EditAdvancedProfile from "./pages/Profile/EditAdvancedProfile";
 
 function App() {
   return (
@@ -119,6 +120,7 @@ function App() {
               <Route path="skills" element={<ProfileSkills />} />
               <Route path="historial" element={<ProfileHistorial />} />
               <Route path="edit" element={<EditProfile />} />
+              <Route path="edit-advanced" element={<EditAdvancedProfile />} />
 
               <Route path="skills/all-skills" element={<SkillsUser />} />
               <Route path="skills/:variantId" element={<SkillDetail />} />

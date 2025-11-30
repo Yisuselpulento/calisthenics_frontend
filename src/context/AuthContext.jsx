@@ -109,31 +109,19 @@ const removeVariant = (userSkillId, variantKey, fingers) => {
     }
   };
 
-//SEGUIMIENTO DE USUARIOS TOGGLE FOLLOW
 const toggleFollow = async (targetUser) => {
-  const isAlreadyFollowing = currentUser.following.some(f => f._id === targetUser._id);
-
   try {
-    const res = await toggleFollowService(targetUser._id); // Llama al backend
+    const res = await toggleFollowService(targetUser._id);
 
     if (res.success) {
-      // Actualizar currentUser
-      const updatedFollowing = isAlreadyFollowing
-        ? currentUser.following.filter(f => f._id !== targetUser._id)
-        : [...currentUser.following, { _id: targetUser._id }];
+      setCurrentUser(res.user);
 
-      setCurrentUser(prev => ({ ...prev, following: updatedFollowing }));
-
-      // Actualizar viewedProfile followers si es el perfil del target
       if (viewedProfile?._id === targetUser._id) {
-        const updatedFollowers = isAlreadyFollowing
-          ? viewedProfile.followers.filter(f => f._id !== currentUser._id)
-          : [...(viewedProfile.followers || []), { _id: currentUser._id }];
-
-        setViewedProfile(prev => ({ ...prev, followers: updatedFollowers }));
+        const profileRes = await getProfileByUsernameService(targetUser.username);
+        if (profileRes.success) {
+          setViewedProfile(profileRes.user);
+        }
       }
-    } else {
-      console.error("No se pudo cambiar el follow en el servidor");
     }
   } catch (err) {
     console.error("Error en toggleFollow:", err);
