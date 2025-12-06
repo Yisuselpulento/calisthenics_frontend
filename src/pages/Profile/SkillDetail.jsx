@@ -7,12 +7,11 @@ import DeleteSkillVariantModal from "../../components/Modals/DeleteSkillVariantM
 import ReportSkillUserModal from "../../components/Modals/ReportSkillUserModal";
 import { useAuth } from "../../context/AuthContext";
 import { getUserVariants } from "../../helpers/getUserVariants";
-import { deleteSkillVariantService } from "../../Services/skillFetching";
 import toast from "react-hot-toast";
 import FavoriteToggleButton from "../../components/Buttons/FavoriteToggleButton";
 
 const SkillDetail = () => {
-  const { username, variantId } = useParams(); // variantId = variantKey
+  const { username, variantId } = useParams(); 
   const { currentUser, viewedProfile, profileLoading, loadProfile, removeVariant } = useAuth();
   const navigate = useNavigate();
 
@@ -37,25 +36,16 @@ const SkillDetail = () => {
 
   // 🔹 Delete
   const handleConfirmDelete = async () => {
-    setLoading(true);
-    try {
-      const response = await deleteSkillVariantService(variant.userSkillId, variant.variantKey, variant.fingers);
-      if (response.success) {
-        // 🔹 Usar removeVariant del contexto
-        removeVariant(variant.userSkillId, variant.variantKey, variant.fingers);
-        toast.success("Skill eliminada correctamente!");
-        setShowDeleteModal(false);
-        navigate(-1); // Volver atrás
-      } else {
-        toast.error("Error al eliminar skill: " + response.message);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error al eliminar skill");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  const res = await removeVariant(variant.userSkillId, variant.variantKey, variant.fingers);
+
+  if (res.success) {
+    toast.success("Skill eliminada correctamente!");
+    setShowDeleteModal(false);
+    navigate(-1);
+  }
+  setLoading(false);
+};
 
   // 🔹 Reportar skill
   const handleSendReport = (reason) => {

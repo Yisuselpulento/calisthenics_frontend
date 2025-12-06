@@ -12,8 +12,6 @@ const Layout = () => {
 
   const showVideo = isProfilePage && viewedProfile?.videoProfile;
 
-  console.log(viewedProfile)
-
   return (
     <>
       {showVideo && (

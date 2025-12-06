@@ -6,8 +6,8 @@ import {
   checkAuthService,
 } from "../Services/AuthFetching.js";
 import { getProfileByUsernameService } from "../Services/ProfileFetching.js";
-import { removeVariantFromSkills } from "../helpers/removeVariantFromSkills";
 import { toggleFollowService } from "../Services/followFetching.js";
+import { deleteSkillVariantService } from "../Services/skillFetching.js";
 
 const AuthContext = createContext();
 
@@ -21,8 +21,12 @@ export const AuthProvider = ({ children }) => {
   const [profileLoading, setProfileLoading] = useState(false);
 
   const updateCurrentUser = (user) => {
-    setCurrentUser(user);
-  };
+  setCurrentUser(user);
+
+  if (viewedProfile?._id === user._id) {
+    setViewedProfile(user);
+  }
+};
 
   // ------------------ RESTAURAR SESIÓN AL CARGAR APP ------------------
   useEffect(() => {
@@ -92,36 +96,26 @@ export const AuthProvider = ({ children }) => {
   };
 
   // ------------------ REMOVER VARIANTE DE HABILIDAD ------------------
-const removeVariant = (userSkillId, variantKey, fingers) => {
-    // Actualizar viewedProfile
-    if (viewedProfile) {
-      setViewedProfile((prev) => ({
-        ...prev,
-        skills: removeVariantFromSkills(prev.skills, userSkillId, variantKey, fingers),
-      }));
+const removeVariant = async (userSkillId, variantKey, fingers) => {
+  try {
+    const res = await deleteSkillVariantService(userSkillId, variantKey, fingers);
+
+    if (res.success) {
+      updateCurrentUser(res.user); 
     }
-    // Actualizar currentUser si es el mismo
-    if (currentUser?.skills.some((s) => s._id === userSkillId)) {
-      setCurrentUser((prev) => ({
-        ...prev,
-        skills: removeVariantFromSkills(prev.skills, userSkillId, variantKey, fingers),
-      }));
-    }
-  };
+
+    return res
+  } catch (err) {
+    console.error("Error al eliminar la variante:", err);
+  }
+};
 
 const toggleFollow = async (targetUser) => {
   try {
     const res = await toggleFollowService(targetUser._id);
 
     if (res.success) {
-      setCurrentUser(res.user);
-
-      if (viewedProfile?._id === targetUser._id) {
-        const profileRes = await getProfileByUsernameService(targetUser.username);
-        if (profileRes.success) {
-          setViewedProfile(profileRes.user);
-        }
-      }
+      updateCurrentUser(res.user);
     }
   } catch (err) {
     console.error("Error en toggleFollow:", err);

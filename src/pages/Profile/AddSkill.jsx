@@ -8,11 +8,11 @@ import toast from "react-hot-toast";
 import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
 
 const AddSkill = () => {
-  const { currentUser, updateCurrentUser } = useAuth();
+  const { updateCurrentUser } = useAuth();
 
   const [skills, setSkills] = useState([]);
-  const [loadingSkills, setLoadingSkills] = useState(true); // ⚡ loading inicial
-  const [loadingSubmit, setLoadingSubmit] = useState(false); // ⚡ loading del botón
+  const [loadingSkills, setLoadingSkills] = useState(true);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -20,14 +20,14 @@ const AddSkill = () => {
   const [fingersUsed, setFingersUsed] = useState(5);
   const [error, setError] = useState("");
 
-  // 🔹 Traer todas las skills desde DB
+  // 🔹 Cargar skills
   useEffect(() => {
     const fetchSkills = async () => {
       setLoadingSkills(true);
       try {
         const data = await getAllSkillsAdminService();
-        if (data.success === false) {
-          setError(data.message || "Error cargando skills");
+        if (!data || data.success === false) {
+          setError(data?.message || "Error cargando skills");
         } else {
           setSkills(data);
         }
@@ -38,11 +38,13 @@ const AddSkill = () => {
         setLoadingSkills(false);
       }
     };
+
     fetchSkills();
   }, []);
 
   // 🔹 Agregar skill
   const handleAddSkill = async () => {
+    const validFingers = [1, 2, 5];
     if (!selectedSkill || !selectedVariant) {
       setError("Debes seleccionar una skill y una variante.");
       return;
@@ -51,8 +53,13 @@ const AddSkill = () => {
       setError("Debes subir un video para agregar esta variante.");
       return;
     }
+    if (!validFingers.includes(fingersUsed)) {
+      setError("Solo puedes elegir 1, 2 o 5 dedos.");
+      return;
+    }
 
     setLoadingSubmit(true);
+
     try {
       const formData = new FormData();
       formData.append("skillId", selectedSkill._id);
@@ -67,16 +74,9 @@ const AddSkill = () => {
         return;
       }
 
-      // 🔹 Actualizar currentUser correctamente
-      updateCurrentUser({
-        ...currentUser,
-        skills: [
-          ...(currentUser.skills || []).filter(s => s._id !== response.userSkill._id),
-          response.userSkill,
-        ],
-      });
+      updateCurrentUser(response.user);
 
-      // Reset de formulario
+      // Reset
       setSelectedSkill(null);
       setSelectedVariant(null);
       setVideoFile(null);
@@ -133,7 +133,8 @@ const AddSkill = () => {
                     : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700"
                 }`}
               >
-                {v.name} <br />
+                {v.name}
+                <br />
                 <span className="text-xs text-gray-400">
                   ({v.type}, {v.difficulty || "-"})
                 </span>
@@ -143,8 +144,12 @@ const AddSkill = () => {
 
           {selectedVariant && (
             <div className="mt-6 space-y-3">
+
+              {/* Video */}
               <div>
-                <label className="block text-sm mb-1 text-gray-300">Video (obligatorio)</label>
+                <label className="block text-sm mb-1 text-gray-300">
+                  Video (obligatorio)
+                </label>
                 <input
                   type="file"
                   accept="video/*"
@@ -153,23 +158,27 @@ const AddSkill = () => {
                 />
               </div>
 
+              {/* Selector de dedos */}
               <div>
-                <label className="block text-sm mb-1 text-gray-300">Dedos usados</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
+                <label className="block text-sm mb-1 text-gray-300">
+                  Dedos usados
+                </label>
+                <select
                   value={fingersUsed}
-                  onChange={(e) => setFingersUsed(parseInt(e.target.value))}
-                  className="w-20 p-2 rounded-lg bg-neutral-900 border border-neutral-700"
-                />
+                  onChange={(e) => setFingersUsed(Number(e.target.value))}
+                  className="w-28 p-2 rounded-lg bg-neutral-900 border border-neutral-700 text-white"
+                >
+                  <option value={1}>1 dedo</option>
+                  <option value={2}>2 dedos</option>
+                  <option value={5}>5 dedos</option>
+                </select>
               </div>
 
               {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
               <SubmitButton
                 onClick={handleAddSkill}
-                loading={loadingSubmit} // ⚡ solo botón
+                loading={loadingSubmit}
                 text="Agregar Skill"
                 type="submit"
               />

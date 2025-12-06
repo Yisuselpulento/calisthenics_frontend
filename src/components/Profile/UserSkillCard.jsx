@@ -16,24 +16,16 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
   const { userSkillId, variantKey, name, fingers, staticAU, dynamicAU } = skill;
 
-  const handleConfirmDelete = async () => {
-    setLoading(true);
-    try {
-      const response = await deleteSkillVariantService(userSkillId, variantKey, fingers);
-      if (response.success) {
-        removeVariant(userSkillId, variantKey, fingers);
-        setShowModal(false);
-        toast.success("Variante eliminada correctamente!");
-      } else {
-        toast.error("Error al eliminar: " + response.message);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error al eliminar variante");
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleConfirmDelete = async () => {
+  setLoading(true);
+  const res = await removeVariant(userSkillId, variantKey, fingers);
+
+  if (res.success) {
+    toast.success("Variante eliminada correctamente!");
+    setShowModal(false);
+  }
+  setLoading(false);
+};
 
   return (
     <>
