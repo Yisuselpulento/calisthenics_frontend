@@ -6,23 +6,21 @@ import { useAuth } from "../context/AuthContext";
 
 const Layout = () => {
   const location = useLocation();
-  const { currentUser } = useAuth();
+  const { viewedProfile } = useAuth(); // 👈 Usar viewedProfile
 
-  // Detecta si estamos en una página de perfil
   const isProfilePage = location.pathname.startsWith("/profile/");
-  const username = location.pathname.split("/")[2];
 
-  // Solo mostramos el video si es la página del usuario logueado
-  const showVideo = isProfilePage && currentUser?.username === username;
+  const showVideo = isProfilePage && viewedProfile?.videoProfile;
+
+  console.log(viewedProfile)
 
   return (
     <>
-      {/* 🎥 Video de fondo global */}
-      {showVideo && currentUser?.videoProfile && (
+      {showVideo && (
         <div className="fixed inset-0 -z-10">
           <video
             className="w-full h-full object-cover"
-            src={currentUser.videoProfile}
+            src={viewedProfile.videoProfile}
             autoPlay
             loop
             muted
@@ -35,7 +33,6 @@ const Layout = () => {
         </div>
       )}
 
-      {/* 🔝 Contenido principal */}
       <div className="relative z-10 min-h-screen flex flex-col">
         <header>
           <NavBar />
