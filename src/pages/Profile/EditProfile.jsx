@@ -86,39 +86,67 @@ const EditProfile = () => {
         className="flex flex-col gap-4 max-w-md mx-auto bg-white/10 p-4 rounded-md backdrop-blur-md border border-white/20"
       >
         {/* Avatar */}
-        <div>
-          <label className="block text-sm mb-1">Avatar</label>
-          <input type="file" name="avatar" accept="image/*" onChange={handleChange} className="text-xs" />
+       <div>
+         <label className="block text-sm mb-1">Avatar</label>
+              <input
+                id="avatar"
+                type="file"
+                name="avatar"
+                accept="image/*"
+                onChange={handleChange}
+                className="hidden"
+              />
 
-          {formData.avatar && (
-            <img
-              src={
-                formData.avatar instanceof File
-                  ? URL.createObjectURL(formData.avatar)
-                  : formData.avatar
-              }
-              className="w-20 h-20 mt-2 rounded-full border object-cover"
-            />
-          )}
-        </div>
+              <label
+                htmlFor="avatar"
+                className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded-md cursor-pointer inline-block transition"
+              >
+                Seleccionar imagen
+              </label>
+
+              {formData.avatar && (
+                <img
+                  src={
+                    formData.avatar instanceof File
+                      ? URL.createObjectURL(formData.avatar)
+                      : formData.avatar
+                  }
+                  className="w-20 h-20 mt-2 rounded-full border object-cover"
+                />
+              )}
+            </div>
 
         {/* Video */}
-        <div>
+       <div>
           <label className="block text-sm mb-1">Video de perfil</label>
-          <input type="file" name="videoProfile" accept="video/*" onChange={handleChange} className="text-xs" />
+              <input
+                id="videoProfile"
+                type="file"
+                name="videoProfile"
+                accept="video/*"
+                onChange={handleChange}
+                className="hidden"
+              />
 
-          {formData.videoProfile && (
-            <video
-              src={
-                formData.videoProfile instanceof File
-                  ? URL.createObjectURL(formData.videoProfile)
-                  : formData.videoProfile
-              }
-              controls
-              className="w-full mt-2 rounded-md"
-            />
-          )}
-        </div>
+              <label
+                htmlFor="videoProfile"
+                className="px-3 py-1 text-sm bg-purple-600 hover:bg-purple-700 rounded-md cursor-pointer inline-block transition"
+              >
+                Seleccionar video
+              </label>
+
+              {formData.videoProfile && (
+                <video
+                  src={
+                    formData.videoProfile instanceof File
+                      ? URL.createObjectURL(formData.videoProfile)
+                      : formData.videoProfile
+                  }
+                  controls
+                  className="w-full mt-2 rounded-md"
+                />
+              )}
+            </div>
 
         {/* Altura y peso */}
         <div className="flex gap-2">

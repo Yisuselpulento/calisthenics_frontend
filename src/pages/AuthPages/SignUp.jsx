@@ -62,7 +62,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     }
 
     toast.success("Cuenta creada correctamente!");
-
     navigate("/");
   };
 

@@ -1,4 +1,4 @@
-const ProgressBar = ({ level = 0, maxLevel = 18000, label }) => {
+const ProgressBar = ({ level = 0, maxLevel = 18000, label, showPercent = true }) => {
   // Asegurar que sea un número válido
   const numericLevel = typeof level === "number" ? level : parseFloat(level) || 0;
 
@@ -35,7 +35,7 @@ const ProgressBar = ({ level = 0, maxLevel = 18000, label }) => {
     <div className="flex flex-col gap-1 mt-1 w-full ">
       {label && (
         <p className="text-[11px] text-gray-300">
-          {label}: {Math.floor(progressPercent)}%
+          {label}: {showPercent ? `${Math.floor(progressPercent)}%` : `${Math.floor(progress)}`}
         </p>
       )}
 

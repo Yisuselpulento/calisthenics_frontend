@@ -10,7 +10,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // 👈 Toggle password
+  const [showPassword, setShowPassword] = useState(false); 
 
   const styleInput =
     "bg-stone-800 mt-1 p-2 w-full border border-gray-300 rounded-md";
@@ -38,8 +38,6 @@ const Login = () => {
       setLoading(false);
       return;
     }
-
-    toast.success("Bienvenido!");
     navigate("/");
   };
 

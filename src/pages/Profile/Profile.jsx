@@ -142,8 +142,8 @@ const Profile = () => {
 
             {showMore && (
               <div className="mt-1 flex flex-col animate-fadeIn">
-                <ProgressBar level={user.stats?.staticAura || 0} maxLevel={9000} label="Static AU" />
-                <ProgressBar level={user.stats?.dynamicAura || 0} maxLevel={9000} label="Dynamic AU" />
+                <ProgressBar level={user.stats?.staticAura || 0} maxLevel={9000} label="Static AU" showPercent={false} />
+                <ProgressBar level={user.stats?.dynamicAura || 0} maxLevel={9000} label="Dynamic AU" showPercent={false} />
               </div>
             )}
           </div>
