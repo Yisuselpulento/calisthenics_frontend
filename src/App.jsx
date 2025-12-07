@@ -123,9 +123,9 @@ function App() {
               <Route path="edit-advanced" element={<EditAdvancedProfile />} />
 
               <Route path="skills/all-skills" element={<SkillsUser />} />
-              <Route path="skills/:variantId" element={<SkillDetail />} />
+              <Route path="skill/:userSkillId/:variantKey/:fingers" element={<SkillDetail />} />
 
-              <Route path="edit-skill/:variantKey/:fingers" element={<EditSkill />} />
+              <Route path="edit-skill/:userSkillId/:variantKey/:fingers" element={<EditSkill />} />
               <Route path="add-skill" element={<AddSkill />} />
 
               <Route path="friends" element={<UserFriendsPage />} />

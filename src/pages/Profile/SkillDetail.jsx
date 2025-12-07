@@ -6,48 +6,60 @@ import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
 import DeleteSkillVariantModal from "../../components/Modals/DeleteSkillVariantModal";
 import ReportSkillUserModal from "../../components/Modals/ReportSkillUserModal";
 import { useAuth } from "../../context/AuthContext";
-import { getUserVariants } from "../../helpers/getUserVariants";
-import toast from "react-hot-toast";
 import FavoriteToggleButton from "../../components/Buttons/FavoriteToggleButton";
+import toast from "react-hot-toast";
+import { getUserSkillVariantService } from "../../Services/skillFetching.js"; 
+import Spinner from "../../components/Spinner/Spinner.jsx";
 
 const SkillDetail = () => {
-  const { username, variantId } = useParams(); 
-  const { currentUser, viewedProfile, profileLoading, loadProfile, removeVariant } = useAuth();
+  const { username, userSkillId, variantKey, fingers } = useParams();
+  const { currentUser, removeVariant } = useAuth();
   const navigate = useNavigate();
 
+  const [variant, setVariant] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // Cargar perfil del usuario
+  // Determinar si el usuario actual es el dueño
+  const isOwner = currentUser?.username === username;
+
+  // Cargar la variante específica
   useEffect(() => {
-    loadProfile(username);
-  }, [username]);
+    const fetchVariant = async () => {
+      setLoading(true);
+      const res = await getUserSkillVariantService(userSkillId, variantKey, fingers);
+      if (res.success) {
+        setVariant(res.variant); // viene solo la variante con todos los datos
+      } else {
+        toast.error(res.message || "No se pudo cargar la skill");
+        setVariant(null);
+      }
+      setLoading(false);
+    };
 
-  if (profileLoading) return <p className="text-white p-5">Cargando...</p>;
-  if (!viewedProfile) return <p className="text-white p-5">Usuario no encontrado</p>;
+    if (userSkillId && variantKey && fingers) fetchVariant();
+  }, [userSkillId, variantKey, fingers]);
 
-  const user = viewedProfile;
-  const isOwner = currentUser?.username === user.username;
-
-  const userVariants = getUserVariants(user.skills);
-  const variant = userVariants.find((v) => v.variantKey === variantId);
+  if (loading) return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner size="2em" />
+      </div>
+    );
+  
   if (!variant) return <p className="text-white p-5">Skill no encontrada</p>;
 
-  // 🔹 Delete
   const handleConfirmDelete = async () => {
-  setLoading(true);
-  const res = await removeVariant(variant.userSkillId, variant.variantKey, variant.fingers);
+    setLoading(true);
+    const res = await removeVariant(variant.userSkillId, variant.variantKey, variant.fingers);
+    if (res.success) {
+      toast.success("Skill eliminada correctamente!");
+      setShowDeleteModal(false);
+      navigate(-1);
+    }
+    setLoading(false);
+  };
 
-  if (res.success) {
-    toast.success("Skill eliminada correctamente!");
-    setShowDeleteModal(false);
-    navigate(-1);
-  }
-  setLoading(false);
-};
-
-  // 🔹 Reportar skill
   const handleSendReport = (reason) => {
     toast.success(`Reporte enviado: ${reason}`);
     setShowReportModal(false);
@@ -55,13 +67,12 @@ const SkillDetail = () => {
 
   return (
     <div className="p-2 text-white max-w-3xl mx-auto">
-      {/* === HEADER === */}
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
         <BackButton />
-
         {isOwner ? (
           <EditAndDeleteButton
-            editLink={`/profile/${username}/edit-skill/${variant.variantKey}/${variant.fingers}`}
+            editLink={`/profile/${username}/edit-skill/${variant.userSkillId}/${variant.variantKey}/${variant.fingers}`}
             onDeleteClick={() => setShowDeleteModal(true)}
             className="px-2 py-1 text-sm rounded flex items-center justify-center"
             disabled={loading}
@@ -76,11 +87,9 @@ const SkillDetail = () => {
         )}
       </div>
 
-      {/* === DETALLES DE LA VARIANTE === */}
+      {/* DETALLES DE LA VARIANTE */}
       <div className="flex items-center gap-2 mb-4">
         <h1 className="text-2xl font-bold">{variant.name}</h1>
-
-        {/* ⭐ FAVORITO */}
         {isOwner && (
           <FavoriteToggleButton 
             userSkillId={variant.userSkillId}
@@ -88,20 +97,21 @@ const SkillDetail = () => {
           />
         )}
       </div>
+
       <p className="text-gray-400 mb-2">
         <span className="text-blue-400 font-semibold">Skill base:</span> {variant.skillName}
       </p>
-      <p className="mb-2"><span className="font-semibold">Tipo:</span> {variant.type}</p>
+      {variant.type && <p className="mb-2"><span className="font-semibold">Tipo:</span> {variant.type}</p>}
       <p className="mb-2"><span className="font-semibold">Fingers Used:</span> {variant.fingers}</p>
-      <p className="mb-2"><span className="font-semibold">Static AU:</span> {variant.staticAU}</p>
-      <p className="mb-2"><span className="font-semibold">Dynamic AU:</span> {variant.dynamicAU}</p>
+      {variant.staticAU !== undefined && <p className="mb-2"><span className="font-semibold">Static AU:</span> {variant.staticAU}</p>}
+      {variant.dynamicAU !== undefined && <p className="mb-2"><span className="font-semibold">Dynamic AU:</span> {variant.dynamicAU}</p>}
 
       {variant.stats && (
         <div className="text-gray-300 text-xs mb-4">
-          <p>Points/sec: {variant.stats.pointsPerSecond}</p>
-          <p>Energy/sec: {variant.stats.energyPerSecond}</p>
-          <p>Points/rep: {variant.stats.pointsPerRep}</p>
-          <p>Energy/rep: {variant.stats.energyPerRep}</p>
+          {variant.stats.pointsPerSecond !== undefined && <p>Points/sec: {variant.stats.pointsPerSecond}</p>}
+          {variant.stats.energyPerSecond !== undefined && <p>Energy/sec: {variant.stats.energyPerSecond}</p>}
+          {variant.stats.pointsPerRep !== undefined && <p>Points/rep: {variant.stats.pointsPerRep}</p>}
+          {variant.stats.energyPerRep !== undefined && <p>Energy/rep: {variant.stats.energyPerRep}</p>}
         </div>
       )}
 
@@ -109,14 +119,16 @@ const SkillDetail = () => {
         <video src={variant.video} controls className="w-full rounded-lg mb-6" />
       )}
 
-      {/* === MODALS === */}
-      <DeleteSkillVariantModal
-        isOpen={showDeleteModal}
-        onCancel={() => setShowDeleteModal(false)}
-        onConfirm={handleConfirmDelete}
-        loading={loading}
-        skillName={variant.name}
-      />
+      {/* MODALS */}
+      {isOwner && (
+        <DeleteSkillVariantModal
+          isOpen={showDeleteModal}
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={handleConfirmDelete}
+          loading={loading}
+          skillName={variant.name}
+        />
+      )}
 
       {showReportModal && (
         <ReportSkillUserModal

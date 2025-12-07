@@ -1,21 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { toggleFavoriteSkillService } from "../../Services/skillFetching";
 import { useAuth } from "../../context/AuthContext";
 
 const FavoriteToggleButton = ({ userSkillId, variantKey }) => {
-  const { currentUser, updateCurrentUser } = useAuth();
+  const { viewedProfile, updateCurrentUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  if (!currentUser) return null;
+  // 🔹 Determinar si la skill/variant está en favoritos
+  useEffect(() => {
+    if (!viewedProfile) return;
 
-  // Verifica si ESTA variante ya está en favoritos
-  const isFavorite = currentUser.favoriteSkills?.some(
-    (fav) =>
-      fav.userSkill === userSkillId &&
-      fav.variantKey === variantKey
-  );
+    const favorite = viewedProfile.favoriteSkills?.some((fav) => {
+      const favId = fav.userSkill?._id || fav.userSkill; // soporta poblado o solo ObjectId
+      return favId === userSkillId && fav.variantKey === variantKey;
+    });
+
+    setIsFavorite(favorite);
+  }, [viewedProfile, userSkillId, variantKey]);
 
   const handleToggle = async () => {
     if (loading) return;
@@ -26,16 +30,22 @@ const FavoriteToggleButton = ({ userSkillId, variantKey }) => {
 
       if (!res.success) {
         toast.error(res.message);
+        setLoading(false);
         return;
       }
 
-      // Actualizar currentUser FAVORITES en el contexto
-      updateCurrentUser({
-        ...currentUser,
-        favoriteSkills: res.favoriteSkills
+      // 🔹 Actualizar estado local instantáneamente
+      const nowFavorite = res.user.favoriteSkills?.some((fav) => {
+        const favId = fav.userSkill?._id || fav.userSkill;
+        return favId === userSkillId && fav.variantKey === variantKey;
       });
+      setIsFavorite(nowFavorite);
 
-      toast.success(isFavorite ? "Eliminada de favoritos" : "Añadida a favoritos");
+      toast.success(nowFavorite ? "Añadida a favoritos" : "Eliminada de favoritos");
+
+      // 🔹 Actualizar viewedProfile en el contexto
+      updateCurrentUser(res.user);
+
     } catch (err) {
       console.error(err);
       toast.error("Error al cambiar favorito");

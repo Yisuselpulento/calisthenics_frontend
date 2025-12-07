@@ -51,3 +51,7 @@ export const toggleFavoriteSkillService = async (userSkillId, variantKey) =>
 /* -------------------- GET FAVORITE SKILLS -------------------- */
 export const getFavoriteSkillsService = async () =>
   handleRequest(axiosInstance.get("/api/user-skills/favorites"));
+
+/* -------------------- GET USER SKILL BY ID -------------------- */
+export const getUserSkillVariantService = async (userSkillId, variantKey, fingers) =>
+  handleRequest(axiosInstance.get(`/api/user-skills/skill/${userSkillId}/${variantKey}/${fingers}`));
