@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { GoReport } from "react-icons/go";
-import BackButton from "../../components/Buttons/BackButton";
 import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
 import DeleteSkillVariantModal from "../../components/Modals/DeleteSkillVariantModal";
-import ReportSkillUserModal from "../../components/Modals/ReportSkillUserModal";
 import { useAuth } from "../../context/AuthContext";
 import FavoriteToggleButton from "../../components/Buttons/FavoriteToggleButton";
 import toast from "react-hot-toast";
 import { getUserSkillVariantService } from "../../Services/skillFetching.js"; 
 import Spinner from "../../components/Spinner/Spinner.jsx";
+import { createReportService } from "../../Services/reportsFetching.js";
+import {skillReportReasons}  from "../../helpers/reportsOptions.js";
+import ReportModal from "../../components/Modals/ReportModal.jsx";
 
 const SkillDetail = () => {
   const { username, userSkillId, variantKey, fingers } = useParams();
@@ -20,6 +21,7 @@ const SkillDetail = () => {
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [loadingReport, setLoadingReport] = useState(false);
 
   // Determinar si el usuario actual es el dueño
   const isOwner = currentUser?.username === username;
@@ -60,9 +62,29 @@ const SkillDetail = () => {
     setLoading(false);
   };
 
-  const handleSendReport = (reason) => {
-    toast.success(`Reporte enviado: ${reason}`);
-    setShowReportModal(false);
+  const handleReport = async (reason) => {
+    try {
+      setLoadingReport(true);
+
+      await createReportService({
+        targetType: "UserSkill",
+        target: variant.userSkillId,
+        variantInfo: {
+          variantKey: variant.variantKey,
+          fingers: variant.fingers,
+        },
+        reason,
+        description: "",
+      });
+
+      toast.success("Reporte enviado correctamente");
+      setShowReportModal(false);
+    } catch (err) {
+      console.error("Error creando reporte:", err);
+      toast.error(err.message || "Error al enviar el reporte");
+    } finally {
+      setLoadingReport(false);
+    }
   };
 
   return (
@@ -136,10 +158,12 @@ const SkillDetail = () => {
       )}
 
       {showReportModal && (
-        <ReportSkillUserModal
+        <ReportModal
           isOpen={showReportModal}
           onClose={() => setShowReportModal(false)}
-          onSend={handleSendReport}
+          onSend={handleReport} 
+          loading={loadingReport}
+          reasons={skillReportReasons}
         />
       )}
     </div>

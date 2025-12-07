@@ -1,7 +1,6 @@
-import reasons from "../../helpers/reportsOptions.js";
 import { useState, useEffect } from "react";
 
-const ReportUserModal = ({ isOpen, onClose, onSend, loading }) => {
+const ReportModal = ({ isOpen, onClose, onSend, loading, reasons }) => {
   const [reason, setReason] = useState("");
 
   // Limpiar razón cuando se abre o cierra el modal
@@ -63,4 +62,4 @@ const ReportUserModal = ({ isOpen, onClose, onSend, loading }) => {
   );
 };
 
-export default ReportUserModal;
+export default ReportModal;

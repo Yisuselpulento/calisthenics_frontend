@@ -1,39 +1,48 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import ReportSkillUserModal from "../Modals/ReportSkillUserModal";
 import { GoReport } from "react-icons/go";
+import { toast } from "react-hot-toast";
+import { createReportService } from "../../Services/reportsFetching";
+import {skillReportReasons}  from "../../helpers/reportsOptions.js";
+import ReportModal from "../Modals/ReportModal.jsx";
 
 const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   const { currentUser } = useAuth();
   const [showReportModal, setShowReportModal] = useState(false);
+  const [loadingReport, setLoadingReport] = useState(false);
 
   const isOwner = currentUser?.username === ownerUsername;
-
   if (!skill) return null;
 
-  // 🔹 Desestructurando según la nueva estructura
-  const {
-    skillName,
-    variantKey,
-    name,
-    fingers,
-    video,
-    type,
-    staticAU,
-    dynamicAU,
-  } = skill;
+  const { skillName, variantKey, name, fingers, video, type, staticAU, dynamicAU, userSkillId } = skill;
 
-  const handleReport = (reason) => {
-    console.log("Reporte enviado:", {
-      reportedUser: ownerUsername,
-      skill: variantKey,
-      reason,
-    });
+  const handleReport = async (reason) => {
+  try {
+    setLoadingReport(true);
+
+    await createReportService({
+  targetType: "UserSkill",
+  target: userSkillId,      // ObjectId del UserSkill
+  variantInfo: {            // info exacta de la variante
+    variantKey: variantKey,
+    fingers: fingers,
+  },
+  reason,
+  description: "",
+});
+
+    toast.success("Reporte enviado correctamente");
+  } catch (err) {
+    console.error("Error creando reporte:", err);
+    toast.error(err.message || "Error al enviar el reporte");
+  } finally {
+    setLoadingReport(false);
     setShowReportModal(false);
-  };
+  }
+};
 
   // ===================================================
-  //                🟦 VISTA CARD
+  //                VISTA CARD
   // ===================================================
   if (view === "card") {
     return (
@@ -71,10 +80,12 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
         )}
 
         {showReportModal && (
-          <ReportSkillUserModal
+          <ReportModal
             isOpen={showReportModal}
             onClose={() => setShowReportModal(false)}
             onSend={handleReport}
+            loading={loadingReport}
+             reasons={skillReportReasons}
           />
         )}
       </div>
@@ -96,10 +107,12 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
         <p className="text-sm text-gray-400">Fingers: {fingers}</p>
 
         {showReportModal && (
-          <ReportSkillUserModal
+          <ReportModal
             isOpen={showReportModal}
             onClose={() => setShowReportModal(false)}
             onSend={handleReport}
+            loading={loadingReport}
+             reasons={skillReportReasons}
           />
         )}
       </div>

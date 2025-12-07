@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import ConfirmUnfollowModal from "../Modals/ConfirmUnfollowModal";
-import ReportUserModal from "../Modals/ReportUserModal";
+import {userReportReasons}  from "../../helpers/reportsOptions.js";
+import ReportModal from "../Modals/ReportModal.jsx";
 
 const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, loadingReport }) => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -54,7 +55,7 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
         }}
       />
 
-      <ReportUserModal
+      <ReportModal
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         onSend={async (reason) => {
@@ -62,6 +63,7 @@ const ButtonConfigProfile = ({ isFollowing, onUnfollowConfirmed, onReportSend, l
           setShowReportModal(false);
         }}
         loading={loadingReport}
+        reasons={userReportReasons}
       />
     </div>
   );
