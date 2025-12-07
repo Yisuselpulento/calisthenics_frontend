@@ -23,7 +23,6 @@ const Searchbar = () => {
     if (res.success) {
       // Excluir al usuario actual
       const filtered = res.data.filter(u => u._id !== currentUser._id);
-      console.log(filtered);
       setResults(filtered);
     } else {
       setResults([]);

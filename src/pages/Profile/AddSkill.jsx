@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
 
 const AddSkill = () => {
-  const { updateCurrentUser } = useAuth();
+  const { updateViewedProfile } = useAuth();
 
   const [skills, setSkills] = useState([]);
   const [loadingSkills, setLoadingSkills] = useState(true);
@@ -74,7 +74,7 @@ const AddSkill = () => {
         return;
       }
 
-      updateCurrentUser(response.user);
+      updateViewedProfile(response.user);
 
       // Reset
       setSelectedSkill(null);

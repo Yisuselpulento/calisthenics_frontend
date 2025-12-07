@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { GoReport } from "react-icons/go";
 import BackButton from "../../components/Buttons/BackButton";
 import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
@@ -69,7 +69,12 @@ const SkillDetail = () => {
     <div className="p-2 text-white max-w-3xl mx-auto">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
-        <BackButton />
+          <Link
+            to={`/profile/${username}/skills/all-skills`}
+            className="text-sm text-blue-500 hover:underline cursor-pointer"
+          >
+            ← Volver
+          </Link>
         {isOwner ? (
           <EditAndDeleteButton
             editLink={`/profile/${username}/edit-skill/${variant.userSkillId}/${variant.variantKey}/${variant.fingers}`}

@@ -22,10 +22,11 @@ export const AuthProvider = ({ children }) => {
 
   const updateCurrentUser = (user) => {
   setCurrentUser(user);
+};
 
-  if (viewedProfile?._id === user._id) {
-    setViewedProfile(user);
-  }
+// Actualiza solo el perfil que estás viendo
+const updateViewedProfile = (user) => {
+  setViewedProfile(user);
 };
 
   // ------------------ RESTAURAR SESIÓN AL CARGAR APP ------------------
@@ -101,7 +102,7 @@ const removeVariant = async (userSkillId, variantKey, fingers) => {
     const res = await deleteSkillVariantService(userSkillId, variantKey, fingers);
 
     if (res.success) {
-      updateCurrentUser(res.user); 
+      updateViewedProfile(res.user); 
     }
 
     return res
@@ -132,8 +133,7 @@ const toggleFollow = async (targetUser) => {
         login,
         logout,
         updateCurrentUser,
-
-        // Nuevo
+        updateViewedProfile,
         viewedProfile,
         profileLoading,
         loadProfile,

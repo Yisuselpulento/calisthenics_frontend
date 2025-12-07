@@ -10,7 +10,7 @@ import Spinner from "../../components/Spinner/Spinner";
 const EditSkill = () => {
   const { username, userSkillId, variantKey, fingers } = useParams();
   const navigate = useNavigate();
-  const { updateCurrentUser } = useAuth();
+  const { updateViewedProfile } = useAuth();
 
   const [variant, setVariant] = useState(null);
   const [newFingers, setNewFingers] = useState(5);
@@ -80,7 +80,7 @@ const EditSkill = () => {
 
     if (res.success) {
       toast.success(res.message || "Variante actualizada correctamente");
-      updateCurrentUser(res.user);
+      updateViewedProfile(res.user);
       navigate(
         `/profile/${username}/skill/${variant.userSkillId}/${variant.variantKey}/${newFingers}`
       );

@@ -5,7 +5,7 @@ import { toggleFavoriteSkillService } from "../../Services/skillFetching";
 import { useAuth } from "../../context/AuthContext";
 
 const FavoriteToggleButton = ({ userSkillId, variantKey }) => {
-  const { viewedProfile, updateCurrentUser } = useAuth();
+  const { viewedProfile, updateViewedProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -44,7 +44,7 @@ const FavoriteToggleButton = ({ userSkillId, variantKey }) => {
       toast.success(nowFavorite ? "Añadida a favoritos" : "Eliminada de favoritos");
 
       // 🔹 Actualizar viewedProfile en el contexto
-      updateCurrentUser(res.user);
+      updateViewedProfile(res.user);
 
     } catch (err) {
       console.error(err);
