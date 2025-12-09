@@ -9,17 +9,21 @@ const FavoriteToggleButton = ({ userSkillId, variantKey, fingers }) => {
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // 🔹 Determinar si la skill/variant está en favoritos
+  // 🔹 Determinar si la skill/variant está en favoritos incluyendo fingers
   useEffect(() => {
     if (!viewedProfile) return;
 
     const favorite = viewedProfile.favoriteSkills?.some((fav) => {
-      const favId = fav.userSkill?._id || fav.userSkill; // soporta poblado o solo ObjectId
-      return favId === userSkillId && fav.variantKey === variantKey;
+      const favId = fav.userSkill?._id || fav.userSkill; 
+      return (
+        favId === userSkillId &&
+        fav.variantKey === variantKey &&
+        fav.fingers === Number(fingers) // 🔹 comparar fingers también
+      );
     });
 
     setIsFavorite(favorite);
-  }, [viewedProfile, userSkillId, variantKey]);
+  }, [viewedProfile, userSkillId, variantKey, fingers]);
 
   const handleToggle = async () => {
     if (loading) return;
@@ -37,7 +41,11 @@ const FavoriteToggleButton = ({ userSkillId, variantKey, fingers }) => {
       // 🔹 Actualizar estado local instantáneamente
       const nowFavorite = res.user.favoriteSkills?.some((fav) => {
         const favId = fav.userSkill?._id || fav.userSkill;
-        return favId === userSkillId && fav.variantKey === variantKey;
+        return (
+          favId === userSkillId &&
+          fav.variantKey === variantKey &&
+          fav.fingers === Number(fingers) // 🔹 comparar fingers también
+        );
       });
       setIsFavorite(nowFavorite);
 

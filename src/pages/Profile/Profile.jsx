@@ -17,6 +17,8 @@ const Profile = () => {
   const { username } = useParams();
   const { currentUser, viewedProfile, profileLoading, loadProfile, toggleFollow } = useAuth();
 
+  console.log("Viewed Profile:", viewedProfile);
+
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
@@ -173,7 +175,7 @@ const Profile = () => {
             <div key={index}>
               <video
                 className="w-30 h-60 object-cover rounded-md"
-                src={fs.userSkill?.variants?.[0]?.video || ""}
+                src={fs.video || ""}
                 controls
                 playsInline
               />

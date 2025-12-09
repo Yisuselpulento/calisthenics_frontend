@@ -6,6 +6,7 @@ import { addSkillVariantService } from "../../Services/skillFetching.js";
 import { getAllSkillsAdminService } from "../../Services/SkillAdminFetching.js";
 import toast from "react-hot-toast";
 import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
+import  {getVariantBgColor}  from "../../helpers/colorTargetVariants.js";
 
 const AddSkill = () => {
   const { updateViewedProfile } = useAuth();
@@ -41,6 +42,7 @@ const AddSkill = () => {
 
     fetchSkills();
   }, []);
+  
 
   // 🔹 Agregar skill
   const handleAddSkill = async () => {
@@ -123,24 +125,26 @@ const AddSkill = () => {
           <h2 className="text-xl font-semibold mb-2">{selectedSkill.name}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {selectedSkill.variants.map((v) => (
-              <button
-                key={v.variantKey}
-                onClick={() => setSelectedVariant(v)}
-                className={`p-3 rounded-xl border transition ${
-                  selectedVariant?.variantKey === v.variantKey
-                    ? "bg-primary border-blue-700"
-                    : "bg-neutral-800 border-neutral-700 hover:bg-neutral-700"
-                }`}
-              >
-                {v.name}
-                <br />
-                <span className="text-xs text-gray-400">
-                  ({v.type}, {v.difficulty || "-"})
-                </span>
-              </button>
-            ))}
-          </div>
+              {selectedSkill.variants.map((v) => {
+                const bgClass = selectedVariant?.variantKey === v.variantKey
+                  ? "bg-primary border-blue-700" // seleccionado mantiene tu estilo
+                  : getVariantBgColor(v.difficulty); // color según dificultad
+
+                return (
+                  <button
+                    key={v.variantKey}
+                    onClick={() => setSelectedVariant(v)}
+                    className={`p-3 rounded-xl border transition ${bgClass}`}
+                  >
+                    {v.name}
+                    <br />
+                    <span className="text-xs text-gray-300">
+                      ({v.difficulty || "-"})
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
           {selectedVariant && (
             <div className="mt-6 space-y-3">
