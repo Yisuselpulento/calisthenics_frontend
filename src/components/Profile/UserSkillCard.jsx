@@ -14,8 +14,6 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
   if (!skill) return null;
 
-  console.log("Rendering UserSkillCard for skill:", skill);
-
   const { userSkillId, variantKey, name, fingers, staticAU, dynamicAU, difficulty } = skill;
 
  const handleConfirmDelete = async () => {
