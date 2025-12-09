@@ -77,7 +77,7 @@ const EditProfile = () => {
           >
             + Combo
           </Link>
-          <TeamButtonProfile />
+        {/*   <TeamButtonProfile /> */}
         </div>
       </div>
 
