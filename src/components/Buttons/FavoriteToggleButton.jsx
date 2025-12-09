@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { toggleFavoriteSkillService } from "../../Services/skillFetching";
 import { useAuth } from "../../context/AuthContext";
 
-const FavoriteToggleButton = ({ userSkillId, variantKey }) => {
+const FavoriteToggleButton = ({ userSkillId, variantKey, fingers }) => {
   const { viewedProfile, updateViewedProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -26,7 +26,7 @@ const FavoriteToggleButton = ({ userSkillId, variantKey }) => {
     setLoading(true);
 
     try {
-      const res = await toggleFavoriteSkillService(userSkillId, variantKey);
+      const res = await toggleFavoriteSkillService(userSkillId, variantKey, fingers);
 
       if (!res.success) {
         toast.error(res.message);

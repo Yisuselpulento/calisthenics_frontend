@@ -43,9 +43,9 @@ export const deleteSkillVariantService = async (userSkillId, variantKey, fingers
   );
 
 /* -------------------- TOGGLE FAVORITE SKILL -------------------- */
-export const toggleFavoriteSkillService = async (userSkillId, variantKey) =>
+export const toggleFavoriteSkillService = async (userSkillId, variantKey, fingers) =>
   handleRequest(
-    axiosInstance.post(`/api/user-skills/favorites/${userSkillId}/${variantKey}`)
+    axiosInstance.post(`/api/user-skills/favorites/${userSkillId}/${variantKey}/${fingers}`)
   );
 
 /* -------------------- GET FAVORITE SKILLS -------------------- */

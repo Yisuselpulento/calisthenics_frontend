@@ -121,6 +121,7 @@ const SkillDetail = () => {
           <FavoriteToggleButton 
             userSkillId={variant.userSkillId}
             variantKey={variant.variantKey}
+            fingers={variant.fingers}
           />
         )}
       </div>

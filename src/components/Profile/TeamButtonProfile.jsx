@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { teams } from "../../helpers/teams"; // importa tu array de teams
+/* import { useAuth } from "../../context/AuthContext";
+import { teams } from "../../helpers/teams"; // importa tu array de teams */
 
 const TeamButtonProfile = () => {
-  const { currentUser } = useAuth();
+ /*  const { currentUser } = useAuth();
 
   const userTeamId = currentUser.teamIds?.[0] || null;
   const userTeam = userTeamId
@@ -21,15 +21,15 @@ const TeamButtonProfile = () => {
       </Link>
     );
   }
-
+ */
   // 👉 Si SÍ tiene team, mostrar logo
   return (
     <Link
-      to={`/teams/${userTeam._id}`}
+  /*     to={`/teams/${userTeam._id}`} */
       className="flex items-center transition"
     >
       <img
-        src={userTeam.logo}
+      /*   src={userTeam.logo} */
         alt="Team logo"
         className="w-14 h-7 object-cover rounded-lg"
       />

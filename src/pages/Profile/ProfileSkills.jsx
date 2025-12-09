@@ -31,6 +31,7 @@ const ProfileSkills = () => {
 
  const userVariants = getUserVariants(user.skills);
 
+
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
 
@@ -94,7 +95,7 @@ const ProfileSkills = () => {
           >
             {userVariants.map((variant) => (
               <SkillCard
-                key={variant.variantKey}
+                key={`${variant.skillId}-${variant.variantKey}-${variant.fingers}`}
                 skill={variant}        
                 view={cardView ? "detail" : "card"}
                 ownerUsername={username}
