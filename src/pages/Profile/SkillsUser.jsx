@@ -24,6 +24,7 @@ const SkillsUser = () => {
   const isOwner = currentUser?.username === user.username;
   const userVariants = getUserVariants(user.skills);
 
+
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
       {/* HEADER */}

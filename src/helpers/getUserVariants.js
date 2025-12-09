@@ -16,7 +16,8 @@ export const getUserVariants = (userSkills = []) => {
       staticAU: variant.staticAU,
       dynamicAU: variant.dynamicAU,
       skillName: userSkill.skill.name,  
-      skillId: userSkill.skill._id,    
+      skillId: userSkill.skill._id,   
+      difficulty: variant.difficulty, 
     }))
   );
 };

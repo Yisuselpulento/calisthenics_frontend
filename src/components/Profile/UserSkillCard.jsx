@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import DeleteSkillVariantModal from "../Modals/DeleteSkillVariantModal";
 import toast from "react-hot-toast";
+import { getVariantBgColor } from "../../helpers/colorTargetVariants";
 
 const UserSkillCard = ({ skill, ownerUsername }) => {
   const { currentUser, removeVariant } = useAuth();
@@ -13,7 +14,9 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
   if (!skill) return null;
 
-  const { userSkillId, variantKey, name, fingers, staticAU, dynamicAU } = skill;
+  console.log("Rendering UserSkillCard for skill:", skill);
+
+  const { userSkillId, variantKey, name, fingers, staticAU, dynamicAU, difficulty } = skill;
 
  const handleConfirmDelete = async () => {
   setLoading(true);
@@ -28,11 +31,15 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
   return (
     <>
-      <div className="bg-stone-900 border border-stone-700 rounded-lg text-xs p-2 flex flex-col gap-1 hover:bg-stone-800 transition">
+      <div
+          className={`border rounded-lg text-xs p-2 flex flex-col gap-1 transition ${
+            getVariantBgColor(skill.difficulty) // <- color según difficulty
+          }`}
+        >
         <Link to={`/profile/${ownerUsername}/skill/${userSkillId}/${variantKey}/${fingers}`} className="flex-1">
           <h3 className="font-semibold text-white">{name}</h3>
-          <p className="text-gray-300">AU estático: <span className="font-medium text-green-400">{staticAU}</span></p>
-          <p className="text-gray-300">AU dinámico: <span className="font-medium text-yellow-400">{dynamicAU}</span></p>
+          <p className="text-gray-200">AU estático: <span className="font-medium text-green-400">{staticAU}</span></p>
+          <p className="text-gray-200">AU dinámico: <span className="font-medium text-yellow-400">{dynamicAU}</span></p>
         </Link>
 
         {isOwner && (

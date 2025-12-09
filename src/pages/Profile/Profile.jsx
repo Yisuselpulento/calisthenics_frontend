@@ -17,8 +17,6 @@ const Profile = () => {
   const { username } = useParams();
   const { currentUser, viewedProfile, profileLoading, loadProfile, toggleFollow } = useAuth();
 
-  console.log("Viewed Profile:", viewedProfile);
-
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
