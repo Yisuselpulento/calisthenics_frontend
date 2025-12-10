@@ -10,7 +10,7 @@ import Spinner from "../../components/Spinner/Spinner";
 const EditSkill = () => {
   const { username, userSkillVariantId } = useParams();
   const navigate = useNavigate();
-  const { updateViewedProfile } = useAuth();
+  const { updateViewedProfile, loadProfile, viewedProfile } = useAuth();
 
   const [variant, setVariant] = useState(null);
   const [newFingers, setNewFingers] = useState(5);
@@ -20,6 +20,11 @@ const EditSkill = () => {
   // Loading separados
   const [loadingVariant, setLoadingVariant] = useState(false); // para cargar variante
   const [submitting, setSubmitting] = useState(false); // para submit
+
+  useEffect(() => {
+    loadProfile(username);
+  }, [username]); 
+
 
   // Cargar la variante específica
   useEffect(() => {
@@ -86,6 +91,13 @@ const EditSkill = () => {
       toast.error(res.message || "Error al actualizar la variante");
     }
   };
+
+   if (!viewedProfile)
+  return (
+    <div className="flex justify-center items-center min-h-screen">
+      <Spinner size="2em" />
+    </div>
+  );
 
   return (
     <div className="p-2 max-w-xl mx-auto text-white min-h-screen">

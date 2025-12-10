@@ -59,6 +59,13 @@ const EditProfile = () => {
     }
   };
 
+  if (!currentUser)
+  return (
+    <div className="flex justify-center items-center min-h-screen">
+      <Spinner size="2em" />
+    </div>
+  );
+
   return (
     <div className="p-2 text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
