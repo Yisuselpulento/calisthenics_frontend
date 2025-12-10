@@ -39,35 +39,37 @@ const AddCombo = () => {
   }, [type, viewedProfile]);
 
   // Energía usada en tiempo real
-  const totalEnergyUsed = useMemo(() => {
-    return elements.reduce((sum, el) => {
-      const variant = userVariants.find(v => v.userSkillId === el.userSkill && v.variantKey === el.variantKey);
-      if (!variant) return sum;
-      return sum + (el.hold ? el.hold * variant.stats.energyPerSecond : 0) + (el.reps ? el.reps * variant.stats.energyPerRep : 0);
-    }, 0);
-  }, [elements, userVariants]);
+ const totalEnergyUsed = useMemo(() => {
+  return elements.reduce((sum, el) => {
+    const variant = userVariants.find(v => v.userSkillVariantId === el.userSkillVariantId);
+    if (!variant) return sum;
+    return sum + (el.hold ? el.hold * variant.stats.energyPerSecond : 0)
+               + (el.reps ? el.reps * variant.stats.energyPerRep : 0);
+  }, 0);
+}, [elements, userVariants]);
 
   const remainingEnergy = Math.max(0, userEnergy - totalEnergyUsed);
 
-  // Agregar / quitar variante
-  const handleToggleSkill = (userSkillId, variantKey) => {
-    setElements(prev => {
-      const exists = prev.some(el => el.userSkill === userSkillId && el.variantKey === variantKey);
-      if (exists) return prev.filter(el => !(el.userSkill === userSkillId && el.variantKey === variantKey));
-      if (prev.length >= maxVariants) {
-        toast.error(`Máximo ${maxVariants} variantes`);
-        return prev;
-      }
-      return [...prev, { userSkill: userSkillId, variantKey, hold: 0, reps: 0 }];
-    });
-  };
+  const handleToggleSkill = (userSkillVariantId) => {
+  setElements(prev => {
+    const exists = prev.some(el => el.userSkillVariantId === userSkillVariantId);
+    if (exists) return prev.filter(el => el.userSkillVariantId !== userSkillVariantId);
+    if (prev.length >= maxVariants) {
+      toast.error(`Máximo ${maxVariants} variantes`);
+      return prev;
+    }
+    return [...prev, { userSkillVariantId, hold: 0, reps: 0 }];
+  });
+};
 
   // Actualizar hold/reps
   const handleSetHoldOrReps = (index, value) => {
     const numberValue = Number(value) || 0;
     setElements(prev => {
       const updated = [...prev];
-      const variant = userVariants.find(v => v.userSkillId === updated[index].userSkill && v.variantKey === updated[index].variantKey);
+        const variant = userVariants.find(
+      v => v.userSkillVariantId === updated[index].userSkillVariantId
+    );
       if (!variant) return updated;
       const usesHold = variant.stats.energyPerSecond > variant.stats.energyPerRep;
 
@@ -162,16 +164,16 @@ const AddCombo = () => {
           <label className="block text-sm mb-1">Variantes ({elements.length}/{maxVariants})</label>
           <div className="grid grid-cols-2 gap-2">
             {filteredVariants.map(variant => {
-              const isSelected = elements.some(el => el.userSkill === variant.userSkillId && el.variantKey === variant.variantKey);
+              const isSelected = elements.some(el => el.userSkillVariantId === variant.userSkillVariantId);
               const cost = variant.stats.energyPerSecond || variant.stats.energyPerRep;
               const disabled = cost > remainingEnergy && !isSelected;
 
               return (
                 <button
-                  key={`${variant.userSkillId}-${variant.variantKey}`}
+                  key={variant.userSkillVariantId}
                   type="button"
                   disabled={disabled}
-                  onClick={() => handleToggleSkill(variant.userSkillId, variant.variantKey)}
+                  onClick={() => handleToggleSkill(variant.userSkillVariantId)}
                   className={`p-2 rounded-md text-left text-xs border transition ${
                     disabled
                       ? "bg-gray-500 border-gray-500 opacity-60 cursor-not-allowed"
@@ -194,8 +196,7 @@ const AddCombo = () => {
 
         {/* Inputs dinámicos */}
         {elements.map((el, index) => {
-          const variant = userVariants.find(v => v.userSkillId === el.userSkill && v.variantKey === el.variantKey);
-          if (!variant) return null;
+          const variant = userVariants.find(v => v.userSkillVariantId === el.userSkillVariantId);
           const usesHold = variant.stats.energyPerSecond > variant.stats.energyPerRep;
 
           return (

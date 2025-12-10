@@ -9,6 +9,8 @@ const ComboDetails = () => {
   const { username, comboId } = useParams();
   const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
 
+  console.log(viewedProfile)
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
