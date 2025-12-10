@@ -23,14 +23,15 @@ const ProfileSkills = () => {
   const user = viewedProfile;
   const isOwner = currentUser?.username === username;
 
+
   // Combos favoritos reconstruidos desde IDs
   const favoriteCombos = Object.values(user.favoriteCombos || {})
     .filter(Boolean)
     .map((favId) => user.combos?.find((c) => c._id === favId))
     .filter(Boolean);
 
- const userVariants = getUserVariants(user.skills);
 
+ const userVariants = getUserVariants(user.skills);
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
@@ -95,7 +96,7 @@ const ProfileSkills = () => {
           >
             {userVariants.map((variant) => (
               <SkillCard
-                key={`${variant.skillId}-${variant.variantKey}-${variant.fingers}`}
+                key={`${variant.userSkillVariantId}`}
                 skill={variant}        
                 view={cardView ? "detail" : "card"}
                 ownerUsername={username}

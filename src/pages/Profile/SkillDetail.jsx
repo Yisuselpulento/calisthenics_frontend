@@ -13,7 +13,7 @@ import {skillReportReasons}  from "../../helpers/reportsOptions.js";
 import ReportModal from "../../components/Modals/ReportModal.jsx";
 
 const SkillDetail = () => {
-  const { username, userSkillId, variantKey, fingers } = useParams();
+  const { userSkillVariantId, username } = useParams();
   const { currentUser, removeVariant } = useAuth();
   const navigate = useNavigate();
 
@@ -24,13 +24,13 @@ const SkillDetail = () => {
   const [loadingReport, setLoadingReport] = useState(false);
 
   // Determinar si el usuario actual es el dueño
-  const isOwner = currentUser?.username === username;
+  const isOwner = currentUser?.username === username; 
 
   // Cargar la variante específica
   useEffect(() => {
     const fetchVariant = async () => {
       setLoading(true);
-      const res = await getUserSkillVariantService(userSkillId, variantKey, fingers);
+      const res = await getUserSkillVariantService(userSkillVariantId);
       if (res.success) {
         setVariant(res.variant); // viene solo la variante con todos los datos
       } else {
@@ -40,8 +40,8 @@ const SkillDetail = () => {
       setLoading(false);
     };
 
-    if (userSkillId && variantKey && fingers) fetchVariant();
-  }, [userSkillId, variantKey, fingers]);
+    if (userSkillVariantId) fetchVariant();
+  }, [userSkillVariantId]);
 
   if (loading) return (
       <div className="flex justify-center items-center min-h-screen">
@@ -53,7 +53,7 @@ const SkillDetail = () => {
 
   const handleConfirmDelete = async () => {
     setLoading(true);
-    const res = await removeVariant(variant.userSkillId, variant.variantKey, variant.fingers);
+    const res = await removeVariant(variant.userSkillVariantId);
     if (res.success) {
       toast.success("Skill eliminada correctamente!");
       setShowDeleteModal(false);
@@ -99,7 +99,7 @@ const SkillDetail = () => {
           </Link>
         {isOwner ? (
           <EditAndDeleteButton
-            editLink={`/profile/${username}/edit-skill/${variant.userSkillId}/${variant.variantKey}/${variant.fingers}`}
+            editLink={`/profile/${username}/edit-skill/${variant.userSkillVariantId}`}
             onDeleteClick={() => setShowDeleteModal(true)}
             className="px-2 py-1 text-sm rounded flex items-center justify-center"
             disabled={loading}
@@ -119,9 +119,7 @@ const SkillDetail = () => {
         <h1 className="text-2xl font-bold">{variant.name}</h1>
         {isOwner && (
           <FavoriteToggleButton 
-            userSkillId={variant.userSkillId}
-            variantKey={variant.variantKey}
-            fingers={variant.fingers}
+            userSkillVariantId={variant.userSkillVariantId}
           />
         )}
       </div>

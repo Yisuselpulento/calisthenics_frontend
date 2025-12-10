@@ -6,18 +6,20 @@
 export const getUserVariants = (userSkills = []) => {
   return userSkills.flatMap((userSkill) =>
     userSkill.variants.map((variant) => ({
-      userSkillId: userSkill._id,       
+      userSkillVariantId: variant.userSkillVariantId,// ID de la variante del usuario
+      userSkillId: userSkill.userSkillId,   // ID del UserSkill
+      skillId: userSkill.skillId,     // ID de la Skill base
+      skillName: userSkill.skillName,  // Nombre de la Skill base
       variantKey: variant.variantKey,
       fingers: variant.fingers,
       video: variant.video,
-      name: variant.name,
-      type: variant.type,
-      stats: variant.stats,
-      staticAU: variant.staticAU,
-      dynamicAU: variant.dynamicAU,
-      skillName: userSkill.skill.name,  
-      skillId: userSkill.skill._id,   
-      difficulty: variant.difficulty, 
+      lastUpdated: variant.lastUpdated,
+      name: variant.name || variant.variantKey,
+      type: variant.type || "static",
+      stats: variant.stats || {},
+      staticAU: variant.staticAU || 0,
+      dynamicAU: variant.dynamicAU || 0,
+      difficulty: variant.difficulty || "basic",
     }))
   );
 };

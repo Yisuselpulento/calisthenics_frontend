@@ -4,13 +4,16 @@ import BackButton from "../../components/Buttons/BackButton";
 import { useAuth } from "../../context/AuthContext";
 import DeleteComboModal from "../../components/Modals/DeleteComboModal";
 import UserComboCard from "../../components/Profile/UserComboCard";
+import { deleteComboService } from "../../Services/comboFetching.js";
+import { toast } from "react-hot-toast";
 
 const Combos = () => {
   const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
+  const { currentUser, viewedProfile, profileLoading, loadProfile, updateViewedProfile } = useAuth();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [comboToDelete, setComboToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (username) loadProfile(username);
@@ -31,9 +34,26 @@ const Combos = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    console.log("Eliminar combo:", comboToDelete);
-    setShowDeleteModal(false);
+  const confirmDelete = async () => {
+    if (!comboToDelete) return;
+
+    setLoading(true);
+    try {
+      const res = await deleteComboService(comboToDelete._id || comboToDelete.comboId);
+      if (!res.success) throw new Error(res.message || "Error eliminando el combo");
+
+      toast.success("Combo eliminado correctamente 🎉");
+
+      // Actualizar el perfil visto con la info nueva
+      updateViewedProfile(res.user);
+
+      setShowDeleteModal(false);
+      setComboToDelete(null);
+    } catch (error) {
+      toast.error(error.message || "Error eliminando el combo");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +76,7 @@ const Combos = () => {
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {combos.map((combo) => (
             <UserComboCard
-              key={combo.comboId}
+              key={combo._id || combo.comboId}
               combo={combo}
               username={user.username}
               isOwner={isOwner}
@@ -75,7 +95,8 @@ const Combos = () => {
         isOpen={showDeleteModal}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
-        comboName={comboToDelete?.comboName}
+        comboName={comboToDelete?.name || comboToDelete?.comboName}
+        loading={loading}
       />
 
       <BackButton />

@@ -27,25 +27,25 @@ export const addSkillVariantService = async (formData) =>
   );
 
 /* -------------------- EDIT SKILL VARIANT -------------------- */
-export const editSkillVariantService = async (userSkillId, variantKey, fingers, formData) =>
+export const editSkillVariantService = async (userSkillVariantId, formData) =>
   handleRequest(
     axiosInstance.put(
-      `/api/user-skills/edit/${userSkillId}/${variantKey}/${fingers}`,
+      `/api/user-skills/edit/${userSkillVariantId}`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     )
   );
 
 /* -------------------- DELETE SKILL VARIANT -------------------- */
-export const deleteSkillVariantService = async (userSkillId, variantKey, fingers) =>
+export const deleteSkillVariantService = async (userSkillVariantId) =>
   handleRequest(
-    axiosInstance.delete(`/api/user-skills/delete/${userSkillId}/${variantKey}/${fingers}`)
+    axiosInstance.delete(`/api/user-skills/delete/${userSkillVariantId}`)
   );
 
 /* -------------------- TOGGLE FAVORITE SKILL -------------------- */
-export const toggleFavoriteSkillService = async (userSkillId, variantKey, fingers) =>
+export const toggleFavoriteSkillService = async (userSkillVariantId) =>
   handleRequest(
-    axiosInstance.post(`/api/user-skills/favorites/${userSkillId}/${variantKey}/${fingers}`)
+    axiosInstance.post(`/api/user-skills/favorites/${userSkillVariantId}`)
   );
 
 /* -------------------- GET FAVORITE SKILLS -------------------- */
@@ -53,5 +53,5 @@ export const getFavoriteSkillsService = async () =>
   handleRequest(axiosInstance.get("/api/user-skills/favorites"));
 
 /* -------------------- GET USER SKILL BY ID -------------------- */
-export const getUserSkillVariantService = async (userSkillId, variantKey, fingers) =>
-  handleRequest(axiosInstance.get(`/api/user-skills/skill/${userSkillId}/${variantKey}/${fingers}`));
+export const getUserSkillVariantService = async (userSkillVariantId) =>
+  handleRequest(axiosInstance.get(`/api/user-skills/skill/variant/${userSkillVariantId}`));

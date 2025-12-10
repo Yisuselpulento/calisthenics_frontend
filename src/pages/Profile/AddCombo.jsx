@@ -1,216 +1,243 @@
-/* import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { users } from "../../helpers/users";
-import { skills as skillsBase } from "../../helpers/skills";
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import BackButton from "../../components/Buttons/BackButton";
-import ButtonSubmit from "../../components/Buttons/ButtonSubmit"; */
+import SubmitButton from "../../components/Buttons/SubmitButton";
+import { useAuth } from "../../context/AuthContext";
+import { createComboService } from "../../Services/comboFetching.js";
+import { getUserVariants } from "../../helpers/getUserVariants";
 
 const AddCombo = () => {
- /*  const { username } = useParams();
   const navigate = useNavigate();
-  const user = users.find((u) => u.username === username);
+  const { viewedProfile, updateViewedProfile } = useAuth();
 
-  if (!user)
-    return (
-      <p className="text-white text-center mt-10">
-        Usuario no encontrado.
-      </p>
-    );
+  const [comboName, setComboName] = useState("");
+  const [type, setType] = useState("static");
+  const [elements, setElements] = useState([]);
+  const [videoFile, setVideoFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const userSkills = user.skills || [];
+  const maxVariants = 10;
+  const minVariants = 3;
 
-  const [form, setForm] = useState({
-    comboName: "",
-    type: "static",
-    selectedSkills: [],
-  });
+  // Variantes planas del usuario
+  const userVariants = useMemo(() => getUserVariants(viewedProfile?.skills), [viewedProfile]);
 
-  const findVariantData = (skillId, variantId) => {
-    const baseSkill = skillsBase.find((s) => s.skillId === skillId);
-    if (!baseSkill) return null;
-    return baseSkill.variants.find((v) => v.variantId === variantId);
-  };
+  const filteredVariants = useMemo(() => {
+  if (!userVariants) return [];
+  if (type === "dynamic" || type === "mixed") return userVariants;
+  // solo static y basic
+  return userVariants.filter(v => v.type === "static" || v.type === "basic");
+}, [userVariants, type]);
 
-  const toggleSkill = (skill) => {
-    setForm((prev) => {
-      const isAdded = prev.selectedSkills.some(
-        (s) => s.skillId === skill.skillId
-      );
+  // Energía disponible según tipo de combo
+  const userEnergy = useMemo(() => {
+    if (!viewedProfile?.stats) return 0;
+    if (type === "static") return viewedProfile.stats.staticAura ?? 0;
+    if (type === "dynamic") return viewedProfile.stats.dynamicAura ?? 0;
+    return Math.min(viewedProfile.stats.staticAura ?? 0, viewedProfile.stats.dynamicAura ?? 0);
+  }, [type, viewedProfile]);
 
-      if (isAdded) {
-        return {
-          ...prev,
-          selectedSkills: prev.selectedSkills.filter(
-            (s) => s.skillId !== skill.skillId
-          ),
-        };
+  // Energía usada en tiempo real
+  const totalEnergyUsed = useMemo(() => {
+    return elements.reduce((sum, el) => {
+      const variant = userVariants.find(v => v.userSkillId === el.userSkill && v.variantKey === el.variantKey);
+      if (!variant) return sum;
+      return sum + (el.hold ? el.hold * variant.stats.energyPerSecond : 0) + (el.reps ? el.reps * variant.stats.energyPerRep : 0);
+    }, 0);
+  }, [elements, userVariants]);
+
+  const remainingEnergy = Math.max(0, userEnergy - totalEnergyUsed);
+
+  // Agregar / quitar variante
+  const handleToggleSkill = (userSkillId, variantKey) => {
+    setElements(prev => {
+      const exists = prev.some(el => el.userSkill === userSkillId && el.variantKey === variantKey);
+      if (exists) return prev.filter(el => !(el.userSkill === userSkillId && el.variantKey === variantKey));
+      if (prev.length >= maxVariants) {
+        toast.error(`Máximo ${maxVariants} variantes`);
+        return prev;
       }
-
-      if (prev.selectedSkills.length >= 5) return prev;
-
-      return {
-        ...prev,
-        selectedSkills: [
-          ...prev.selectedSkills,
-          {
-            skillId: skill.skillId,
-            variantId: skill.variantId,
-            holdSeconds: 0,
-            reps: 0,
-          },
-        ],
-      };
+      return [...prev, { userSkill: userSkillId, variantKey, hold: 0, reps: 0 }];
     });
   };
 
-  const updateSkillField = (skillId, field, value) => {
-    setForm((prev) => ({
-      ...prev,
-      selectedSkills: prev.selectedSkills.map((s) =>
-        s.skillId === skillId ? { ...s, [field]: value } : s
-      ),
-    }));
-    console.log("Update skill:", skillId, field, value);
+  // Actualizar hold/reps
+  const handleSetHoldOrReps = (index, value) => {
+    const numberValue = Number(value) || 0;
+    setElements(prev => {
+      const updated = [...prev];
+      const variant = userVariants.find(v => v.userSkillId === updated[index].userSkill && v.variantKey === updated[index].variantKey);
+      if (!variant) return updated;
+      const usesHold = variant.stats.energyPerSecond > variant.stats.energyPerRep;
+
+      updated[index] = {
+        ...updated[index],
+        hold: usesHold ? numberValue : 0,
+        reps: usesHold ? 0 : numberValue,
+      };
+      return updated;
+    });
   };
 
-  const handleSubmit = (e) => {
+  // Submit del combo
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("FORM DATA:", form);
-  }; */
+
+    if (!comboName.trim()) return toast.error("El combo necesita nombre");
+    if (elements.length < minVariants) return toast.error(`Agrega mínimo ${minVariants} variantes`);
+    if (!videoFile) return toast.error("Sube un video del combo");
+    if (remainingEnergy < 0) return toast.error("No tienes energía suficiente");
+
+    const formData = new FormData();
+    formData.append("name", comboName);
+    formData.append("type", type);
+    formData.append("elements", JSON.stringify(elements));
+    formData.append("video", videoFile);
+
+    try {
+      setLoading(true);
+      const data = await createComboService(formData);
+      if (!data.success) throw new Error(data.message);
+
+      toast.success("Combo creado 🎉");
+      navigate(`/profile/${viewedProfile.username}`);
+      updateViewedProfile(data.user);
+    } catch (error) {
+      toast.error(error.message || "Error creando el combo");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="text-white min-h-screen p-4">
-  {/*     <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Crear nuevo Combo</h2>
         <BackButton />
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="max-w-xl mx-auto bg-white/10 p-5 rounded-md backdrop-blur-md border border-white/20 flex flex-col gap-4"
+        className="max-w-xl mx-auto bg-black/20 p-5 rounded-md border border-white/20 flex flex-col gap-4"
       >
-    
+        {/* Nombre */}
         <div>
-          <label className="block text-sm mb-1">Nombre</label>
+          <label className="block text-sm">Nombre</label>
           <input
             type="text"
-            value={form.comboName}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, comboName: e.target.value }))
-            }
-            className="w-full bg-black/30 rounded-md border border-white/20 p-2 text-sm"
+            value={comboName}
+            onChange={(e) => setComboName(e.target.value)}
+            className="w-full bg-black/40 rounded-md border border-white/20 p-2 text-sm"
+            placeholder="Ej: Static Flow LVL 4"
           />
         </div>
 
+        {/* Tipo */}
         <div>
-          <label className="block text-sm mb-1">Tipo</label>
+          <label className="block text-sm">Tipo</label>
           <select
-            value={form.type}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, type: e.target.value }))
-            }
-            className="w-full bg-black/30 rounded-md border border-white/20 p-2 text-sm"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="w-full bg-black/40 rounded-md border border-white/20 p-2 text-sm"
           >
             <option value="static">Static</option>
             <option value="dynamic">Dynamic</option>
-            <option value="mixed">Mixed</option>
           </select>
         </div>
 
-       
-        <div>
-          <label className="block text-sm mb-2">
-            Skills del usuario (máx. 5)
-          </label>
+        {/* ProgressBar */}
+        <div className="text-xs">
+          <strong>Energía disponible: </strong> {remainingEnergy}/{userEnergy}
+          <div className="w-full bg-gray-700 rounded-md h-3 mt-1">
+            <div
+              className={`h-3 rounded-md transition-all duration-500 ${remainingEnergy > userEnergy * 0.3 ? "bg-green-500" : "bg-red-500"}`}
+              style={{ width: `${(remainingEnergy / userEnergy) * 100}%` }}
+            />
+          </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {userSkills.map((skill) => {
-              const isSelected = form.selectedSkills.some(
-                (s) => s.skillId === skill.skillId
-              );
-              const variantData = findVariantData(skill.skillId, skill.variantId);
+        {/* Variantes */}
+        <div>
+          <label className="block text-sm mb-1">Variantes ({elements.length}/{maxVariants})</label>
+          <div className="grid grid-cols-2 gap-2">
+            {filteredVariants.map(variant => {
+              const isSelected = elements.some(el => el.userSkill === variant.userSkillId && el.variantKey === variant.variantKey);
+              const cost = variant.stats.energyPerSecond || variant.stats.energyPerRep;
+              const disabled = cost > remainingEnergy && !isSelected;
 
               return (
                 <button
-                  key={skill.skillId}
+                  key={`${variant.userSkillId}-${variant.variantKey}`}
                   type="button"
-                  onClick={() => toggleSkill(skill)}
-                  className={`p-2 rounded-md text-left text-sm border transition ${
-                    isSelected
+                  disabled={disabled}
+                  onClick={() => handleToggleSkill(variant.userSkillId, variant.variantKey)}
+                  className={`p-2 rounded-md text-left text-xs border transition ${
+                    disabled
+                      ? "bg-gray-500 border-gray-500 opacity-60 cursor-not-allowed"
+                      : isSelected
                       ? "bg-blue-600 border-blue-400"
-                      : "bg-black/30 border-white/20 hover:border-blue-300"
+                      : "bg-black/40 border-white/20 hover:border-blue-300"
                   }`}
                 >
-                  {variantData?.variant || skill.variantId}
+                  {variant.name}
+                  <p className="text-[10px]">
+                    {variant.stats.energyPerSecond
+                      ? `${variant.stats.energyPerSecond} EN/s`
+                      : `${variant.stats.energyPerRep} EN/r`}
+                  </p>
                 </button>
               );
             })}
           </div>
         </div>
 
-     
-        <div className="flex flex-col gap-4 mt-4">
-          {form.selectedSkills.map((s, index) => {
-            const variantData = findVariantData(s.skillId, s.variantId);
-            const isStatic = variantData?.type === "static";
-            const isDynamic = variantData?.type === "dynamic";
+        {/* Inputs dinámicos */}
+        {elements.map((el, index) => {
+          const variant = userVariants.find(v => v.userSkillId === el.userSkill && v.variantKey === el.variantKey);
+          if (!variant) return null;
+          const usesHold = variant.stats.energyPerSecond > variant.stats.energyPerRep;
 
-            return (
-              <div
-                key={index}
-                className="bg-white/10 border border-white/20 rounded-lg p-4"
-              >
-                <h3 className="font-bold mb-2">
-                  {variantData?.variant || "Skill"}
-                </h3>
+          return (
+            <div key={index} className="flex items-center gap-2 text-xs bg-black/40 p-2 rounded-md border border-white/10">
+              <p className="text-[11px]">{variant.name}</p>
 
-                <p className="text-xs opacity-80 mb-2">
-                  staticAU: {variantData?.staticAU ?? "?"} | dynamicAU:{" "}
-                  {variantData?.dynamicAU ?? "?"}
-                </p>
+              <input
+                type="number"
+                min="1"
+                placeholder={usesHold ? "Segundos" : "Reps"}
+                onChange={(e) => handleSetHoldOrReps(index, e.target.value)}
+                className="w-16 bg-black/40 p-1 rounded-md text-[11px] border border-white/20"
+              />
 
-                {isStatic && (
-                  <div>
-                    <label className="text-sm">Hold Seconds</label>
-                    <input
-                      type="number"
-                      min={1}
-                      value={s.holdSeconds}
-                      onChange={(e) =>
-                        updateSkillField(
-                          s.skillId,
-                          "holdSeconds",
-                          Number(e.target.value)
-                        )
-                      }
-                      className="w-full bg-black/30 border border-white/20 rounded-md p-2 mt-1"
-                    />
-                  </div>
-                )}
+              <span>
+                {usesHold
+                  ? (el.hold * variant.stats.energyPerSecond || 0)
+                  : (el.reps * variant.stats.energyPerRep || 0)
+                } EN
+              </span>
+            </div>
+          );
+        })}
 
-                {isDynamic && (
-                  <div>
-                    <label className="text-sm">Reps</label>
-                    <input
-                      type="number"
-                      min={1}
-                      value={s.reps}
-                      onChange={(e) =>
-                        updateSkillField(s.skillId, "reps", Number(e.target.value))
-                      }
-                      className="w-full bg-black/30 border border-white/20 rounded-md p-2 mt-1"
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        {/* Video */}
+        <div>
+          <label className="block text-sm mb-1">Video del Combo</label>
+          <input
+            type="file"
+            accept="video/mp4,video/webm"
+            onChange={(e) => setVideoFile(e.target.files[0])}
+            className="w-full text-sm"
+          />
         </div>
 
-        <ButtonSubmit type="submit" className="text-sm mt-4">
-          Crear Combo (solo console.log)
-        </ButtonSubmit>
-      </form> */}
+        <SubmitButton
+          loading={loading}
+          text="Crear Combo"
+          type="submit"
+          disabled={remainingEnergy < 0 || loading}
+        />
+      </form>
     </div>
   );
 };

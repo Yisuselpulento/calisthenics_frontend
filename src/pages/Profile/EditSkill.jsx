@@ -8,7 +8,7 @@ import SubmitButton from "../../components/Buttons/SubmitButton";
 import Spinner from "../../components/Spinner/Spinner";
 
 const EditSkill = () => {
-  const { username, userSkillId, variantKey, fingers } = useParams();
+  const { username, userSkillVariantId } = useParams();
   const navigate = useNavigate();
   const { updateViewedProfile } = useAuth();
 
@@ -25,7 +25,7 @@ const EditSkill = () => {
   useEffect(() => {
     const fetchVariant = async () => {
       setLoadingVariant(true);
-      const res = await getUserSkillVariantService(userSkillId, variantKey, fingers);
+      const res = await getUserSkillVariantService(userSkillVariantId);
       if (res.success) {
         setVariant(res.variant);
         setNewFingers(res.variant.fingers);
@@ -35,8 +35,8 @@ const EditSkill = () => {
       setLoadingVariant(false);
     };
 
-    if (userSkillId && variantKey && fingers) fetchVariant();
-  }, [userSkillId, variantKey, fingers]);
+    if (userSkillVariantId) fetchVariant();
+  }, [userSkillVariantId]);
 
   // Previsualización de video
   useEffect(() => {
@@ -71,9 +71,7 @@ const EditSkill = () => {
 
     setSubmitting(true);
     const res = await editSkillVariantService(
-      variant.userSkillId,
-      variant.variantKey,
-      variant.fingers,
+      variant.userSkillVariantId ,
       formData
     );
     setSubmitting(false);
@@ -82,7 +80,7 @@ const EditSkill = () => {
       toast.success(res.message || "Variante actualizada correctamente");
       updateViewedProfile(res.user);
       navigate(
-        `/profile/${username}/skill/${variant.userSkillId}/${variant.variantKey}/${newFingers}`
+        `/profile/${username}/skill/${variant.userSkillVariantId}`
       );
     } else {
       toast.error(res.message || "Error al actualizar la variante");

@@ -24,7 +24,6 @@ const SkillsUser = () => {
   const isOwner = currentUser?.username === user.username;
   const userVariants = getUserVariants(user.skills);
 
-
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">
       {/* HEADER */}
@@ -48,7 +47,7 @@ const SkillsUser = () => {
         <div className="grid gap-1 sm:grid-cols-2 grid-cols-3">
           {userVariants.map((variant) => (
             <UserSkillCard
-              key={variant.variantKey + "-" + variant.fingers} // ⚡ asegurar key única si hay variantes con mismo variantKey
+              key={variant.userSkillVariantId} // ⚡ asegurar key única si hay variantes con mismo variantKey
               skill={variant}
               ownerUsername={user.username}
             />

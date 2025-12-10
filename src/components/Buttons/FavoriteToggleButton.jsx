@@ -4,33 +4,32 @@ import toast from "react-hot-toast";
 import { toggleFavoriteSkillService } from "../../Services/skillFetching";
 import { useAuth } from "../../context/AuthContext";
 
-const FavoriteToggleButton = ({ userSkillId, variantKey, fingers }) => {
+const FavoriteToggleButton = ( {userSkillVariantId} ) => {
   const { viewedProfile, updateViewedProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // 🔹 Determinar si la skill/variant está en favoritos incluyendo fingers
+  console.log(viewedProfile)
+
+  // 🔹 Determinar si la variante está en favoritos usando solo userSkillVariantId
   useEffect(() => {
     if (!viewedProfile) return;
 
-    const favorite = viewedProfile.favoriteSkills?.some((fav) => {
-      const favId = fav.userSkill?._id || fav.userSkill; 
-      return (
-        favId === userSkillId &&
-        fav.variantKey === variantKey &&
-        fav.fingers === Number(fingers) // 🔹 comparar fingers también
-      );
-    });
+    const favorite = viewedProfile.favoriteSkills?.some(
+      (fav) => fav.userSkillVariantId === userSkillVariantId
+    );
+    console.log(favorite)
 
     setIsFavorite(favorite);
-  }, [viewedProfile, userSkillId, variantKey, fingers]);
+  }, [viewedProfile, userSkillVariantId]);
 
   const handleToggle = async () => {
     if (loading) return;
     setLoading(true);
 
     try {
-      const res = await toggleFavoriteSkillService(userSkillId, variantKey, fingers);
+      // 🔹 Solo pasamos userSkillVariantId
+      const res = await toggleFavoriteSkillService(userSkillVariantId);
 
       if (!res.success) {
         toast.error(res.message);
@@ -39,14 +38,9 @@ const FavoriteToggleButton = ({ userSkillId, variantKey, fingers }) => {
       }
 
       // 🔹 Actualizar estado local instantáneamente
-      const nowFavorite = res.user.favoriteSkills?.some((fav) => {
-        const favId = fav.userSkill?._id || fav.userSkill;
-        return (
-          favId === userSkillId &&
-          fav.variantKey === variantKey &&
-          fav.fingers === Number(fingers) // 🔹 comparar fingers también
-        );
-      });
+      const nowFavorite = res.user.favoriteSkills?.some(
+        (fav) => fav.userSkillVariantId === userSkillVariantId
+      );
       setIsFavorite(nowFavorite);
 
       toast.success(nowFavorite ? "Añadida a favoritos" : "Eliminada de favoritos");
