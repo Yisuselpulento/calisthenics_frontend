@@ -5,14 +5,14 @@ const UserComboCard = ({ combo, username, isOwner, onDeleteClick }) => {
     
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 hover:border-blue-500 transition-all">
-      <h3 className="text-xl font-bold mb-2">{combo.comboName}</h3>
+      <h3 className="font-bold mb-2">{combo.name}</h3>
 
       <div className="text-sm space-y-1 mb-4">
         <p>
           <span className="font-semibold text-blue-300">Tipo:</span> {combo.type}
         </p>
         <p>
-          <span className="font-semibold text-blue-300">Energía Total:</span> {combo.totalEnergyCost}
+          <span className="font-semibold text-blue-300">Aura Total:</span> {combo.totalEnergyCost}
         </p>
       </div>
 
@@ -26,7 +26,7 @@ const UserComboCard = ({ combo, username, isOwner, onDeleteClick }) => {
 
         {isOwner && (
           <EditAndDeleteButton
-            editLink={`/profile/${username}/combos/${combo.comboId}/edit`}
+            editLink={`/profile/${username}/combos/${combo._id}/edit`}
             onDeleteClick={() => onDeleteClick(combo)}
             className="px-2 rounded"
           />
