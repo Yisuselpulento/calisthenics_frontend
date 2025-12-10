@@ -127,8 +127,9 @@ const ComboDetails = () => {
               className="w-full rounded-xl mb-3"
             />
           )}          
-          <div className="text-sm mb-2">
-            {el.hold > 0 && <p>⏱ Hold: {el.hold}s</p>}
+         <div className="text-sm mb-2">
+            {el.hold > 0 && <p>⏱ Hold: {el.hold} s</p>}
+            {el.reps > 0 && <p>🔁 Reps: {el.reps}</p>}
             <p>🤘 Fingers: {el.fingers}</p>
           </div>
 
