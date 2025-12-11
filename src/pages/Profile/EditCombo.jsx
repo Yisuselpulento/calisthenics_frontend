@@ -101,8 +101,9 @@ const EditCombo = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto text-white min-h-screen p-4">
+    <div className="max-w-xl mx-auto text-white min-h-screen p-2">
       <h1 className="text-2xl font-bold mb-4">Editar Combo</h1>
+      <h2>AUN NO FUNCIONA</h2>
 
       <form
         onSubmit={handleSubmit}
