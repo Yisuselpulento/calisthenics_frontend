@@ -28,6 +28,14 @@ const EditProfile = () => {
       return;
     }
 
+    if (name === "peso" || name === "altura") {
+    // Permitimos solo números positivos o vacío
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+    return;
+  }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -163,6 +171,7 @@ const EditProfile = () => {
               type="number"
               step="0.01"
               name="altura"
+              min="0"
               value={formData.altura}
               onChange={handleChange}
               className="w-full p-2 bg-black/30 rounded-md border text-sm"
@@ -174,6 +183,7 @@ const EditProfile = () => {
             <input
               type="number"
               name="peso"
+              min="0"
               value={formData.peso}
               onChange={handleChange}
               className="w-full p-2 bg-black/30 rounded-md border text-sm"
