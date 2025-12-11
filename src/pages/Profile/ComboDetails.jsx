@@ -5,6 +5,7 @@ import EditAndDeleteButton from "../../components/Buttons/EditAndDeleteButton";
 import DeleteComboModal from "../../components/Modals/DeleteComboModal";
 import { deleteComboService, getComboByIdService } from "../../Services/comboFetching.js";
 import toast from "react-hot-toast";
+import FavoriteComboStar from "../../components/Buttons/FavoriteComboStar.jsx";
 
 const ComboDetails = () => {
   const { comboId } = useParams();
@@ -71,7 +72,13 @@ const ComboDetails = () => {
   return (
   <div className="max-w-4xl mx-auto text-white min-h-screen">
     <div className="flex justify-between items-center mb-2">
-      <h1 className="text-xl font-bold">{combo.name}</h1>
+      <div className="flex items-center gap-2 mb-2">
+          <h1 className="text-2xl font-bold">{combo.name}</h1>
+
+          {isOwner && (
+            <FavoriteComboStar comboId={combo._id} type={combo.type} />
+          )}
+        </div>
       {isOwner && (
         <EditAndDeleteButton
           editLink={`/combos/${combo._id}/edit`}

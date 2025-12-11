@@ -9,12 +9,12 @@ const EditAndDeleteButton = ({
     <div className={`flex items-center gap-2 ${className}`}>
 
       {/* EDITAR (siempre Link) */}
-      <Link
+  {/*     <Link
         to={editLink}
         className={`${className} bg-yellow-500` }
       >
         Editar
-      </Link>
+      </Link> */}
 
       {/* ELIMINAR */}
       <button

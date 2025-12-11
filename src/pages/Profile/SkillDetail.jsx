@@ -13,7 +13,7 @@ import {skillReportReasons}  from "../../helpers/reportsOptions.js";
 import ReportModal from "../../components/Modals/ReportModal.jsx";
 
 const SkillDetail = () => {
-  const { userSkillVariantId, username } = useParams();
+  const { userSkillVariantId, username, currentUser } = useParams();
   const { viewedProfile, removeVariant, loadProfile } = useAuth();
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const SkillDetail = () => {
   }, [username]); 
 
   // Determinar si el usuario actual es el dueño
-  const isOwner = viewedProfile?.username === username; 
+  const isOwner = currentUser?.username === username; 
 
   // Cargar la variante específica
   useEffect(() => {
