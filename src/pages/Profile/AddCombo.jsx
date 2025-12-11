@@ -16,6 +16,7 @@ const AddCombo = () => {
   const [elements, setElements] = useState([]);
   const [videoFile, setVideoFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [videoPreview, setVideoPreview] = useState(null);
 
   const maxVariants = 10;
   const minVariants = 3;
@@ -223,14 +224,40 @@ const AddCombo = () => {
 
         {/* Video */}
         <div>
-          <label className="block text-sm mb-1">Video del Combo</label>
-          <input
-            type="file"
-            accept="video/mp4,video/webm"
-            onChange={(e) => setVideoFile(e.target.files[0])}
-            className="w-full text-sm"
-          />
-        </div>
+            <label className="block text-sm mb-1">Video del Combo</label>
+
+            {/* Input oculto */}
+            <input
+              id="comboVideo"
+              type="file"
+              accept="video/mp4,video/webm"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setVideoFile(file);
+                if (file) {
+                  setVideoPreview(URL.createObjectURL(file));
+                }
+              }}
+              className="hidden"
+            />
+
+            {/* Botón visible */}
+            <label
+              htmlFor="comboVideo"
+              className="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded-md text-sm cursor-pointer inline-block transition"
+            >
+              Seleccionar video
+            </label>
+
+            {/* Preview */}
+            {videoPreview && (
+              <video
+                src={videoPreview}
+                controls
+                className="w-full rounded-md mt-2 max-h-64 object-cover"
+              />
+            )}
+          </div>
 
         <SubmitButton
           loading={loading}

@@ -10,7 +10,6 @@ const Home = () => {
   useEffect(() => {
     const loadFeed = async () => {
       const res = await getFeedEventsService();
-
       if (res.success) {
         setFeed(res.data);
       } else {

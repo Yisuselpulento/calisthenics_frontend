@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import TeamButtonProfile from "../../components/Profile/TeamButtonProfile";
 
 const EditProfile = () => {
-  const { currentUser, updateViewedProfile } = useAuth();
+  const { currentUser, updateCurrentUser } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ const EditProfile = () => {
 
       if (!res.success) throw new Error(res.message);
 
-      updateViewedProfile(res.user);
+      updateCurrentUser(res.user);
 
       toast.success("Perfil actualizado!");
       navigate(`/profile/${res.user.username}`);

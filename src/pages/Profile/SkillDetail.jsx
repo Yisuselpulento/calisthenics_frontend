@@ -67,7 +67,6 @@ const SkillDetail = () => {
 
   try {
     const res = await deleteSkillVariantService(userSkillVariantId);
-    console.log(res)
     if (!res.success) {
       toast.error(res.message || "No se pudo eliminar la variante.");
       setLoading(false);
@@ -138,7 +137,7 @@ const SkillDetail = () => {
       </div>
 
       {/* DETALLES DE LA VARIANTE */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-2">
         <h1 className="text-2xl font-bold">{variant.name}</h1>
         {isOwner && (
           <FavoriteToggleButton 
@@ -146,11 +145,22 @@ const SkillDetail = () => {
           />
         )}
       </div>
+          <span
+                className={` text-xs px-2 py-1 rounded-full ${
+                  variant.type === "static"
+                    ? "bg-blue-500/50 text-blue-300"
+                    : variant.type === "dynamic"
+                    ? "bg-green-500/50 text-green-300"
+                    : "bg-yellow-500/50 text-yellow-300"
+                }`}
+              >
+                {variant.type || "unknown"}
+        </span>
 
-      <p className="text-gray-400 mb-2">
-        <span className="text-blue-400 font-semibold">Skill base:</span> {variant.skillName}
+      <p className="text-gray-400">
+        <span className="text-blue-400 font-semibold ">Skill base:</span> {variant.skillName}
       </p>
-      {variant.type && <p className="mb-2"><span className="font-semibold">Tipo:</span> {variant.type}</p>}
+  
       <p className="mb-2"><span className="font-semibold">Fingers Used:</span> {variant.fingers}</p>
       {variant.staticAU !== undefined && <p className="mb-2"><span className="font-semibold">Static AU:</span> {variant.staticAU}</p>}
       {variant.dynamicAU !== undefined && <p className="mb-2"><span className="font-semibold">Dynamic AU:</span> {variant.dynamicAU}</p>}

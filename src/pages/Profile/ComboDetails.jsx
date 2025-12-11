@@ -25,7 +25,6 @@ const ComboDetails = () => {
       setLoading(true);
       try {
        const res = await getComboByIdService(comboId);
-       console.log(res)
           if (res?.success && res?.combo) {
             setCombo(res.combo);
           } else {

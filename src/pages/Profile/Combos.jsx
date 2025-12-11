@@ -60,7 +60,7 @@ const Combos = () => {
     <div className="max-w-5xl mx-auto text-white min-h-screen">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold">Combos de {user.username}</h1>
+        <h1 className="text-xl font-bold">Combos</h1>
         {isOwner && (
           <Link
             to={`/profile/${currentUser.username}/combos/add`}

@@ -15,7 +15,7 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
   if (!skill) return null;
 
-  const {  name,  staticAU, dynamicAU, difficulty, userSkillVariantId  } = skill;
+  const {  name,  staticAU, dynamicAU, difficulty, userSkillVariantId, fingers  } = skill;
 
  const handleConfirmDelete = async () => {
   setLoading(true);
@@ -47,7 +47,7 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
           }`}
         >
         <Link to={`/profile/${ownerUsername}/skill/${userSkillVariantId}`} className="flex-1">
-          <h3 className="font-semibold text-white">{name}</h3>
+           {name} <span className="text-gray-300">({fingers})</span>
           <p className="text-gray-200">AU estático: <span className="font-medium text-green-400">{staticAU}</span></p>
           <p className="text-gray-200">AU dinámico: <span className="font-medium text-yellow-400">{dynamicAU}</span></p>
         </Link>

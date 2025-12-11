@@ -9,8 +9,6 @@ const FavoriteToggleButton = ( {userSkillVariantId} ) => {
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  console.log(viewedProfile)
-
   // 🔹 Determinar si la variante está en favoritos usando solo userSkillVariantId
   useEffect(() => {
     if (!viewedProfile) return;
