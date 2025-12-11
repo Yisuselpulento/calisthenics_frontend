@@ -1,5 +1,5 @@
-import { useState , useEffect} from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { HiMiniEyeSlash } from "react-icons/hi2";
 import { IoEyeSharp } from "react-icons/io5";
 import { useAuth } from "../../context/AuthContext";
@@ -11,29 +11,14 @@ import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 import { createReportService } from "../../Services/reportsFetching";
 import { toast } from "react-hot-toast";
-import Spinner from "../../components/Spinner/Spinner";
 
 const Profile = () => {
-  const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile, toggleFollow } = useAuth();
+  const { currentUser, viewedProfile, toggleFollow } = useAuth();
 
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
-  // 🔍 Cargar perfil cuando cambia el username
-  useEffect(() => {
-    loadProfile(username);
-  }, [username]); 
-
-
-  if (!viewedProfile)
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Spinner size="2em" />
-    </div>
-  );
-
-  const user = viewedProfile; // Alias para no cambiar todo el código
+  const user = viewedProfile; 
   const isCurrentUser = currentUser?._id === user._id;
   const isFollowing = currentUser?.following?.some(f => f._id === user._id);
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ComboCard from "../../components/Profile/ComboCard";
 import SkillCard from "../../components/Profile/SkillCard";
@@ -8,30 +8,19 @@ import { getUserVariants } from "../../helpers/getUserVariants";
 
 const ProfileSkills = () => {
   const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
+  const { currentUser, viewedProfile} = useAuth();
   const [cardView, setCardView] = useState(false);
-
-  useEffect(() => {
-    loadProfile(username);
-  }, [username]);
-
-  if (profileLoading) 
-    return <p className="text-white text-center mt-10">Cargando...</p>;
-  if (!viewedProfile) 
-    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
 
   const user = viewedProfile;
   const isOwner = currentUser?.username === username;
 
-
-  // Combos favoritos reconstruidos desde IDs
   const favoriteCombos = Object.values(user.favoriteCombos || {})
     .filter(Boolean)
     .map((favId) => user.combos?.find((c) => c._id === favId))
     .filter(Boolean);
 
 
- const userVariants = getUserVariants(user.skills);
+  const userVariants = getUserVariants(user.skills);
 
   return (
     <div className="p-2 max-w-4xl mx-auto text-white">

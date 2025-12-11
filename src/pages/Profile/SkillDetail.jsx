@@ -14,7 +14,7 @@ import ReportModal from "../../components/Modals/ReportModal.jsx";
 
 const SkillDetail = () => {
   const { userSkillVariantId, username } = useParams();
-  const { viewedProfile, loadProfile, updateViewedProfile , currentUser} = useAuth();
+  const {  updateViewedProfile , currentUser} = useAuth();
   const navigate = useNavigate();
 
   const [variant, setVariant] = useState(null);
@@ -23,11 +23,6 @@ const SkillDetail = () => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
 
-  useEffect(() => {
-    loadProfile(username);
-  }, [username]); 
-
-  // Determinar si el usuario actual es el dueño
   const isOwner = currentUser?.username === username; 
 
   // Cargar la variante específica
@@ -54,13 +49,6 @@ const SkillDetail = () => {
     );
   
   if (!variant) return <p className="text-white p-5">Skill no encontrada</p>;
-
-   if (!viewedProfile)
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Spinner size="2em" />
-    </div>
-  );
 
   const handleConfirmDelete = async () => {
   setLoading(true);

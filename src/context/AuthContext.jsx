@@ -7,7 +7,6 @@ import {
 } from "../Services/AuthFetching.js";
 import { getProfileByUsernameService } from "../Services/ProfileFetching.js";
 import { toggleFollowService } from "../Services/followFetching.js";
-import { deleteSkillVariantService } from "../Services/skillFetching.js";
 
 const AuthContext = createContext();
 

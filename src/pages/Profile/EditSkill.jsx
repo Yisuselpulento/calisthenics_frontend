@@ -10,21 +10,15 @@ import Spinner from "../../components/Spinner/Spinner";
 const EditSkill = () => {
   const { username, userSkillVariantId } = useParams();
   const navigate = useNavigate();
-  const { updateViewedProfile, loadProfile, viewedProfile } = useAuth();
+  const { updateViewedProfile, viewedProfile } = useAuth();
 
   const [variant, setVariant] = useState(null);
   const [newFingers, setNewFingers] = useState(5);
   const [videoFile, setVideoFile] = useState(null);
   const [previewVideo, setPreviewVideo] = useState(null);
 
-  // Loading separados
-  const [loadingVariant, setLoadingVariant] = useState(false); // para cargar variante
-  const [submitting, setSubmitting] = useState(false); // para submit
-
-  useEffect(() => {
-    loadProfile(username);
-  }, [username]); 
-
+  const [loadingVariant, setLoadingVariant] = useState(false);
+  const [submitting, setSubmitting] = useState(false); 
 
   // Cargar la variante específica
   useEffect(() => {

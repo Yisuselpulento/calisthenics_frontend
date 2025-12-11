@@ -80,7 +80,7 @@ const ComboDetails = () => {
         </div>
       {isOwner && (
         <EditAndDeleteButton
-          editLink={`/combos/${combo._id}/edit`}
+          editLink={`/profile/${currentUser.username}/combos/${combo._id}/edit`}
           onDeleteClick={() => setShowDeleteModal(true)}
           className="px-2 rounded"
         />

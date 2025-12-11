@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import BackButton from "../../components/Buttons/BackButton";
 import { useAuth } from "../../context/AuthContext";
@@ -6,19 +5,7 @@ import UserSkillCard from "../../components/Profile/UserSkillCard";
 import { getUserVariants } from "../../helpers/getUserVariants";
 
 const SkillsUser = () => {
-  const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile } = useAuth();
-
-  // 🔹 Cargar perfil al montar o cambiar el username
-  useEffect(() => {
-    if (username) loadProfile(username);
-  }, [username]);
-
-  if (profileLoading)
-    return <p className="text-white text-center mt-10">Cargando...</p>;
-
-  if (!viewedProfile)
-    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
+  const { currentUser, viewedProfile} = useAuth();
 
   const user = viewedProfile;
   const isOwner = currentUser?.username === user.username;
@@ -47,7 +34,7 @@ const SkillsUser = () => {
         <div className="grid gap-1 sm:grid-cols-2 grid-cols-3">
           {userVariants.map((variant) => (
             <UserSkillCard
-              key={variant.userSkillVariantId} // ⚡ asegurar key única si hay variantes con mismo variantKey
+              key={variant.userSkillVariantId} 
               skill={variant}
               ownerUsername={user.username}
             />

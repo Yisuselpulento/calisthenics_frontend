@@ -39,6 +39,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import { Toaster } from "react-hot-toast";
 import EditAdvancedProfile from "./pages/Profile/EditAdvancedProfile";
+import OwnerRoute from "./components/OwnerRoute";
 
 function App() {
   return (
@@ -116,28 +117,59 @@ function App() {
 
             {/* --- Perfil --- */}
             <Route path="profile/:username" element={<ProfileLayout />}>
-              <Route index element={<Profile />} />
-              <Route path="skills" element={<ProfileSkills />} />
-              <Route path="historial" element={<ProfileHistorial />} />
-              <Route path="edit" element={<EditProfile />} />
-              <Route path="edit-advanced" element={<EditAdvancedProfile />} />
+                <Route index element={<Profile />} />
+                <Route path="skills" element={<ProfileSkills />} />
+                <Route path="historial" element={<ProfileHistorial />} />
+                
+                {/* Rutas solo accesibles por el dueño */}
+                <Route path="edit" element={
+                  <OwnerRoute>
+                    <EditProfile />
+                  </OwnerRoute>
+                } />
+                <Route path="edit-advanced" element={
+                  <OwnerRoute>
+                    <EditAdvancedProfile />
+                  </OwnerRoute>
+                } />
 
-              <Route path="skills/all-skills" element={<SkillsUser />} />
-              <Route path="skill/:userSkillVariantId" element={<SkillDetail />} />
+                <Route path="skills/all-skills" element={<SkillsUser />} />
+                <Route path="skill/:userSkillVariantId" element={<SkillDetail />} />
 
-              <Route path="edit-skill/:userSkillVariantId" element={<EditSkill />} />
-              <Route path="add-skill" element={<AddSkill />} />
+                <Route path="edit-skill/:userSkillVariantId" element={
+                  <OwnerRoute>
+                    <EditSkill />
+                  </OwnerRoute>
+                } />
+                <Route path="add-skill" element={
+                  <OwnerRoute>
+                    <AddSkill />
+                  </OwnerRoute>
+                } />
 
-              <Route path="friends" element={<UserFriendsPage />} />
+                <Route path="friends" element={<UserFriendsPage />} />
 
-              {/* Combos */}
-              <Route path="combos" element={<CombosLayout />}>
-                <Route index element={<Combos />} />
-                <Route path="add" element={<AddCombo />} />
-                <Route path=":comboId" element={<ComboDetails />} />
-                <Route path=":comboId/edit" element={<EditCombo />} />
+                {/* Combos */}
+                <Route path="combos" element={<CombosLayout />}>
+                  <Route index element={
+                     <OwnerRoute>
+                       <Combos />
+                     </OwnerRoute>
+                  
+                    } />
+                  <Route path="add" element={
+                    <OwnerRoute>
+                      <AddCombo />
+                    </OwnerRoute>
+                  } />
+                  <Route path=":comboId" element={<ComboDetails />} />
+                  <Route path=":comboId/edit" element={
+                    <OwnerRoute>
+                      <EditCombo />
+                    </OwnerRoute>
+                  } />
+                </Route>
               </Route>
-            </Route>
 
             {/* Matches */}
             <Route path="match/:matchId" element={<Match />} />

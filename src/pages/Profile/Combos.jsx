@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import {  useState } from "react";
+import { Link } from "react-router-dom";
 import BackButton from "../../components/Buttons/BackButton";
 import { useAuth } from "../../context/AuthContext";
 import DeleteComboModal from "../../components/Modals/DeleteComboModal";
@@ -8,22 +8,11 @@ import { deleteComboService } from "../../Services/comboFetching.js";
 import { toast } from "react-hot-toast";
 
 const Combos = () => {
-  const { username } = useParams();
-  const { currentUser, viewedProfile, profileLoading, loadProfile, updateViewedProfile } = useAuth();
+  const { currentUser, viewedProfile, updateViewedProfile } = useAuth();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [comboToDelete, setComboToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (username) loadProfile(username);
-  }, [username]);
-
-  if (profileLoading)
-    return <p className="text-white text-center mt-10">Cargando...</p>;
-
-  if (!viewedProfile)
-    return <p className="text-white text-center mt-10">Usuario no encontrado</p>;
 
   const user = viewedProfile;
   const isOwner = currentUser?.username === user.username;
