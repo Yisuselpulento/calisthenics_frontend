@@ -134,8 +134,9 @@ const ComboDetails = () => {
               playsInline
               className="w-full rounded-xl mb-3"
             />
-          )}          
-         <div className="text-sm mb-2">
+          )}  
+          <div className="flex justify-between"> 
+            <div className="text-sm mb-2">
             {el.hold > 0 && <p>⏱ Hold: {el.hold} s</p>}
             {el.reps > 0 && <p>🔁 Reps: {el.reps}</p>}
             <p>🤘 Fingers: {el.fingers}</p>
@@ -146,7 +147,9 @@ const ComboDetails = () => {
             <p>🌀 Static AU: {el.staticAu}</p>
             <p>🔥 Dynamic AU: {el.dynamicAu}</p>
           </div>
-        </div>
+        </div>         
+          </div>        
+         
       ))}
     </div>
 

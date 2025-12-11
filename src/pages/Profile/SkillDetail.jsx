@@ -31,6 +31,7 @@ const SkillDetail = () => {
       setLoading(true);
       const res = await getUserSkillVariantService(userSkillVariantId);
       if (res.success) {
+        console.log(res)
         setVariant(res.variant); 
       } else {
         toast.error(res.message || "No se pudo cargar la skill");
@@ -159,6 +160,23 @@ const SkillDetail = () => {
           {variant.stats.energyPerSecond !== undefined && <p>Energy/sec: {variant.stats.energyPerSecond}</p>}
           {variant.stats.pointsPerRep !== undefined && <p>Points/rep: {variant.stats.pointsPerRep}</p>}
           {variant.stats.energyPerRep !== undefined && <p>Energy/rep: {variant.stats.energyPerRep}</p>}
+        </div>
+      )}
+      {variant.usedInCombos?.length > 0 && (
+        <div className="mb-4">
+          <p className="text-sm text-gray-300 mb-1">Agregado a:</p>
+          <ul className="space-y-1">
+            {variant.usedInCombos.map((c) => (
+              <li key={c.comboId}>
+                <Link
+                  to={`../combos/${c.comboId}`}
+                  className="text-blue-400 hover:underline text-sm"
+                >
+                  {c.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
