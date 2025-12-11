@@ -46,18 +46,21 @@ const Combos = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto text-white min-h-screen">
+    <div className="max-w-5xl mx-auto text-white min-h-screen p-2">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-bold">Combos</h1>
-        {isOwner && (
-          <Link
-            to={`/profile/${currentUser.username}/combos/add`}
-            className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 cursor-pointer rounded-md transition"
-          >
-            + Combo
-          </Link>
-        )}
+         <div className="flex items-center gap-5">
+            {isOwner && (
+            <Link
+              to={`/profile/${currentUser.username}/combos/add`}
+              className="px-3 py-1 text-sm bg-primary hover:bg-primary/80 cursor-pointer rounded-md transition"
+            >
+              + Combo
+            </Link>
+          )}
+          <BackButton />
+        </div>
       </div>
 
       {/* LISTADO DE COMBOS */}
@@ -87,8 +90,6 @@ const Combos = () => {
         comboName={comboToDelete?.name || comboToDelete?.comboName}
         loading={loading}
       />
-
-      <BackButton />
     </div>
   );
 };

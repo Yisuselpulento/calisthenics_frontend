@@ -14,7 +14,6 @@ import { AuthProvider } from "./context/AuthContext";
 import Combos from "./pages/Profile/Combos";
 import ComboDetails from "./pages/Profile/ComboDetails";
 import EditCombo from "./pages/Profile/EditCombo";
-import CombosLayout from "./Layouts/CombosLayout";
 import AddCombo from "./pages/Profile/AddCombo";
 import VsDetails from "./pages/VsDetails";
 import Ranks from "./pages/Ranks/Ranks";
@@ -149,26 +148,33 @@ function App() {
 
                 <Route path="friends" element={<UserFriendsPage />} />
 
-                {/* Combos */}
-                <Route path="combos" element={<CombosLayout />}>
-                  <Route index element={
-                     <OwnerRoute>
-                       <Combos />
-                     </OwnerRoute>
-                  
-                    } />
-                  <Route path="add" element={
-                    <OwnerRoute>
-                      <AddCombo />
-                    </OwnerRoute>
-                  } />
-                  <Route path=":comboId" element={<ComboDetails />} />
-                  <Route path=":comboId/edit" element={
-                    <OwnerRoute>
-                      <EditCombo />
-                    </OwnerRoute>
-                  } />
-                </Route>
+                <Route path="combos">
+                    <Route
+                      index
+                      element={
+                        <OwnerRoute>
+                          <Combos />
+                        </OwnerRoute>
+                      }
+                    />
+                    <Route
+                      path="add"
+                      element={
+                        <OwnerRoute>
+                          <AddCombo />
+                        </OwnerRoute>
+                      }
+                    />
+                    <Route path=":comboId" element={<ComboDetails />} />
+                    <Route
+                      path=":comboId/edit"
+                      element={
+                        <OwnerRoute>
+                          <EditCombo />
+                        </OwnerRoute>
+                      }
+                    />
+                  </Route>
               </Route>
 
             {/* Matches */}
