@@ -6,15 +6,15 @@ import DeleteSkillVariantModal from "../../components/Modals/DeleteSkillVariantM
 import { useAuth } from "../../context/AuthContext";
 import FavoriteToggleButton from "../../components/Buttons/FavoriteToggleButton";
 import toast from "react-hot-toast";
-import { getUserSkillVariantService } from "../../Services/skillFetching.js"; 
+import { getUserSkillVariantService, deleteSkillVariantService } from "../../Services/skillFetching.js"; 
 import Spinner from "../../components/Spinner/Spinner.jsx";
 import { createReportService } from "../../Services/reportsFetching.js";
 import {skillReportReasons}  from "../../helpers/reportsOptions.js";
 import ReportModal from "../../components/Modals/ReportModal.jsx";
 
 const SkillDetail = () => {
-  const { userSkillVariantId, username, currentUser } = useParams();
-  const { viewedProfile, removeVariant, loadProfile } = useAuth();
+  const { userSkillVariantId, username } = useParams();
+  const { viewedProfile, loadProfile, updateViewedProfile , currentUser} = useAuth();
   const navigate = useNavigate();
 
   const [variant, setVariant] = useState(null);
@@ -36,7 +36,7 @@ const SkillDetail = () => {
       setLoading(true);
       const res = await getUserSkillVariantService(userSkillVariantId);
       if (res.success) {
-        setVariant(res.variant); // viene solo la variante con todos los datos
+        setVariant(res.variant); 
       } else {
         toast.error(res.message || "No se pudo cargar la skill");
         setVariant(null);
@@ -63,15 +63,27 @@ const SkillDetail = () => {
   );
 
   const handleConfirmDelete = async () => {
-    setLoading(true);
-    const res = await removeVariant(variant.userSkillVariantId);
-    if (res.success) {
-      toast.success("Skill eliminada correctamente!");
-      setShowDeleteModal(false);
-      navigate(-1);
+  setLoading(true);
+
+  try {
+    const res = await deleteSkillVariantService(userSkillVariantId);
+    console.log(res)
+    if (!res.success) {
+      toast.error(res.message || "No se pudo eliminar la variante.");
+      setLoading(false);
+      return;
     }
-    setLoading(false);
-  };
+    toast.success("Skill eliminada correctamente!");
+    setShowDeleteModal(false);
+    updateViewedProfile(res.user);
+    navigate(-1);
+
+  } catch (err) {
+    toast.error("Error eliminando la variante.");
+  }
+
+  setLoading(false);
+};
 
   const handleReport = async (reason) => {
     try {

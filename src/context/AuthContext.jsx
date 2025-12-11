@@ -96,20 +96,6 @@ const updateViewedProfile = (user) => {
     return res;
   };
 
-  // ------------------ REMOVER VARIANTE DE HABILIDAD ------------------
-const removeVariant = async (userSkillId, variantKey, fingers) => {
-  try {
-    const res = await deleteSkillVariantService(userSkillId, variantKey, fingers);
-
-    if (res.success) {
-      updateViewedProfile(res.user); 
-    }
-
-    return res
-  } catch (err) {
-    console.error("Error al eliminar la variante:", err);
-  }
-};
 
 const toggleFollow = async (targetUser) => {
   try {
@@ -137,7 +123,6 @@ const toggleFollow = async (targetUser) => {
         viewedProfile,
         profileLoading,
         loadProfile,
-        removeVariant,
         toggleFollow
         
       }}

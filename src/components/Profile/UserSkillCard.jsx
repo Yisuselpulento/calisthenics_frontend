@@ -4,9 +4,10 @@ import { useAuth } from "../../context/AuthContext";
 import DeleteSkillVariantModal from "../Modals/DeleteSkillVariantModal";
 import toast from "react-hot-toast";
 import { getVariantBgColor } from "../../helpers/colorTargetVariants";
+import {deleteSkillVariantService } from "../../Services/skillFetching.js"
 
 const UserSkillCard = ({ skill, ownerUsername }) => {
-  const { currentUser, removeVariant } = useAuth();
+  const { currentUser,updateViewedProfile } = useAuth();
   const isOwner = currentUser?.username === ownerUsername;
 
   const [showModal, setShowModal] = useState(false);
@@ -18,12 +19,23 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
  const handleConfirmDelete = async () => {
   setLoading(true);
-  const res = await removeVariant(userSkillVariantId);
 
-  if (res.success) {
-    toast.success("Variante eliminada correctamente!");
+  try {
+    const res = await deleteSkillVariantService(userSkillVariantId);
+    console.log(res)
+    if (!res.success) {
+      toast.error(res.message || "No se pudo eliminar la variante.");
+      setLoading(false);
+      return;
+    }
+    toast.success("Skill eliminada correctamente!");
+    updateViewedProfile(res.user);
     setShowModal(false);
+
+  } catch (err) {
+    toast.error("Error eliminando la variante.");
   }
+
   setLoading(false);
 };
 
