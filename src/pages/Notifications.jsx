@@ -4,13 +4,22 @@ import {
   markNotificationAsReadService,
   markAllNotificationsAsReadService,
 } from "../Services/notificationFetching.js";
+import Spinner from "../components/Spinner/Spinner.jsx";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true); // nuevo estado de carga
 
   const load = async () => {
-    const res = await getUserNotificationsService();
-    if (res.success) setNotifications(res.notifications);
+    setLoading(true); // comienza a cargar
+    try {
+      const res = await getUserNotificationsService();
+      if (res.success) setNotifications(res.notifications);
+    } catch (err) {
+      console.error("Error cargando notificaciones:", err);
+    } finally {
+      setLoading(false); // termina carga
+    }
   };
 
   useEffect(() => {
@@ -26,6 +35,13 @@ const Notifications = () => {
     const res = await markAllNotificationsAsReadService();
     if (res.success) load();
   };
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner size="2em" />
+      </div>
+    );
 
   return (
     <div className="p-2 max-w-2xl mx-auto">

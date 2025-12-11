@@ -22,6 +22,14 @@ export const AuthProvider = ({ children }) => {
 
   const updateCurrentUser = (user) => {
   setCurrentUser(user);
+
+  // ⚡ Si estás viendo tu propio perfil, actualizamos solo los campos que cambian
+  if (viewedProfile?._id === user._id) {
+    setViewedProfile((prev) => ({
+      ...prev,      // mantiene todo lo existente
+      ...user,      // reemplaza solo los campos actualizados
+    }));
+  }
 };
 
 // Actualiza solo el perfil que estás viendo
