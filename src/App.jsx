@@ -178,7 +178,7 @@ function App() {
               </Route>
 
             {/* Matches */}
-            <Route path="match/:matchId" element={<Match />} />
+            <Route path="match" element={<Match />} />
           </Route>
 
           {/* ❌ 404 */}

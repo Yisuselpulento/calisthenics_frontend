@@ -20,7 +20,6 @@ const FavoriteComboStar = ({ comboId, type }) => {
     setLoading(true);
 
     const res = await toggleFavoriteComboService(comboId, type);
-
     if (res.success) {
       toast.success("Favorito actualizado");
 

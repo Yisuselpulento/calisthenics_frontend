@@ -11,42 +11,39 @@ const VsButton = ({ opponent }) => {
 
   const handleToggle = () => {
     setShowSelect(!showSelect);
-    setErrorMsg(""); // limpiar mensaje al abrir/cerrar
+    setErrorMsg(""); 
   };
 
   const handleSelect = (type) => {
-    const hasCurrentCombo = currentUser.combos.some((c) => c.type === type);
-    const hasOpponentCombo = opponent.combos.some((c) => c.type === type);
+    const myFav = currentUser.favoriteCombos?.[type];
+    const opponentFav = opponent.favoriteCombos?.[type];
+
+    const hasCurrentCombo = Boolean(myFav);
+    const hasOpponentCombo = Boolean(opponentFav);
 
     if (!hasCurrentCombo || !hasOpponentCombo) {
       const msg = `⚠️ ${
         !hasCurrentCombo && !hasOpponentCombo
           ? "Ninguno de los dos tiene"
           : !hasCurrentCombo
-          ? `${currentUser.name} no tiene`
-          : `${opponent.name} no tiene`
-      } un combo de tipo "${type.toUpperCase()}". Selecciona otro.`;
-
+          ? `${currentUser.username} no tiene`
+          : `${opponent.username} no tiene`
+      } un combo favorito de tipo "${type.toUpperCase()}".`;
       setErrorMsg(msg);
       return;
     }
 
-    setErrorMsg(""); // limpiar mensaje si todo está OK
-
-    const matchId = `${currentUser.username}-vs-${opponent.username}-${type}-${uuidv4().slice(0, 6)}`;
-
-    navigate(`/match/${matchId}`, {
+    // ✔ Navegar al match
+    navigate(`/match`, {
       state: {
-        currentUser,
-        opponent,
+        opponentId: opponent._id,
         type,
       },
     });
   };
 
   return (
-    <div className="relative items-center hidden"> //flex col 
-
+    <div className="relative items-center">
       {/* VS Button */}
       <button
         onClick={handleToggle}
@@ -72,17 +69,10 @@ const VsButton = ({ opponent }) => {
           >
             Dynamic
           </button>
-
-          <button
-            onClick={() => handleSelect("mixed")}
-            className="px-2 py-2 bg-stone-800 hover:bg-stone-700 rounded-lg text-white text-xs font-semibold transition"
-          >
-            Mixed
-          </button>
         </div>
       )}
 
-      {/* Mensaje de error */}
+      {/* Error message */}
       {errorMsg && (
         <p className="text-red-500 text-xs mt-3 max-w-[260px] text-center">
           {errorMsg}
