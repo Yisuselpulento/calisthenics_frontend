@@ -11,6 +11,7 @@ import Spinner from "../../components/Spinner/Spinner.jsx";
 import { createReportService } from "../../Services/reportsFetching.js";
 import {skillReportReasons}  from "../../helpers/reportsOptions.js";
 import ReportModal from "../../components/Modals/ReportModal.jsx";
+import BackButton from "../../components/Buttons/BackButton.jsx";
 
 const SkillDetail = () => {
   const { userSkillVariantId, username } = useParams();
@@ -18,7 +19,7 @@ const SkillDetail = () => {
   const navigate = useNavigate();
 
   const [variant, setVariant] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
@@ -102,12 +103,7 @@ const SkillDetail = () => {
     <div className="p-2 text-white max-w-3xl mx-auto">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
-          <Link
-            to={`/profile/${username}/skills/all-skills`}
-            className="text-sm text-blue-500 hover:underline cursor-pointer"
-          >
-            ← Volver
-          </Link>
+          <BackButton />
         {isOwner ? (
           <EditAndDeleteButton
             editLink={`/profile/${username}/edit-skill/${variant.userSkillVariantId}`}
