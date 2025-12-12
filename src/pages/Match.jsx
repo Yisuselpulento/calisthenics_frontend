@@ -61,6 +61,9 @@ const Match = () => {
           src={userCombo?.video}
           className="w-64 rounded-xl my-2 p-2"
           controls
+           autoPlay
+          muted
+          loop 
         />
         <ComboStepByStep
           elementsStepData={userAResult?.elementsStepData}
@@ -81,10 +84,13 @@ const Match = () => {
           className="w-25 h-25 rounded-full border m-2"
         />
         <h2 className="text-lg font-semibold">{opponentCombo?.user.username}</h2>
-        <video
+       <video
           src={opponentCombo?.video}
           className="w-64 rounded-xl my-2 p-2"
           controls
+          autoPlay
+          muted
+          loop // opcional, si quieres que se repita
         />
         <ComboStepByStep
           elementsStepData={userBResult?.elementsStepData}

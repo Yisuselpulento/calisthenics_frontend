@@ -51,7 +51,7 @@ const ComboStepByStep = ({ elementsStepData = [], totalPoints = 0 }) => {
       {/* Mostrar total al final */}
       {displayedElements.length === elementsStepData.length &&
         displayedElements.some((el) => el.hold > 0 || el.reps > 0) && (
-          <div className="mt-4 bg-green-600 p-4 rounded-xl shadow-lg text-white text-center font-bold text-xl">
+          <div className="mt-4 p-2 rounded-xl shadow-lg text-white text-center font-bold text-lg">
             Total Points: {totalPoints.toFixed(0)}
           </div>
         )}
