@@ -20,7 +20,7 @@ const Match = () => {
       }
 
       const res = await doMatchService(opponentId, type);
-
+      console.log(res)
       if (!res.success) {
         setError(res.message);
         setLoading(false);
@@ -68,6 +68,8 @@ const Match = () => {
         <ComboStepByStep
           elementsStepData={userAResult?.elementsStepData}
           totalPoints={userAResult?.totalPoints}
+          isWinner={userAResult.isWinner}
+          playerName={userCombo?.user.username}
         />
       </div>
 
@@ -95,6 +97,8 @@ const Match = () => {
         <ComboStepByStep
           elementsStepData={userBResult?.elementsStepData}
           totalPoints={userBResult?.totalPoints}
+          isWinner={userBResult.isWinner}
+          playerName={opponentCombo?.user.username}
         />
       </div>
     </div>
