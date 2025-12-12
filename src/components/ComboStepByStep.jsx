@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 
-const AnimatedNumber = ({ value, duration = 1000, interval = 50, className = "" }) => {
+const AnimatedNumber = ({ value, duration = 1000, interval = 50, className = "", decimals = 0 }) => {
   const [displayValue, setDisplayValue] = useState(0);
   const currentValueRef = useRef(0);
   const rafRef = useRef(null);
 
   useEffect(() => {
-    const steps = Math.ceil(duration / interval); // cuántos pasos habrá
-    const step = value / steps; // step dinámico según valor y duración
+    const steps = Math.ceil(duration / interval); 
+    const step = value / steps; 
     currentValueRef.current = 0;
 
     const updateNumber = () => {
@@ -27,7 +27,7 @@ const AnimatedNumber = ({ value, duration = 1000, interval = 50, className = "" 
     return () => cancelAnimationFrame(rafRef.current);
   }, [value, duration, interval]);
 
-  return <span className={className}>{displayValue.toFixed(0)}</span>;
+  return <span className={className}>{displayValue.toFixed(decimals)}</span>;
 };
 
 const ComboStepByStep = ({
@@ -87,13 +87,14 @@ const ComboStepByStep = ({
                 className={el.pointsWithFingers >= 0 ? "text-green-400" : "text-red-400"}
               />
             </p>
-            <p>
-              Limpieza X{" "}
-              <AnimatedNumber
-                value={el.cleanFactor}
-                className={el.cleanFactor < 1 ? "text-red-400" : "text-green-400"}
-              />
-            </p>
+           <p>
+                Limpieza X{" "}
+                <AnimatedNumber
+                  value={el.cleanFactor}
+                  decimals={2}
+                  className={el.cleanFactor < 1 ? "text-red-400" : "text-green-400"}
+                />
+              </p>
             <p>
               Puntos por Limpieza:{" "}
               <AnimatedNumber value={el.pointsWithCleanHit} className="text-blue-400" />
