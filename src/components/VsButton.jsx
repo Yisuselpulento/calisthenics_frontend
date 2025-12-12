@@ -22,7 +22,7 @@ const VsButton = ({ opponent }) => {
     const hasOpponentCombo = Boolean(opponentFav);
 
     if (!hasCurrentCombo || !hasOpponentCombo) {
-      const msg = `⚠️ ${
+      const msg = `${
         !hasCurrentCombo && !hasOpponentCombo
           ? "Ninguno de los dos tiene"
           : !hasCurrentCombo
@@ -43,7 +43,7 @@ const VsButton = ({ opponent }) => {
   };
 
   return (
-    <div className="relative items-center">
+    <div className="relative items-center z-10 min-h-20 ">
       {/* VS Button */}
       <button
         onClick={handleToggle}
@@ -54,8 +54,7 @@ const VsButton = ({ opponent }) => {
 
       {/* Dropdown */}
       {showSelect && (
-        <div className="absolute w-[300px] bottom-[-50px] rounded-xl p-1 grid grid-cols-3 gap-1 shadow-xl">
-
+         <div className="absolute left-1/2 -bottom-14 -translate-x-1/2 w-[140px] rounded-xl p-1 grid grid-cols-2 gap-1 shadow-xl bg-stone-800 z-20">
           <button
             onClick={() => handleSelect("static")}
             className="px-2 py-2 bg-stone-800 hover:bg-stone-700 rounded-lg text-white text-xs font-semibold transition"
@@ -74,9 +73,9 @@ const VsButton = ({ opponent }) => {
 
       {/* Error message */}
       {errorMsg && (
-        <p className="text-red-500 text-xs mt-3 max-w-[260px] text-center">
-          {errorMsg}
-        </p>
+        <p className="absolute -bottom-25 left-1/2 -translate-x-1/2 text-red-500 text-sm text-center w-[260px]">
+      {errorMsg}
+    </p>
       )}
     </div>
   );
