@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { doMatchService } from "../Services/matchFetching.js";
 import { useLocation } from "react-router-dom";
+import ComboStepByStep from "../components/ComboStepByStep.jsx";
 
 const Match = () => {
   const { state } = useLocation();
@@ -20,16 +21,18 @@ const Match = () => {
 
       const res = await doMatchService(opponentId, type);
 
-      console.log(res)
-
       if (!res.success) {
         setError(res.message);
-      } else {
-        setMatchData({
-          userCombo: res.userCombo,
-          opponentCombo: res.opponentCombo,
-        });
+        setLoading(false);
+        return;
       }
+
+      setMatchData({
+        userCombo: res.userCombo,
+        opponentCombo: res.opponentCombo,
+        userAResult: res.userAResult,
+        userBResult: res.userBResult,
+      });
 
       setLoading(false);
     };
@@ -40,46 +43,54 @@ const Match = () => {
   if (loading) return <p>Cargando match...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  const { userCombo, opponentCombo } = matchData;
+  const { userCombo, opponentCombo, userAResult, userBResult } = matchData || {};
+
+  if (!userAResult || !userBResult) return <p>Cargando resultados...</p>;
 
   return (
-    <div className="flex items-start justify-center gap-10 mt-8">
-
-      {/* CURRENT USER */}
-      <div className="flex flex-col items-center w-1/3 bg-gray-800 p-4 rounded-xl">
+    <div className="flex justify-center items-start gap-1 mt-8">
+      {/* USER */}
+      <div className="flex flex-col items-center rounded-xl">
         <img
-          src={userCombo.user.avatar}
+          src={userCombo?.user.avatar}
           alt="avatar"
-          className="w-24 h-24 rounded-full border"
+          className="w-25 h-25 rounded-full border m-2"
         />
-        <h2 className="text-xl mt-2">{userCombo.user.username}</h2>
-
+        <h2 className="text-lg font-semibold">{userCombo?.user.username}</h2>
         <video
-          src={userCombo.video}
-          className="w-full mt-4 rounded-xl"
+          src={userCombo?.video}
+          className="w-64 rounded-xl my-2 p-2"
           controls
+        />
+        <ComboStepByStep
+          elementsStepData={userAResult?.elementsStepData}
+          totalPoints={userAResult?.totalPoints}
         />
       </div>
 
-      {/* VS TEXT */}
-      <h1 className="text-3xl font-bold">VS</h1>
+      {/* VS */}
+      <div className="flex items-center justify-center text-3xl font-bold text-white">
+        VS
+      </div>
 
       {/* OPPONENT */}
-      <div className="flex flex-col items-center w-1/3 bg-gray-800 p-4 rounded-xl">
+      <div className="flex flex-col items-center rounded-xl">
         <img
-          src={opponentCombo.user.avatar}
+          src={opponentCombo?.user.avatar}
           alt="avatar"
-          className="w-24 h-24 rounded-full border"
+          className="w-25 h-25 rounded-full border m-2"
         />
-        <h2 className="text-xl mt-2">{opponentCombo.user.username}</h2>
-
+        <h2 className="text-lg font-semibold">{opponentCombo?.user.username}</h2>
         <video
-          src={opponentCombo.video}
-          className="w-full mt-4 rounded-xl"
+          src={opponentCombo?.video}
+          className="w-64 rounded-xl my-2 p-2"
           controls
         />
+        <ComboStepByStep
+          elementsStepData={userBResult?.elementsStepData}
+          totalPoints={userBResult?.totalPoints}
+        />
       </div>
-
     </div>
   );
 };
