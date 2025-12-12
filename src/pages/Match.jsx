@@ -40,8 +40,35 @@ const Match = () => {
     run();
   }, [opponentId, type]);
 
-  if (loading) return <p>Cargando match...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+   if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-white text-lg font-bold animate-blink">
+          Cargando Enfrentamiento...
+        </p>
+
+        {/* Animación blink personalizada */}
+        <style>
+          {`
+            @keyframes blink {
+              0%, 50%, 100% { opacity: 1; }
+              25%, 75% { opacity: 0; }
+            }
+            .animate-blink {
+              animation: blink 2.5s infinite;
+            }
+          `}
+        </style>
+      </div>
+    );
+
+  // Si hay error
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500 text-lg font-bold animate-blink">{error}</p>
+      </div>
+    );
 
   const { userCombo, opponentCombo, userAResult, userBResult } = matchData || {};
 

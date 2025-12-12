@@ -1,92 +1,135 @@
 import { useEffect, useState, useRef } from "react";
 
-const ComboStepByStep = ({ elementsStepData = [], totalPoints = 0, isWinner = false,  playerName = "", }) => {
+const AnimatedNumber = ({ value, duration = 1000, interval = 50, className = "" }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  const currentValueRef = useRef(0);
+  const rafRef = useRef(null);
+
+  useEffect(() => {
+    const steps = Math.ceil(duration / interval); // cuántos pasos habrá
+    const step = value / steps; // step dinámico según valor y duración
+    currentValueRef.current = 0;
+
+    const updateNumber = () => {
+      currentValueRef.current += step;
+      if (currentValueRef.current >= value) {
+        setDisplayValue(value);
+        cancelAnimationFrame(rafRef.current);
+        return;
+      } else {
+        setDisplayValue(currentValueRef.current);
+        rafRef.current = requestAnimationFrame(updateNumber);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(updateNumber);
+
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [value, duration, interval]);
+
+  return <span className={className}>{displayValue.toFixed(0)}</span>;
+};
+
+const ComboStepByStep = ({
+  elementsStepData = [],
+  totalPoints = 0,
+  isWinner = false,
+  playerName = "",
+}) => {
   const [displayedElements, setDisplayedElements] = useState([]);
+  const [isCalculating, setIsCalculating] = useState(true);
   const indexRef = useRef(0);
 
   useEffect(() => {
-    if (!elementsStepData?.length) return; // evita undefined
+    if (!elementsStepData?.length) return;
 
     setDisplayedElements([]);
     indexRef.current = 0;
+    setIsCalculating(true);
 
     const interval = setInterval(() => {
       const element = elementsStepData[indexRef.current];
-      console.log("Añadiendo elemento:", element); // para debug
-
       setDisplayedElements((prev) => [...prev, element]);
-
       indexRef.current += 1;
 
       if (indexRef.current >= elementsStepData.length) {
         clearInterval(interval);
+        setIsCalculating(false);
       }
-    }, 1000);
+    }, 1500);
 
     return () => clearInterval(interval);
   }, [elementsStepData]);
 
   return (
-        <div className="mt-6 flex flex-col gap-3 text-sm">
-          {displayedElements
-            .filter((el) => el.hold > 0 || el.reps > 0)
-            .map((el) => (
-              <div
-                key={el.elementId}
-                className="p-3 rounded-xl shadow-md transform transition-all duration-500 translate-y-0"
-                style={{ animation: `dropIn 0.5s ease forwards` }}
-              >
-                <h3 className="font-semibold p-2 bg-stone-800 rounded-lg text-center">{el.name}</h3>
-                {el.hold > 0 && <p>Hold: {el.hold}</p>}
-                {el.reps > 0 && <p>Reps: {el.reps}</p>}
-                <p>Dedos: {el.fingers}</p>
-                <p>
-                  Puntos base: <span className="text-blue-400">{el.basePoints.toFixed(0)}</span>
-                </p>
-                <p>
-                  Aumento por dedos:{" "}
-                  <span className={el.pointsWithFingers >= 0 ? "text-green-400" : "text-red-400"}>
-                    {el.pointsWithFingers.toFixed(0)}
-                  </span>
-                </p>
-               <p>
-                    Limpieza X{" "}
-                    <span className={el.cleanFactor < 1 ? "text-red-400" : "text-green-400"}>
-                      {el.cleanFactor.toFixed(2)}
-                    </span>
-                  </p>
-                <p>
-                  Puntos por Limpieza: <span className="text-blue-400">{el.pointsWithCleanHit.toFixed(0)}</span>
-                </p>
-              </div>
-            ))}
+    <div className="mt-6 flex flex-col gap-3 text-sm">
+      {displayedElements
+        .filter((el) => el.hold > 0 || el.reps > 0)
+        .map((el) => (
+          <div
+            key={el.elementId}
+            className="p-3 rounded-xl shadow-md transform transition-all duration-500 translate-y-0"
+            style={{ animation: `dropIn 0.5s ease forwards` }}
+          >
+            <h3 className="font-semibold p-2 bg-stone-800 rounded-lg text-center">
+              {el.name}
+            </h3>
+            {el.hold > 0 && <p>Hold: {el.hold}</p>}
+            {el.reps > 0 && <p>Reps: {el.reps}</p>}
+            <p>Dedos: {el.fingers}</p>
+            <p>
+              Puntos base: <AnimatedNumber value={el.basePoints} className="text-blue-400" />
+            </p>
+            <p>
+              Aumento por dedos:{" "}
+              <AnimatedNumber
+                value={el.pointsWithFingers}
+                className={el.pointsWithFingers >= 0 ? "text-green-400" : "text-red-400"}
+              />
+            </p>
+            <p>
+              Limpieza X{" "}
+              <AnimatedNumber
+                value={el.cleanFactor}
+                className={el.cleanFactor < 1 ? "text-red-400" : "text-green-400"}
+              />
+            </p>
+            <p>
+              Puntos por Limpieza:{" "}
+              <AnimatedNumber value={el.pointsWithCleanHit} className="text-blue-400" />
+            </p>
+          </div>
+        ))}
 
-          {/* Mostrar total al final */}
-          {displayedElements.length === elementsStepData.length &&
-            displayedElements.some((el) => el.hold > 0 || el.reps > 0) && (
-              <div className="mt-4 p-2 rounded-xl shadow-lg text-center font-bold text-lg">
-              <p>Total Points:</p>
-              <p className={isWinner ? "text-green-400" : "text-red-400"}>
-                {totalPoints.toFixed(0)}
-              </p>
+      {isCalculating && (
+        <p className="text-white text-center font-semibold mt-2">Calculando...</p>
+      )}
 
-               {playerName && (
+      {displayedElements.length === elementsStepData.length &&
+        displayedElements.some((el) => el.hold > 0 || el.reps > 0) && (
+          <div className="mt-4 p-2 rounded-xl shadow-lg text-center font-bold text-lg">
+            <p>Total Points:</p>
+            <AnimatedNumber
+              value={totalPoints}
+              className={isWinner ? "text-green-400" : "text-red-400"}
+            />
+            {playerName && (
               <p className={`mt-2 font-semibold ${isWinner ? "text-green-400" : "text-red-400"}`}>
                 {playerName} {isWinner ? "🏆 Ganador" : "💀 Perdedor"}
               </p>
             )}
-            </div>
-            )}
+          </div>
+        )}
 
-          <style>
-            {`
-              @keyframes dropIn {
-                0% { opacity: 0; transform: translateY(-20px); }
-                100% { opacity: 1; transform: translateY(0); }
-              }
-            `}
-          </style>
-        </div>
+      <style>
+        {`
+          @keyframes dropIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
+    </div>
   );
 };
 
