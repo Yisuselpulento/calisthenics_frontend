@@ -122,45 +122,72 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   // ===================================================
   if (view === "detail") {
     return (
-      <div className="relative bg-white/5 border border-white/10 rounded-2xl p-4 shadow-md flex flex-col gap-2">
-        {!isOwner && (
-          <button
-            onClick={() => setShowReportModal(true)}
-            className="absolute top-2 right-2 bg-stone-800 p-1 rounded-full hover:bg-stone-700"
+       <Link
+            to={`/profile/${ownerUsername}/skill/${userSkillVariantId}`}
+            className="block"
           >
-            <GoReport />
-          </button>
-        )}
+            <div
+              className={`relative bg-white/5 border border-white/10 rounded-2xl p-3 shadow-md hover:shadow-lg transition-all ${
+                view === "detail" ? "flex flex-col gap-2" : ""
+              }`}
+            >
+              {!isOwner && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault(); // evita navegación al abrir reporte
+                    setShowReportModal(true);
+                  }}
+                  className="absolute top-2 right-2 bg-stone-800 p-1 rounded-full hover:bg-stone-700"
+                >
+                  <GoReport />
+                </button>
+              )}
 
-        <h3 className="text-white">{name || variantKey}</h3>
-                <span
-          className={`text-xs w-[50px]  px-2 py-1 rounded-full ${
-            type === "static"
-              ? "bg-blue-500/50 text-blue-300"
-              : type === "dynamic"
-              ? "bg-green-500/50 text-green-300"
-              : "bg-yellow-500/50 text-yellow-300"
-          }`}
-        >
-          {type || "unknown"}
-        </span>
-        <p className="text-xs text-gray-400">Fingers: {fingers}</p>
-        <p className="text-sm text-gray-300">
-          🔹 Static AU: <span className="text-blue-400">{staticAU ?? 0}</span> |
-          🔸 Dynamic AU: <span className="text-green-400">{dynamicAU ?? 0}</span>
-        </p>
+              <h3 className="text-white mb-1 font-semibold">{name || variantKey}</h3>
+              <p className="text-xs text-gray-400 mb-1">Skill: {skillName}</p>
 
+              <p className="text-sm text-gray-300 mb-2">
+                🔹 Static AU: <span className="text-blue-400">{staticAU ?? 0}</span> |
+                🔸 Dynamic AU: <span className="text-green-400">{dynamicAU ?? 0}</span>
+              </p>
 
-        {showReportModal && (
-          <ReportModal
-            isOpen={showReportModal}
-            onClose={() => setShowReportModal(false)}
-            onSend={handleReport}
-            loading={loadingReport}
-            reasons={skillReportReasons}
-          />
-        )}
-      </div>
+              <p className="text-xs text-gray-400 mb-1">Fingers: {fingers}</p>
+
+              <span
+                className={`text-xs px-2 py-1 w-[50px] rounded-full ${
+                  type === "static"
+                    ? "bg-blue-500/50 text-blue-300"
+                    : type === "dynamic"
+                    ? "bg-green-500/50 text-green-300"
+                    : "bg-yellow-500/50 text-yellow-300"
+                }`}
+              >
+                {type || "unknown"}
+              </span>
+
+              {video && (
+                <video
+                  src={video}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="rounded-lg mt-2 w-full"
+                />
+              )}
+
+              {showReportModal && (
+                <ReportModal
+                  isOpen={showReportModal}
+                  onClose={() => setShowReportModal(false)}
+                  onSend={handleReport}
+                  loading={loadingReport}
+                  reasons={skillReportReasons}
+                />
+              )}
+            </div>
+          </Link>
     );
   }
 
