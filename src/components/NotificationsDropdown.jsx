@@ -16,8 +16,6 @@ const NotificationsDropdown = ({ closeDropdown }) => {
   const handleMarkRead = async (id) => {
     if (!currentUser) return;
 
-    const previousNotifications = [...notifications];
-
     // optimistic
     updateCurrentUser({
       ...currentUser,
@@ -36,10 +34,7 @@ const NotificationsDropdown = ({ closeDropdown }) => {
       const res = await markNotificationAsReadService(id);
       if (!res.success) throw new Error(res.message);
     } catch (err) {
-      updateCurrentUser({
-        ...currentUser,
-        notifications: previousNotifications,
-      });
+      updateCurrentUser({ notifications: previousNotifications });
       toast.error("No se pudo marcar la notificación");
     } finally {
       setLoadingIds((prev) => prev.filter((nid) => nid !== id));
@@ -57,6 +52,7 @@ const NotificationsDropdown = ({ closeDropdown }) => {
     });
 
     handleMarkRead(notification._id);
+    closeDropdown();
   };
 
   return (

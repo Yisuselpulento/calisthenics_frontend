@@ -5,8 +5,11 @@ import {
   markAllNotificationsAsReadService,
 } from "../Services/notificationFetching.js";
 import Spinner from "../components/Spinner/Spinner.jsx";
+import { useAuth } from "../context/AuthContext";
 
 const Notifications = () => {
+  const {  updateCurrentUser } = useAuth();
+
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true); // nuevo estado de carga
 
@@ -27,14 +30,20 @@ const Notifications = () => {
   }, []);
 
   const handleMarkRead = async (id) => {
-    const res = await markNotificationAsReadService(id);
-    if (res.success) load();
-  };
+  const res = await markNotificationAsReadService(id);
+  if (res.success) {
+    setNotifications(res.user.notifications); 
+    updateCurrentUser(res.user);
+  }
+};
 
-  const handleMarkAll = async () => {
-    const res = await markAllNotificationsAsReadService();
-    if (res.success) load();
-  };
+const handleMarkAll = async () => {
+  const res = await markAllNotificationsAsReadService();
+  if (res.success) {
+    setNotifications(res.user.notifications);
+    updateCurrentUser(res.user);
+  }
+};
 
   if (loading)
     return (

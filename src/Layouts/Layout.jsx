@@ -1,48 +1,16 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/Navbar/NavBar";
 import BottomNavbar from "../components/Navbar/BottomNavbar";
 import { useAuth } from "../context/AuthContext";
-import { useSocket } from "../context/SocketContext";
-import toast from "react-hot-toast";
-import { doMatchService } from "../Services/matchFetching";
 
 const Layout = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const socket = useSocket();
+
   const { viewedProfile } = useAuth();
 
   const isProfilePage = location.pathname.startsWith("/profile/");
   const showVideo = isProfilePage && viewedProfile?.videoProfile;
-
-useEffect(() => {
-  if (!socket) return;
-
-  socket.on("challengeAccepted", async ({ challengeId, opponentId }) => {
-  console.log("✅ Desafío aceptado, challengeId:", challengeId, "opponentId:", opponentId);
-
-  try {
-    if (!opponentId) throw new Error("Opponent ID no definido");
-
-    const matchData = await doMatchService(opponentId, "static"); 
-    navigate("/match", { state: { matchData } });
-  } catch (err) {
-    toast("No se pudo cargar el enfrentamiento");
-  }
-});
-
-  // 👉 desafío rechazado
-  socket.on("challengeRejected", ({ message }) => {
-    toast(message || "Desafío rechazado");
-  });
-
-  return () => {
-    socket.off("challengeAccepted");
-    socket.off("challengeRejected");
-  };
-}, [socket, navigate, viewedProfile]);
 
 
   return (

@@ -1,12 +1,16 @@
 import { createContext, useContext, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext";
+import toast from "react-hot-toast";
+import { doMatchService } from "../Services/matchFetching";
+import { useNavigate } from "react-router-dom";
 
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const { currentUser, updateCurrentUser } = useAuth();
+  const navigate = useNavigate(); // navegaciones desde socket
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_API_BACKEND_URL, {
@@ -25,38 +29,37 @@ export const SocketProvider = ({ children }) => {
     const socket = socketRef.current;
     if (!socket) return;
 
+    // 🔔 Notificaciones nuevas
     socket.on("newNotification", (notification) => {
-      updateCurrentUser((prev) => ({
-        ...prev,
-        notifications: [notification, ...(prev.notifications || [])],
-        notificationsCount: (prev.notificationsCount || 0) + 1,
-      }));
+      updateCurrentUser({
+        notifications: [notification, ...(currentUser?.notifications || [])],
+        notificationsCount: (currentUser?.notificationsCount || 0) + 1,
+      });
     });
 
-    return () => socket.off("newNotification");
-  }, [updateCurrentUser]);
+    // ⚔️ Desafíos aceptados
+    socket.on("challengeAccepted", async ({ challengeId, opponentId }) => {
+      try {
+        if (!opponentId) throw new Error("Opponent ID no definido");
 
-  useEffect(() => {
-  const socket = socketRef.current;
-  if (!socket) return;
+        const matchData = await doMatchService(opponentId, "static");
+        navigate("/match", { state: { matchData } });
+      } catch (err) {
+        toast.error("No se pudo cargar el enfrentamiento");
+      }
+    });
 
-  socket.on("challengeAccepted", ({ matchData }) => {
-  window.dispatchEvent(
-    new CustomEvent("challengeResolved", { detail: { accepted: true, matchData } })
-  );
-});
+    // ❌ Desafíos rechazados
+    socket.on("challengeRejected", ({ message }) => {
+      toast(message || "Desafío rechazado");
+    });
 
-socket.on("challengeRejected", ({ message }) => {
-  window.dispatchEvent(
-    new CustomEvent("challengeResolved", { detail: { accepted: false, message } })
-  );
-});
-
-  return () => {
-    socket.off("challengeAccepted");
-    socket.off("challengeRejected");
-  };
-}, []);
+    return () => {
+      socket.off("newNotification");
+      socket.off("challengeAccepted");
+      socket.off("challengeRejected");
+    };
+  }, [updateCurrentUser, currentUser, navigate]);
 
   return (
     <SocketContext.Provider value={socketRef.current}>
@@ -64,4 +67,5 @@ socket.on("challengeRejected", ({ message }) => {
     </SocketContext.Provider>
   );
 };
+
 export const useSocket = () => useContext(SocketContext);
