@@ -1,49 +1,49 @@
-import { Outlet, useLocation , useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import Footer from "../components/Footer";
 import NavBar from "../components/Navbar/NavBar";
 import BottomNavbar from "../components/Navbar/BottomNavbar";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
-import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { doMatchService } from "../Services/matchFetching";
 
 const Layout = () => {
   const location = useLocation();
-  const { viewedProfile } = useAuth(); 
   const navigate = useNavigate();
   const socket = useSocket();
+  const { viewedProfile } = useAuth();
 
   const isProfilePage = location.pathname.startsWith("/profile/");
-
   const showVideo = isProfilePage && viewedProfile?.videoProfile;
 
-  useEffect(() => {
-    if (!socket) return;
+useEffect(() => {
+  if (!socket) return;
 
-    // Recibir desafío
-    socket.on("incomingChallenge", ({ challengeId, fromUserId, type }) => {
-      const accepted = window.confirm(
-        `Usuario ${fromUserId} te desafía en ${type}. ¿Aceptar?`
-      );
+  socket.on("challengeAccepted", async ({ challengeId, opponentId }) => {
+  console.log("✅ Desafío aceptado, challengeId:", challengeId, "opponentId:", opponentId);
 
-      socket.emit("challengeResponse", { challengeId, accepted });
-    });
+  try {
+    if (!opponentId) throw new Error("Opponent ID no definido");
 
-    // Desafío aceptado → ir al match
-    socket.on("challengeAccepted", (matchData) => {
-  navigate("/match", { state: { matchData } });
+    const matchData = await doMatchService(opponentId, "static"); 
+    navigate("/match", { state: { matchData } });
+  } catch (err) {
+    toast("No se pudo cargar el enfrentamiento");
+  }
 });
 
-    // Desafío rechazado
-    socket.on("challengeRejected", ({ message }) => {
-      alert(message);
-    });
+  // 👉 desafío rechazado
+  socket.on("challengeRejected", ({ message }) => {
+    toast(message || "Desafío rechazado");
+  });
 
-    return () => {
-      socket.off("incomingChallenge");
-      socket.off("challengeAccepted");
-      socket.off("challengeRejected");
-    };
-  }, [socket, navigate]);
+  return () => {
+    socket.off("challengeAccepted");
+    socket.off("challengeRejected");
+  };
+}, [socket, navigate, viewedProfile]);
+
 
   return (
     <>
@@ -57,10 +57,7 @@ const Layout = () => {
             muted
             playsInline
           />
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
-          />
+          <div className="absolute inset-0 bg-black/70" />
         </div>
       )}
 

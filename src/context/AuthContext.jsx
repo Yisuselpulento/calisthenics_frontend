@@ -8,6 +8,7 @@ import {
 import { getProfileByUsernameService } from "../Services/ProfileFetching.js";
 import { toggleFollowService } from "../Services/followFetching.js";
 
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {

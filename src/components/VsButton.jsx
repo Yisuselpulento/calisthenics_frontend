@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
+import { useNavigate } from "react-router-dom";
 
 const VsButton = ({ opponent }) => {
   const { currentUser } = useAuth();
@@ -9,7 +10,6 @@ const VsButton = ({ opponent }) => {
   const [showSelect, setShowSelect] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [waiting, setWaiting] = useState(false); // indicador de espera
-
 
   const handleToggle = () => {
     setShowSelect(!showSelect);
@@ -36,14 +36,26 @@ const VsButton = ({ opponent }) => {
     }
 
     // ✔ Enviar desafío al backend vía socket
-    setWaiting(true);
+    setShowSelect(false);
+  setErrorMsg("");
+  setWaiting(true);
 
-    socket.emit("challengeRequest", {
+    socket.emit(
+    "challengeRequest",
+    {
       fromUserId: currentUser._id,
       toUserId: opponent._id,
       type,
-    });
+    },
+    (response) => {
+      if (!response?.success) {
+        setWaiting(false);
+        setErrorMsg("No se pudo enviar el desafío");
+      }
+    }
+  );
   };
+
 
   return (
     <div className="relative items-center z-10 min-h-20">
