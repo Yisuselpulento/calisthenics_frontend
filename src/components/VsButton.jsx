@@ -22,6 +22,9 @@ const VsButton = ({ opponent }) => {
     const myFav = currentUser.favoriteCombos?.[type];
     const opponentFav = opponent.favoriteCombos?.[type];
 
+    console.log(myFav)
+    console.log(opponentFav)
+
     if (!myFav || !opponentFav) {
       const msg = `${
         !myFav && !opponentFav

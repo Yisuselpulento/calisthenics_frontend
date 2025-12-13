@@ -5,15 +5,15 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 
 const FavoriteComboStar = ({ comboId, type }) => {
-  const { viewedProfile, updateViewedProfile } = useAuth();
+  const { currentUser, updateCurrentUser } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  if (!viewedProfile) return null;
+  if (!currentUser) return null;
 
   // Verificar si este combo YA es favorito en el perfil cargado
   const isFavorite =
-    viewedProfile.favoriteCombos?.[type] &&
-    String(viewedProfile.favoriteCombos[type]) === String(comboId);
+    currentUser.favoriteCombos?.[type] &&
+    String(currentUser.favoriteCombos[type]) === String(comboId);
 
   const handleToggle = async () => {
     if (loading) return;
@@ -24,7 +24,7 @@ const FavoriteComboStar = ({ comboId, type }) => {
       toast.success("Favorito actualizado");
 
       // Actualizar el viewedProfile con los nuevos datos
-      updateViewedProfile(res.user);
+      updateCurrentUser(res.user);
     } else {
       toast.error(res.message || "Error al actualizar favorito");
     }
