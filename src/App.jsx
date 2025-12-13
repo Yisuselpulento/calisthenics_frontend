@@ -39,151 +39,154 @@ import PublicRoute from "./components/PublicRoute";
 import { Toaster } from "react-hot-toast";
 import EditAdvancedProfile from "./pages/Profile/EditAdvancedProfile";
 import OwnerRoute from "./components/OwnerRoute";
+import { SocketProvider } from "./context/SocketContext";
 
 function App() {
   return (
     <BrowserRouter>
     <Toaster position="top-right" />
       <AuthProvider>
-        <ScrollToTop />
+        <SocketProvider>
+              <ScrollToTop />
 
-        <Routes>
-          {/* 🔓 RUTAS PÚBLICAS (solo sin sesión) */}
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
+              <Routes>
+                {/* 🔓 RUTAS PÚBLICAS (solo sin sesión) */}
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
 
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <SignUp />
-              </PublicRoute>
-            }
-          />
+                <Route
+                  path="/signup"
+                  element={
+                    <PublicRoute>
+                      <SignUp />
+                    </PublicRoute>
+                  }
+                />
 
-          <Route
-            path="/forgot-password"
-            element={
-              <PublicRoute>
-                <ForgotPassword />
-              </PublicRoute>
-            }
-          />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <PublicRoute>
+                      <ForgotPassword />
+                    </PublicRoute>
+                  }
+                />
 
-          <Route
-            path="/verify-email"
-            element={
-              <PublicRoute>
-                <EmailVerification />
-              </PublicRoute>
-            }
-          />
+                <Route
+                  path="/verify-email"
+                  element={
+                    <PublicRoute>
+                      <EmailVerification />
+                    </PublicRoute>
+                  }
+                />
 
-          <Route
-            path="/update-password"
-            element={
-              <PublicRoute>
-                <UpdatePassword />
-              </PublicRoute>
-            }
-          />
+                <Route
+                  path="/update-password"
+                  element={
+                    <PublicRoute>
+                      <UpdatePassword />
+                    </PublicRoute>
+                  }
+                />
 
-          {/* 🔒 RUTAS PROTEGIDAS */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            {/* --- Home --- */}
-            <Route index element={<Home />} />
+                {/* 🔒 RUTAS PROTEGIDAS */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  {/* --- Home --- */}
+                  <Route index element={<Home />} />
 
-            {/* --- Otras páginas generales --- */}
-            <Route path="/skills-stats" element={<SkillsStatsPage />} />
-            <Route path="/vs/:matchId" element={<VsDetails />} />
-            <Route path="/teams/:teamId" element={<TeamPage />} />
-            <Route path="/teams/create" element={<CreateTeamPage />} />
-            <Route path="/ranks" element={<Ranks />} />
-            <Route path="/notifications" element={<Notifications />} />
+                  {/* --- Otras páginas generales --- */}
+                  <Route path="/skills-stats" element={<SkillsStatsPage />} />
+                  <Route path="/vs/:matchId" element={<VsDetails />} />
+                  <Route path="/teams/:teamId" element={<TeamPage />} />
+                  <Route path="/teams/create" element={<CreateTeamPage />} />
+                  <Route path="/ranks" element={<Ranks />} />
+                  <Route path="/notifications" element={<Notifications />} />
 
-            {/* --- Perfil --- */}
-            <Route path="profile/:username" element={<ProfileLayout />}>
-                <Route index element={<Profile />} />
-                <Route path="skills" element={<ProfileSkills />} />
-                <Route path="historial" element={<ProfileHistorial />} />
-                
-                {/* Rutas solo accesibles por el dueño */}
-                <Route path="edit" element={
-                  <OwnerRoute>
-                    <EditProfile />
-                  </OwnerRoute>
-                } />
-                <Route path="edit-advanced" element={
-                  <OwnerRoute>
-                    <EditAdvancedProfile />
-                  </OwnerRoute>
-                } />
-
-                <Route path="skills/all-skills" element={<SkillsUser />} />
-                <Route path="skill/:userSkillVariantId" element={<SkillDetail />} />
-
-                <Route path="edit-skill/:userSkillVariantId" element={
-                  <OwnerRoute>
-                    <EditSkill />
-                  </OwnerRoute>
-                } />
-                <Route path="add-skill" element={
-                  <OwnerRoute>
-                    <AddSkill />
-                  </OwnerRoute>
-                } />
-
-                <Route path="friends" element={<UserFriendsPage />} />
-
-                <Route path="combos">
-                    <Route
-                      index
-                      element={
+                  {/* --- Perfil --- */}
+                  <Route path="profile/:username" element={<ProfileLayout />}>
+                      <Route index element={<Profile />} />
+                      <Route path="skills" element={<ProfileSkills />} />
+                      <Route path="historial" element={<ProfileHistorial />} />
+                      
+                      {/* Rutas solo accesibles por el dueño */}
+                      <Route path="edit" element={
                         <OwnerRoute>
-                          <Combos />
+                          <EditProfile />
                         </OwnerRoute>
-                      }
-                    />
-                    <Route
-                      path="add"
-                      element={
+                      } />
+                      <Route path="edit-advanced" element={
                         <OwnerRoute>
-                          <AddCombo />
+                          <EditAdvancedProfile />
                         </OwnerRoute>
-                      }
-                    />
-                    <Route path=":comboId" element={<ComboDetails />} />
-                    <Route
-                      path=":comboId/edit"
-                      element={
+                      } />
+
+                      <Route path="skills/all-skills" element={<SkillsUser />} />
+                      <Route path="skill/:userSkillVariantId" element={<SkillDetail />} />
+
+                      <Route path="edit-skill/:userSkillVariantId" element={
                         <OwnerRoute>
-                          <EditCombo />
+                          <EditSkill />
                         </OwnerRoute>
-                      }
-                    />
-                  </Route>
-              </Route>
+                      } />
+                      <Route path="add-skill" element={
+                        <OwnerRoute>
+                          <AddSkill />
+                        </OwnerRoute>
+                      } />
 
-            {/* Matches */}
-            <Route path="match" element={<Match />} />
-          </Route>
+                      <Route path="friends" element={<UserFriendsPage />} />
 
-          {/* ❌ 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+                      <Route path="combos">
+                          <Route
+                            index
+                            element={
+                              <OwnerRoute>
+                                <Combos />
+                              </OwnerRoute>
+                            }
+                          />
+                          <Route
+                            path="add"
+                            element={
+                              <OwnerRoute>
+                                <AddCombo />
+                              </OwnerRoute>
+                            }
+                          />
+                          <Route path=":comboId" element={<ComboDetails />} />
+                          <Route
+                            path=":comboId/edit"
+                            element={
+                              <OwnerRoute>
+                                <EditCombo />
+                              </OwnerRoute>
+                            }
+                          />
+                        </Route>
+                    </Route>
+
+                  {/* Matches */}
+                  <Route path="match" element={<Match />} />
+                </Route>
+
+                {/* ❌ 404 */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+        </SocketProvider>
       </AuthProvider>
     </BrowserRouter>
   );

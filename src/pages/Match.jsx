@@ -1,53 +1,27 @@
 import { useEffect, useState } from "react";
-import { doMatchService } from "../Services/matchFetching.js";
 import { useLocation } from "react-router-dom";
 import ComboStepByStep from "../components/ComboStepByStep.jsx";
 
 const Match = () => {
   const { state } = useLocation();
-  const { opponentId, type } = state || {};
+  const matchData = state?.matchData;
 
   const [loading, setLoading] = useState(true);
-  const [matchData, setMatchData] = useState(null);
-  const [error, setError] = useState("");
 
+  // ⏳ Loading visual corto al montar
   useEffect(() => {
-    const run = async () => {
-      if (!opponentId || !type) {
-        setError("Faltan datos del match.");
-        setLoading(false);
-        return;
-      }
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
-      const res = await doMatchService(opponentId, type);
-      console.log(res)
-      if (!res.success) {
-        setError(res.message);
-        setLoading(false);
-        return;
-      }
-
-      setMatchData({
-        userCombo: res.userCombo,
-        opponentCombo: res.opponentCombo,
-        userAResult: res.userAResult,
-        userBResult: res.userBResult,
-      });
-
-      setLoading(false);
-    };
-
-    run();
-  }, [opponentId, type]);
-
-   if (loading)
+  // 🔄 ANIMACIÓN LOADING (la que tú quieres)
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p className="text-white text-lg font-bold animate-blink">
           Cargando Enfrentamiento...
         </p>
 
-        {/* Animación blink personalizada */}
         <style>
           {`
             @keyframes blink {
@@ -61,42 +35,53 @@ const Match = () => {
         </style>
       </div>
     );
+  }
 
-  // Si hay error
-  if (error)
+  // ❌ Si no hay data (refresh / acceso directo)
+  if (!matchData) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-red-500 text-lg font-bold animate-blink">{error}</p>
+        <p className="text-red-500 text-lg font-bold">
+          No se pudo cargar el enfrentamiento.
+        </p>
       </div>
     );
+  }
 
-  const { userCombo, opponentCombo, userAResult, userBResult } = matchData || {};
-
-  if (!userAResult || !userBResult) return <p>Cargando resultados...</p>;
+  const {
+    userCombo,
+    opponentCombo,
+    userAResult,
+    userBResult,
+  } = matchData;
 
   return (
-    <div className="flex justify-center items-start gap-1 mt-8">
+    <div className="flex justify-center items-start gap-2 mt-8">
       {/* USER */}
       <div className="flex flex-col items-center rounded-xl">
         <img
-          src={userCombo?.user.avatar}
+          src={userCombo.user.avatar}
           alt="avatar"
           className="w-25 h-25 rounded-full border m-2"
         />
-        <h2 className="text-lg font-semibold">{userCombo?.user.username}</h2>
+        <h2 className="text-lg font-semibold">
+          {userCombo.user.username}
+        </h2>
+
         <video
-          src={userCombo?.video}
+          src={userCombo.video}
           className="w-64 rounded-xl my-2 p-2"
-          controls
-           autoPlay
+          autoPlay
           muted
-          loop 
+          loop
+          playsInline
         />
+
         <ComboStepByStep
-          elementsStepData={userAResult?.elementsStepData}
-          totalPoints={userAResult?.totalPoints}
+          elementsStepData={userAResult.elementsStepData}
+          totalPoints={userAResult.totalPoints}
           isWinner={userAResult.isWinner}
-          playerName={userCombo?.user.username}
+          playerName={userCombo.user.username}
         />
       </div>
 
@@ -108,24 +93,28 @@ const Match = () => {
       {/* OPPONENT */}
       <div className="flex flex-col items-center rounded-xl">
         <img
-          src={opponentCombo?.user.avatar}
+          src={opponentCombo.user.avatar}
           alt="avatar"
           className="w-25 h-25 rounded-full border m-2"
         />
-        <h2 className="text-lg font-semibold">{opponentCombo?.user.username}</h2>
-       <video
-          src={opponentCombo?.video}
+        <h2 className="text-lg font-semibold">
+          {opponentCombo.user.username}
+        </h2>
+
+        <video
+          src={opponentCombo.video}
           className="w-64 rounded-xl my-2 p-2"
-          controls
           autoPlay
           muted
-          loop // opcional, si quieres que se repita
+          loop
+          playsInline
         />
+
         <ComboStepByStep
-          elementsStepData={userBResult?.elementsStepData}
-          totalPoints={userBResult?.totalPoints}
+          elementsStepData={userBResult.elementsStepData}
+          totalPoints={userBResult.totalPoints}
           isWinner={userBResult.isWinner}
-          playerName={opponentCombo?.user.username}
+          playerName={opponentCombo.user.username}
         />
       </div>
     </div>

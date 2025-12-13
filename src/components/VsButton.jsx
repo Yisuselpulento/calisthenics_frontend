@@ -1,45 +1,15 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { io } from "socket.io-client";
-
-// Conexión al backend usando tu variable VITE_API_BACKEND_URL
-const socket = io(import.meta.env.VITE_API_BACKEND_URL);
+import { useSocket } from "../context/SocketContext";
 
 const VsButton = ({ opponent }) => {
-  const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const socket = useSocket();
+
   const [showSelect, setShowSelect] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [waiting, setWaiting] = useState(false); // indicador de espera
-  
-  console.log(opponent)
-  console.log(currentUser)
 
-  useEffect(() => {
-    // Registrar al usuario en el socket
-    if (currentUser?._id) socket.emit("register", currentUser._id);
-
-    // Cuando el oponente recibe un desafío
-    socket.on("incomingChallenge", ({ fromUserId, type }) => {
-      const accepted = window.confirm(`Usuario ${fromUserId} te desafía en ${type}. ¿Aceptas?`);
-      socket.emit("challengeResponse", { accepted });
-    });
-
-    // Cuando el desafío es aceptado
-    socket.on("challengeAccepted", (matchData) => {
-      setWaiting(false);
-      navigate("/match", { state: matchData });
-    });
-
-    // Cuando el desafío es rechazado o expira
-    socket.on("challengeRejected", ({ message }) => {
-      setWaiting(false);
-      alert(message);
-    });
-
-    return () => socket.off();
-  }, [currentUser]);
 
   const handleToggle = () => {
     setShowSelect(!showSelect);
@@ -47,6 +17,8 @@ const VsButton = ({ opponent }) => {
   };
 
   const handleSelect = (type) => {
+    if (!socket) return;
+
     const myFav = currentUser.favoriteCombos?.[type];
     const opponentFav = opponent.favoriteCombos?.[type];
 
@@ -58,12 +30,14 @@ const VsButton = ({ opponent }) => {
           ? `${currentUser.username} no tiene`
           : `${opponent.username} no tiene`
       } un combo favorito de tipo "${type.toUpperCase()}"`;
+
       setErrorMsg(msg);
       return;
     }
 
     // ✔ Enviar desafío al backend vía socket
     setWaiting(true);
+
     socket.emit("challengeRequest", {
       fromUserId: currentUser._id,
       toUserId: opponent._id,
