@@ -12,8 +12,8 @@ const EditProfile = () => {
 
   const [formData, setFormData] = useState({
     country: currentUser.country || "",
-    videoProfile: currentUser.videoProfile || "",
-    avatar: currentUser.avatar || "",
+    videoProfile: currentUser.videoProfile.url || "",
+    avatar: currentUser.avatar.url || "",
     altura: currentUser.altura || "",
     peso: currentUser.peso || "",
   });
@@ -151,15 +151,21 @@ const EditProfile = () => {
               </label>
 
               {formData.videoProfile && (
-                <video
-                  src={
-                    formData.videoProfile instanceof File
-                      ? URL.createObjectURL(formData.videoProfile)
-                      : formData.videoProfile
-                  }
-                  controls
-                  className="w-full mt-2 rounded-md"
-                />
+                <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={
+                        formData.videoProfile instanceof File
+                          ? URL.createObjectURL(formData.videoProfile)
+                          : formData.videoProfile
+                      }
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
               )}
             </div>
 

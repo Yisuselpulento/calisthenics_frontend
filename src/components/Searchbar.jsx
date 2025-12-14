@@ -56,8 +56,8 @@ const Searchbar = () => {
               }}
             >
               <img
-                src={user.avatar}
-                alt={user.name}
+                src={user.avatar.url}
+                alt={user.fullName}
                 className="w-8 h-8 rounded-full object-cover border border-white/30"
               />
               <div>

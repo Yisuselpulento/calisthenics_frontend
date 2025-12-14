@@ -177,7 +177,17 @@ const SkillDetail = () => {
       )}
 
       {variant.video && (
-        <video src={variant.video} controls className="w-full rounded-lg mb-6" />
+        <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={variant.video.url}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
       )}
 
       {/* MODALS */}

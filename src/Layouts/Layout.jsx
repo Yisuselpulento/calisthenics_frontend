@@ -10,7 +10,7 @@ const Layout = () => {
   const { viewedProfile } = useAuth();
 
   const isProfilePage = location.pathname.startsWith("/profile/");
-  const showVideo = isProfilePage && viewedProfile?.videoProfile;
+  const showVideo = isProfilePage && viewedProfile?.videoProfile?.url;
 
 
   return (
@@ -19,7 +19,7 @@ const Layout = () => {
         <div className="fixed inset-0 -z-10">
           <video
             className="w-full h-full object-cover"
-            src={viewedProfile.videoProfile}
+            src={viewedProfile.videoProfile.url}
             autoPlay
             loop
             muted

@@ -11,12 +11,14 @@ import ButtonFollow from "../../components/Profile/ButtonFollow";
 import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 import { createReportService } from "../../Services/reportsFetching";
 import { toast } from "react-hot-toast";
+import ImageLightbox from "../../components/ImageLightbox";
 
 const Profile = () => {
   const { currentUser, viewedProfile, toggleFollow } = useAuth();
 
   const [loadingReport, setLoadingReport] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [openImage, setOpenImage] = useState(false);
 
   const user = viewedProfile; 
   const isCurrentUser = currentUser?._id === user._id;
@@ -67,8 +69,9 @@ const Profile = () => {
 
         <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
           <img
-            src={user.avatar}
+            src={user.avatar.url}
             alt={user.fullName}
+            onClick={() => setOpenImage(true)}
             className="w-full h-full object-cover rounded-full border"
             style={{ borderColor: bgColor }}
           />
@@ -173,6 +176,13 @@ const Profile = () => {
           <VsButton opponent={user} />
         </section>
       )}
+
+      <ImageLightbox
+      src={user.avatar.url}
+      alt={user.fullName}
+      isOpen={openImage}
+      onClose={() => setOpenImage(false)}
+    />
     </div>
   );
 };

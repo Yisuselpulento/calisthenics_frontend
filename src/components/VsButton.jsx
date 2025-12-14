@@ -59,6 +59,9 @@ const VsButton = ({ opponent }) => {
   );
   };
 
+  if (!currentUser || currentUser._id === opponent._id) {
+  return null;
+}
 
   return (
     <div className="relative items-center z-10 min-h-20">

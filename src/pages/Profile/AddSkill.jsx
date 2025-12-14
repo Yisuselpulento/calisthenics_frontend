@@ -151,16 +151,42 @@ const AddSkill = () => {
 
               {/* Video */}
               <div>
-                <label className="block text-sm mb-1 text-gray-300">
-                  Video (obligatorio)
-                </label>
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => setVideoFile(e.target.files[0])}
-                  className="w-full p-2 rounded-lg bg-neutral-900 border border-neutral-700"
-                />
-              </div>
+                  <label className="block text-sm mb-1 text-gray-300">
+                    Video (obligatorio)
+                  </label>
+                  
+                  {/* Input oculto */}
+                  <input
+                    id="skillVideo"
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => setVideoFile(e.target.files[0])}
+                    className="hidden"
+                  />
+
+                  {/* Label como botón */}
+                  <label
+                    htmlFor="skillVideo"
+                    className="px-3 py-1 text-sm bg-purple-600 hover:bg-purple-700 rounded-md cursor-pointer inline-block transition"
+                  >
+                    Seleccionar video
+                  </label>
+
+                  {/* Preview */}
+                  {videoFile && (
+                    <div className="relative w-full aspect-[9/16] max-h-[60vh] bg-black rounded-lg overflow-hidden mt-2">
+                      <video
+                        src={videoFile instanceof File ? URL.createObjectURL(videoFile) : videoFile}
+                        controls
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
+                </div>
 
               {/* Selector de dedos */}
               <div>

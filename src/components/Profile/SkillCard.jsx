@@ -15,6 +15,7 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   const isOwner = currentUser?.username === ownerUsername;
   if (!skill) return null;
 
+
   const {
     skillName,
     variantKey,
@@ -92,15 +93,17 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
           </span>
 
           {video && (
-            <video
-              src={video}
-              controls
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="rounded-lg mt-2 w-full"
-            />
+            <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={video.url}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
           )}
 
           {showReportModal && (
@@ -166,15 +169,17 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
               </span>
 
               {video && (
-                <video
-                  src={video}
-                  controls
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="rounded-lg mt-2 w-full"
-                />
+                <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={video}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
               )}
 
               {showReportModal && (

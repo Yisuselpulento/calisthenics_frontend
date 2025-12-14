@@ -62,7 +62,7 @@ const PostCard = ({ activity }) => {
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2">
           <img
-            src={user.avatar}
+            src={user.avatar.url}
             alt={user.username}
             className="w-8 h-8 rounded-full object-cover border border-white/20"
           />
@@ -76,11 +76,18 @@ const PostCard = ({ activity }) => {
 
       {/* Video opcional */}
       {metadata?.videoUrl && (
-        <video
-          src={metadata.videoUrl}
-          controls
-          className="mt-3 w-full rounded-lg object-cover"
-        />
+        <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={metadata.videoUrl}
+                      controls
+                      autoPlay
+                      preload="metadata"
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
       )}
     </Link>
   );

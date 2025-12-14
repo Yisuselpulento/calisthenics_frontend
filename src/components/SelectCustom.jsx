@@ -10,7 +10,7 @@ const SelectCustom = ({ label, value, onChange, options }) => {
       <div className="relative">
         <select
           value={value}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.value)}
           className="
             w-full
             appearance-none

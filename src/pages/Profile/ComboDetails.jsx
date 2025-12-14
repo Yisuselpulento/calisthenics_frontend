@@ -99,16 +99,17 @@ const ComboDetails = () => {
 
     {/* ---------------------- VIDEO PRINCIPAL DEL COMBO ---------------------- */}
     {combo.video && (
-      <div className="mb-6">
-        <video
-          src={combo.video}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full rounded-2xl border border-white/20"
-        />
-      </div>
+      <div className="relative w-full mb-6 aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={combo.video.url}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
     )}
 
     <h2 className="text-2xl font-bold mb-2">Skills del Combo</h2>
@@ -126,14 +127,17 @@ const ComboDetails = () => {
 
           {/* Video de la variante */}
           {el.video && (
-            <video
-              src={el.video}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full rounded-xl mb-3"
-            />
+            <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                    <video
+                      src={el.video.url}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-contain"
+                    />
+                  </div>
           )}  
           <div className="flex justify-between"> 
             <div className="text-sm mb-2">
