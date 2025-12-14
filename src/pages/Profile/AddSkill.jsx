@@ -7,6 +7,7 @@ import { getAllSkillsAdminService } from "../../Services/SkillAdminFetching.js";
 import toast from "react-hot-toast";
 import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
 import  {getVariantBgColor}  from "../../helpers/colorTargetVariants.js";
+import SearchSkills from "../../components/SearchSkills";
 
 const AddSkill = () => {
   const { updateViewedProfile } = useAuth();
@@ -20,6 +21,15 @@ const AddSkill = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [fingersUsed, setFingersUsed] = useState(5);
   const [error, setError] = useState("");
+
+   const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+
+  const filteredVariants = selectedSkill?.variants.filter((v) => {
+    const matchesSearch = v.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = typeFilter ? v.type === typeFilter : true;
+    return matchesSearch && matchesType;
+  }) || [];
 
   // 🔹 Cargar skills
   useEffect(() => {

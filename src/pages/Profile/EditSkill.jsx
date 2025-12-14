@@ -48,13 +48,6 @@ const EditSkill = () => {
     return () => URL.revokeObjectURL(url);
   }, [videoFile]);
 
-  if (loadingVariant) return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Spinner size="2em" />
-    </div>
-  );
-
-  if (!variant) return <p className="text-white p-5">Variante no encontrada</p>;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,12 +79,17 @@ const EditSkill = () => {
     }
   };
 
-   if (!viewedProfile)
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Spinner size="2em" />
-    </div>
-  );
+  if (loadingVariant) return (
+  <div className="flex justify-center items-center min-h-screen">
+    <Spinner size="2em" />
+  </div>
+);
+
+if (!variant && !loadingVariant) return (
+  <p className="text-white p-5">Variante no encontrada</p>
+);
+
+
 
   return (
     <div className="p-2 max-w-xl mx-auto text-white min-h-screen">
@@ -112,38 +110,45 @@ const EditSkill = () => {
             onChange={(e) => setNewFingers(Number(e.target.value))}
             className="w-full p-2 rounded bg-white/20 text-white"
           >
-            <option value={1}>1</option>
-            <option value={2}>2</option>
-            <option value={5}>5</option>
+            <option className="bg-stone-800" value={1}>1</option>
+            <option className="bg-stone-800" value={2}>2</option>
+            <option className="bg-stone-800" value={5}>5</option>
           </select>
         </div>
 
         {/* Video Upload */}
-        <div>
-          <label className="block text-sm mb-1">Subir video</label>
+         <div>
+            <label className="block text-sm mb-1">Subir video</label>
 
-          <input
-            id="videoUpload"
-            type="file"
-            accept="video/*"
-            className="hidden"
-            onChange={(e) => setVideoFile(e.target.files[0])}
-          />
-          <label
-            htmlFor="videoUpload"
-            className="px-3 py-1 text-sm bg-purple-600 hover:bg-purple-700 rounded-md cursor-pointer inline-block transition"
-          >
-            Seleccionar video
-          </label>
+            <input
+              id="videoUpload"
+              type="file"
+              accept="video/*"
+              className="hidden"
+              onChange={(e) => setVideoFile(e.target.files[0])}
+            />
+            <label
+              htmlFor="videoUpload"
+              className="px-3 py-1 text-sm bg-purple-600 hover:bg-purple-700 rounded-md cursor-pointer inline-block transition"
+            >
+              Seleccionar video
+            </label>
 
-          {previewVideo ? (
-            <video src={previewVideo} controls className="w-full mt-2 rounded-lg" />
-          ) : (
-            variant.video && (
-              <video src={variant.video} controls className="w-full mt-2 rounded-lg" />
-            )
-          )}
-        </div>
+            {/* Video Preview */}
+            {(previewVideo || variant?.video?.url) && (
+              <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
+                <video
+                  src={previewVideo || variant.video.url}
+                  controls
+                  autoPlay={!!previewVideo} // solo autoPlay si es previsualización
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-contain"
+                />
+              </div>
+            )}
+          </div>
 
         <SubmitButton
           type="submit"

@@ -59,7 +59,7 @@ const FriendsDropdown = ({ user }) => {
             className="flex items-center gap-3 p-2 bg-stone-800 rounded-lg hover:bg-stone-700"
           >
             <img
-              src={u.avatar}
+              src={u.avatar.url}
               className="w-8 h-8 rounded-full object-cover"
               alt={u.username}
             />

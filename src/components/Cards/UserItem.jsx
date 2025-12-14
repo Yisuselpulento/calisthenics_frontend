@@ -5,7 +5,7 @@ const UserItem = ({ user, isFollowing, onToggleFollow }) => {
     <div className="flex items-center justify-between bg-stone-800 p-3 rounded-lg hover:bg-stone-700">
       <Link to={`/profile/${user.username}`} className="flex items-center gap-3">
         <img
-          src={user.avatar}
+          src={user.avatar.url}
           className="w-10 h-10 rounded-full object-cover"
           alt={user.username}
         />

@@ -32,7 +32,6 @@ const SkillDetail = () => {
       setLoading(true);
       const res = await getUserSkillVariantService(userSkillVariantId);
       if (res.success) {
-        console.log(res)
         setVariant(res.variant); 
       } else {
         toast.error(res.message || "No se pudo cargar la skill");
