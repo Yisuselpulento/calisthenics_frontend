@@ -10,9 +10,10 @@ const Match = () => {
 
   // ⏳ Loading visual corto al montar
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
+  if (!matchData) return;
+  const timer = setTimeout(() => setLoading(false), 500);
+  return () => clearTimeout(timer);
+}, [matchData]);
 
   // 🔄 ANIMACIÓN LOADING (la que tú quieres)
   if (loading) {
@@ -33,6 +34,22 @@ const Match = () => {
             }
           `}
         </style>
+      </div>
+    );
+  }
+
+  if (
+    !matchData ||
+    !matchData.userCombo ||
+    !matchData.opponentCombo ||
+    !matchData.userAResult ||
+    !matchData.userBResult
+  ) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500 text-lg font-bold">
+          Datos del enfrentamiento incompletos.
+        </p>
       </div>
     );
   }
@@ -60,7 +77,7 @@ const Match = () => {
       {/* USER */}
       <div className="flex flex-col items-center rounded-xl">
         <img
-          src={userCombo.user.avatar}
+          src={userCombo.user.avatar.url}
           alt="avatar"
           className="w-25 h-25 rounded-full border m-2"
         />
@@ -69,7 +86,7 @@ const Match = () => {
         </h2>
 
         <video
-          src={userCombo.video}
+          src={userCombo.video.url}
           className="w-64 rounded-xl my-2 p-2"
           autoPlay
           muted
@@ -93,7 +110,7 @@ const Match = () => {
       {/* OPPONENT */}
       <div className="flex flex-col items-center rounded-xl">
         <img
-          src={opponentCombo.user.avatar}
+          src={opponentCombo.user.avatar.url}
           alt="avatar"
           className="w-25 h-25 rounded-full border m-2"
         />
@@ -102,7 +119,7 @@ const Match = () => {
         </h2>
 
         <video
-          src={opponentCombo.video}
+          src={opponentCombo.video.url}
           className="w-64 rounded-xl my-2 p-2"
           autoPlay
           muted

@@ -32,10 +32,11 @@ export const SocketProvider = ({ children }) => {
     // 🔔 Notificaciones nuevas
     socket.on("newNotification", (notification) => {
       updateCurrentUser({
-        notifications: [notification, ...(currentUser?.notifications || [])],
-        notificationsCount: (currentUser?.notificationsCount || 0) + 1,
+          ...currentUser, // 🔥 conservar todo
+          notifications: [notification, ...(currentUser?.notifications || [])],
+          notificationsCount: (currentUser?.notificationsCount || 0) + 1,
+        });
       });
-    });
 
     // ⚔️ Desafíos aceptados
     socket.on("challengeAccepted", async ({ challengeId, opponentId }) => {
