@@ -13,39 +13,27 @@ const NotificationsDropdown = ({ closeDropdown }) => {
   const [loadingIds, setLoadingIds] = useState([]);
 
   /* -------------------- MARCAR COMO LEÍDA -------------------- */
-  const handleMarkRead = async (id) => {
+ const handleMarkRead = async (id) => {
   if (!currentUser) return;
 
-  const previousNotifications = currentUser.notifications;
-
-  // optimistic
+  // optimistic (solo UI)
   updateCurrentUser({
     ...currentUser,
-    notifications: notifications.map((n) =>
+    notifications: currentUser.notifications.map((n) =>
       n._id === id ? { ...n, read: true } : n
     ),
-    notificationsCount: Math.max(
-      (currentUser.notificationsCount || 1) - 1,
-      0
-    ),
+    notificationsCount: Math.max(currentUser.notificationsCount - 1, 0),
   });
-
-  setLoadingIds((prev) => [...prev, id]);
 
   try {
     const res = await markNotificationAsReadService(id);
-    if (!res.success) throw new Error(res.message);
-  } catch (err) {
-    updateCurrentUser({
-      ...currentUser,
-      notifications: previousNotifications,
-    });
+    if (res.success) {
+      updateCurrentUser(res.user); 
+    }
+  } catch {
     toast.error("No se pudo marcar la notificación");
-  } finally {
-    setLoadingIds((prev) => prev.filter((nid) => nid !== id));
   }
 };
-
   /* -------------------- RESPONDER DESAFÍO -------------------- */
   const handleChallengeResponse = (notification, accepted) => {
     if (!socket) return;
@@ -56,7 +44,6 @@ const NotificationsDropdown = ({ closeDropdown }) => {
       accepted,
     });
 
-    handleMarkRead(notification._id);
     closeDropdown();
   };
 

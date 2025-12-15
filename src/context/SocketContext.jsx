@@ -13,12 +13,17 @@ export const SocketProvider = ({ children }) => {
   const navigate = useNavigate(); // navegaciones desde socket
 
   useEffect(() => {
-    socketRef.current = io(import.meta.env.VITE_API_BACKEND_URL, {
-      withCredentials: true,
-    });
+  if (socketRef.current) return; // 👈 evita duplicados
 
-    return () => socketRef.current.disconnect();
-  }, []);
+  socketRef.current = io(import.meta.env.VITE_API_BACKEND_URL, {
+    withCredentials: true,
+  });
+
+  return () => {
+    socketRef.current?.disconnect();
+    socketRef.current = null;
+  };
+}, []);
 
   useEffect(() => {
     if (!socketRef.current || !currentUser?._id) return;

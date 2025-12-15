@@ -22,7 +22,6 @@ const UserSkillCard = ({ skill, ownerUsername }) => {
 
   try {
     const res = await deleteSkillVariantService(userSkillVariantId);
-    console.log(res)
     if (!res.success) {
       toast.error(res.message || "No se pudo eliminar la variante.");
       setLoading(false);
