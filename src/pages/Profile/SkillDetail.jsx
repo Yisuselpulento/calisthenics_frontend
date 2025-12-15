@@ -12,6 +12,7 @@ import { createReportService } from "../../Services/reportsFetching.js";
 import {skillReportReasons}  from "../../helpers/reportsOptions.js";
 import ReportModal from "../../components/Modals/ReportModal.jsx";
 import BackButton from "../../components/Buttons/BackButton.jsx";
+import VideoPlayer from "../../components/VideoPlayer.jsx";
 
 const SkillDetail = () => {
   const { userSkillVariantId, username } = useParams();
@@ -176,17 +177,7 @@ const SkillDetail = () => {
       )}
 
       {variant.video && (
-        <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={variant.video.url}
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+        <VideoPlayer src={variant?.video?.url} />
       )}
 
       {/* MODALS */}

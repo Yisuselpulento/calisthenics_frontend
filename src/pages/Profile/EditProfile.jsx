@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { updateProfileService } from "../../Services/ProfileFetching";
 import SubmitButton from "../../components/Buttons/SubmitButton";
 import toast from "react-hot-toast";
 import TeamButtonProfile from "../../components/Profile/TeamButtonProfile";
+import VideoPlayer from "../../components/VideoPlayer";
 
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
@@ -66,6 +67,19 @@ const EditProfile = () => {
       setLoading(false);
     }
   };
+
+  const videoSrc =
+  formData.videoProfile instanceof File
+    ? URL.createObjectURL(formData.videoProfile)
+    : formData.videoProfile;
+
+    useEffect(() => {
+  return () => {
+    if (formData.videoProfile instanceof File) {
+      URL.revokeObjectURL(videoSrc);
+    }
+  };
+}, [videoSrc, formData.videoProfile]);
 
   if (!currentUser)
   return (
@@ -151,21 +165,7 @@ const EditProfile = () => {
               </label>
 
               {formData.videoProfile && (
-                <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={
-                        formData.videoProfile instanceof File
-                          ? URL.createObjectURL(formData.videoProfile)
-                          : formData.videoProfile
-                      }
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+                <VideoPlayer src={videoSrc} />
               )}
             </div>
 

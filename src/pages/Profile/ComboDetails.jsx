@@ -7,6 +7,7 @@ import { deleteComboService, getComboByIdService } from "../../Services/comboFet
 import toast from "react-hot-toast";
 import FavoriteComboStar from "../../components/Buttons/FavoriteComboStar.jsx";
 import BackButton from "../../components/Buttons/BackButton.jsx";
+import VideoPlayer from "../../components/VideoPlayer.jsx";
 
 const ComboDetails = () => {
   const { comboId } = useParams();
@@ -99,17 +100,7 @@ const ComboDetails = () => {
 
     {/* ---------------------- VIDEO PRINCIPAL DEL COMBO ---------------------- */}
     {combo.video && (
-      <div className="relative w-full mb-6 aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={combo.video.url}
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+      <VideoPlayer src={combo.video.url} />
     )}
 
     <h2 className="text-2xl font-bold mb-2">Skills del Combo</h2>
@@ -127,17 +118,7 @@ const ComboDetails = () => {
 
           {/* Video de la variante */}
           {el.video && (
-            <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={el.video.url}
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+            <VideoPlayer src={el.video.url} />
           )}  
           <div className="flex justify-between"> 
             <div className="text-sm mb-2">

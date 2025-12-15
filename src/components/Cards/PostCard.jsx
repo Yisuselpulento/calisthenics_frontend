@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import VideoPlayer from "../VideoPlayer";
 
 const PostCard = ({ activity }) => {
   const { user, type, message, createdAt, metadata } = activity;
@@ -76,18 +77,7 @@ const PostCard = ({ activity }) => {
 
       {/* Video opcional */}
       {metadata?.videoUrl && (
-        <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={metadata.videoUrl}
-                      controls
-                      autoPlay
-                      preload="metadata"
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+        <VideoPlayer src={metadata.videoUrl} />
       )}
     </Link>
   );

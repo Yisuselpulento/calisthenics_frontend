@@ -6,6 +6,7 @@ import { createReportService } from "../../Services/reportsFetching";
 import { skillReportReasons } from "../../helpers/reportsOptions.js";
 import ReportModal from "../Modals/ReportModal.jsx";
 import { Link } from "react-router-dom";
+import VideoPlayer from "../VideoPlayer.jsx";
 
 const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   const { currentUser } = useAuth();
@@ -93,17 +94,7 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
           </span>
 
           {video && (
-            <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={video.url}
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+            <VideoPlayer src={video.url} />
           )}
 
           {showReportModal && (
@@ -169,17 +160,7 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
               </span>
 
               {video && (
-                <div className="relative w-full aspect-[9/16] max-h-[80vh] bg-black rounded-lg overflow-hidden mt-2">
-                    <video
-                      src={video}
-                      controls
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain"
-                    />
-                  </div>
+                <VideoPlayer src={video.url} />
               )}
 
               {showReportModal && (
