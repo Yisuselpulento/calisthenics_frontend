@@ -77,10 +77,6 @@ const updateViewedProfile = (user) => {
   // ------------------ SIGN UP ------------------
   const signup = async (formData) => {
     const res = await signupService(formData);
-    if (res.success) {
-      setCurrentUser(res.user);
-      setIsAuthenticated(true);
-    }
     return res;
   };
 
