@@ -1,67 +1,68 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
-import { useNavigate } from "react-router-dom";
+import { sendChallengeService } from "../Services/challengeFetching.js";
+import toast from "react-hot-toast";
 
 const VsButton = ({ opponent }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, updateCurrentUser } = useAuth();
   const socket = useSocket();
 
   const [showSelect, setShowSelect] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [waiting, setWaiting] = useState(false); // indicador de espera
+  const [waiting, setWaiting] = useState(false);
 
   const handleToggle = () => {
     setShowSelect(!showSelect);
     setErrorMsg("");
   };
 
-  const handleSelect = (type) => {
-    if (!socket) return;
+   const handleSelect = async (type) => {
+    setErrorMsg("");
 
     const myFav = currentUser.favoriteCombos?.[type];
     const opponentFav = opponent.favoriteCombos?.[type];
 
-    console.log(myFav)
-    console.log(opponentFav)
-
     if (!myFav || !opponentFav) {
       const msg = `${
         !myFav && !opponentFav
-          ? "Ninguno de los dos tiene"
+          ? "Ninguno tiene"
           : !myFav
           ? `${currentUser.username} no tiene`
           : `${opponent.username} no tiene`
       } un combo favorito de tipo "${type.toUpperCase()}"`;
-
       setErrorMsg(msg);
       return;
     }
 
-    // ✔ Enviar desafío al backend vía socket
     setShowSelect(false);
-  setErrorMsg("");
-  setWaiting(true);
+    setWaiting(true);
 
-    socket.emit(
-    "challengeRequest",
-    {
-      fromUserId: currentUser._id,
-      toUserId: opponent._id,
-      type,
-    },
-    (response) => {
-      if (!response?.success) {
+    try {
+      const res = await sendChallengeService({
+        toUserId: opponent._id,
+        type,
+      });
+
+      if (!res.success) {
+        setErrorMsg(res.message || "No se pudo enviar el desafío");
         setWaiting(false);
-        setErrorMsg("No se pudo enviar el desafío");
+        return;
       }
+      
+    } catch (error) {
+      console.error("Error al enviar desafío:", error);
+      setErrorMsg("Ocurrió un error al enviar el desafío. Intenta de nuevo.");
+      setWaiting(false);
     }
-  );
   };
+  useEffect(() => {
+  if (!currentUser?.pendingChallenge) {
+    setWaiting(false);
+  }
+}, [currentUser?.pendingChallenge]);
 
-  if (!currentUser || currentUser._id === opponent._id) {
-  return null;
-}
+  if (!currentUser || currentUser._id === opponent._id) return null;
 
   return (
     <div className="relative items-center z-10 min-h-20">

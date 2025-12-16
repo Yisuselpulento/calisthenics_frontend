@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext";
 import toast from "react-hot-toast";
-import { doMatchService } from "../Services/matchFetching";
 import { useNavigate } from "react-router-dom";
 
 const SocketContext = createContext(null);
@@ -10,21 +9,23 @@ const SocketContext = createContext(null);
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const { currentUser, updateCurrentUser } = useAuth();
-  const navigate = useNavigate(); // navegaciones desde socket
+  const navigate = useNavigate();
 
+  // Conectar al socket
   useEffect(() => {
-  if (socketRef.current) return; // 👈 evita duplicados
+    if (socketRef.current) return;
 
-  socketRef.current = io(import.meta.env.VITE_API_BACKEND_URL, {
-    withCredentials: true,
-  });
+    socketRef.current = io(import.meta.env.VITE_API_BACKEND_URL, {
+      withCredentials: true,
+    });
 
-  return () => {
-    socketRef.current?.disconnect();
-    socketRef.current = null;
-  };
-}, []);
+    return () => {
+      socketRef.current?.disconnect();
+      socketRef.current = null;
+    };
+  }, []);
 
+  // Registrar usuario en el socket
   useEffect(() => {
     if (!socketRef.current || !currentUser?._id) return;
     socketRef.current.emit("register", currentUser._id);
@@ -34,38 +35,53 @@ export const SocketProvider = ({ children }) => {
     const socket = socketRef.current;
     if (!socket) return;
 
-    // 🔔 Notificaciones nuevas
-    socket.on("newNotification", (notification) => {
-      updateCurrentUser({
-          ...currentUser, // 🔥 conservar todo
-          notifications: [notification, ...(currentUser?.notifications || [])],
-          notificationsCount: (currentUser?.notificationsCount || 0) + 1,
-        });
-      });
+    // 🔔 Nuevo desafío recibido
+    socket.on("newChallenge", ({ notification }) => {
+    });
 
-    // ⚔️ Desafíos aceptados
-    socket.on("challengeAccepted", async ({ challengeId, opponentId }) => {
-      try {
-        if (!opponentId) throw new Error("Opponent ID no definido");
+    // 🔄 Usuario actualizado (backend envía el objeto completo)
+    socket.on("userUpdated", ({ user }) => {
+      updateCurrentUser(user);
+    });
 
-        const matchData = await doMatchService(opponentId, "static");
-        navigate("/match", { state: { matchData } });
-      } catch (err) {
-        toast.error("No se pudo cargar el enfrentamiento");
+    // ⚔️ Challenge respondido
+    socket.on("challengeResponded", ({ challengeId, accepted }) => {
+      if (currentUser?.pendingChallenge === challengeId) {
+        toast.success(
+          accepted
+            ? "Tu desafío fue aceptado"
+            : "Tu desafío fue rechazado"
+        );
       }
     });
 
-    // ❌ Desafíos rechazados
-    socket.on("challengeRejected", ({ message }) => {
-      toast(message || "Desafío rechazado");
+    // ⚠️ Challenge expirado
+    socket.on("challengeExpired", ({ challengeId }) => {
+      if (currentUser?.pendingChallenge === challengeId) {
+        toast.error("El desafío expiró. Puedes volver a intentarlo.");
+      }
     });
 
+    socket.on("challengeCancelled", ({ challengeId }) => {
+  if (currentUser?.pendingChallenge === challengeId) {
+    toast.error("Tu desafío fue cancelado.");
+  }
+});
+
+    // ⚔️ Match completado
+  socket.on("matchCompleted", ({ matchId }) => {
+  navigate(`/match/${matchId}`);
+});
+
     return () => {
-      socket.off("newNotification");
-      socket.off("challengeAccepted");
-      socket.off("challengeRejected");
+      socket.off("newChallenge");
+      socket.off("userUpdated");
+      socket.off("challengeExpired");
+      socket.off("challengeResponded");
+      socket.off("matchCompleted");
+      socket.off("challengeCancelled");
     };
-  }, [updateCurrentUser, currentUser, navigate]);
+  }, [currentUser, updateCurrentUser, navigate]);
 
   return (
     <SocketContext.Provider value={socketRef.current}>

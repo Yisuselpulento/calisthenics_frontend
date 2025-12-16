@@ -180,7 +180,7 @@ function App() {
                     </Route>
 
                   {/* Matches */}
-                  <Route path="match" element={<Match />} />
+                  <Route path="match/:matchId" element={<Match />} />
                 </Route>
 
                 {/* ❌ 404 */}

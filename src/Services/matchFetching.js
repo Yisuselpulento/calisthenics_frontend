@@ -15,10 +15,5 @@ const handleRequest = async (request) => {
 };
 
 /* -------------------- GET FEED EVENTS -------------------- */
-export const doMatchService = async (opponentId, type) =>
-  handleRequest(
-    axiosInstance.post(`/api/match`, {
-      opponentId,
-      type,
-    })
-  );
+export const getMatchById = async (matchId) =>
+  handleRequest(axiosInstance.get(`/api/match/${matchId}`));
