@@ -161,7 +161,7 @@ const Profile = () => {
             <div key={index}>
               <video
                 className="w-30 h-60 object-cover rounded-md"
-                src={fs.video || ""}
+                src={fs.video.url || ""}
                 controls
                 playsInline
               />
