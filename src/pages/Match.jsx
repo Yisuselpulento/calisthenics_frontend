@@ -9,20 +9,21 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMatch = async () => {
-      try {
-        const res = await getMatchById(matchId); // ⚡ Usamos siempre el servicio
-        if (res.success) setMatchData(res.match);
-        else setMatchData(null);
-      } catch (err) {
-        console.error(err);
-        setMatchData(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMatch();
-  }, [matchId]);
+  const fetchMatch = async () => {
+    const res = await getMatchById(matchId);
+
+    if (!res.success) {
+      setMatchData(null);
+      setLoading(false);
+      return;
+    }
+
+    setMatchData(res.match);
+    setLoading(false);
+  };
+
+  fetchMatch();
+}, [matchId]);
 
   if (loading) return <p>Cargando enfrentamiento...</p>;
   if (!matchData) return <p>Enfrentamiento no encontrado</p>;

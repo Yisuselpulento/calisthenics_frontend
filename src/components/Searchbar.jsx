@@ -8,27 +8,28 @@ const Searchbar = () => {
   const [results, setResults] = useState([]);
   const { currentUser } = useAuth();
 
-  const handleSearch = async (e) => {
-    const value = e.target.value;
-    setSearch(value);
+    let timeout;
 
-    if (value.trim() === "") {
-      setResults([]);
-      return;
-    }
+  const handleSearch = (e) => {
+  const value = e.target.value;
+  setSearch(value);
 
-    // Llamada al backend
+  clearTimeout(timeout);
+
+  if (!value.trim()) {
+    setResults([]);
+    return;
+  }
+
+  timeout = setTimeout(async () => {
     const res = await searchUsersService(value);
-
     if (res.success) {
-      // Excluir al usuario actual
-      const filtered = res.data.filter(u => u._id !== currentUser._id);
-      setResults(filtered);
+      setResults(res.data.filter(u => u._id !== currentUser._id));
     } else {
       setResults([]);
-      console.error(res.message);
     }
-  };
+  }, 300);
+};
 
   return (
     <div className="w-full max-w-sm min-w-[200px] relative p-1">

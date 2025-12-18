@@ -44,7 +44,6 @@ const EditProfile = () => {
     e.preventDefault();
     setLoading(true);
 
-    try {
       const data = new FormData();
       data.append("peso", formData.peso);
       data.append("altura", formData.altura);
@@ -55,17 +54,17 @@ const EditProfile = () => {
 
       const res = await updateProfileService(data);
 
-      if (!res.success) throw new Error(res.message);
+      if (!res.success) {
+        toast.error(res.message);
+        setLoading(false);
+        return;
+      }
 
       updateCurrentUser(res.user);
 
-      toast.success("Perfil actualizado!");
+      toast.success(res.message);
       navigate(`/profile/${res.user.username}`);
-    } catch (error) {
-      toast.error(error.message || "Error actualizando perfil");
-    } finally {
       setLoading(false);
-    }
   };
 
   const videoSrc =

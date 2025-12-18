@@ -7,38 +7,35 @@ const CardNotification = ({ notification, closeDropdown }) => {
   const [loading, setLoading] = useState(false);
 
   const handleMarkRead = async () => {
-    setLoading(true);
-    try {
-      const res = await markNotificationAsReadService(notification._id);
-      if (!res.success) {
-        toast.error("No se pudo marcar la notificación");
-      }
-      // Backend emitirá userUpdated con las notificaciones actualizadas
-    } catch {
-      toast.error("Error al marcar la notificación");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+
+  const res = await markNotificationAsReadService(notification._id);
+
+  if (!res.success) {
+    toast.error(res.message);
+  }
+
+  setLoading(false);
+};
 
   const handleChallengeResponse = async (accepted) => {
-    setLoading(true);
-    
-    const res = await respondChallengeService({
-      challengeId: notification.challenge,
-      accepted,
-    });
+  setLoading(true);
 
-    if (!res.success) {
-      toast.error(res.message);
-      setLoading(false);
-      return;
-    }
+  const res = await respondChallengeService({
+    challengeId: notification.challenge,
+    accepted,
+  });
 
-    toast.success(accepted ? "Desafío aceptado" : "Desafío rechazado");
-    closeDropdown();
+  if (!res.success) {
+    toast.error(res.message);
+    setLoading(false);
+    return;
+  }
 
-  };
+  toast.success(res.message);
+  closeDropdown();
+  setLoading(false);
+};
 
   const isChallenge = Boolean(notification.challenge);
 

@@ -14,16 +14,16 @@ const Notifications = () => {
   const [loading, setLoading] = useState(true); // nuevo estado de carga
 
   const load = async () => {
-    setLoading(true); // comienza a cargar
-    try {
-      const res = await getUserNotificationsService();
-      if (res.success) setNotifications(res.notifications);
-    } catch (err) {
-      console.error("Error cargando notificaciones:", err);
-    } finally {
-      setLoading(false); // termina carga
-    }
-  };
+  setLoading(true);
+
+  const res = await getUserNotificationsService();
+
+  if (res.success) {
+    setNotifications(res.notifications);
+  }
+
+  setLoading(false);
+};
 
   useEffect(() => {
     load();

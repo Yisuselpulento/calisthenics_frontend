@@ -24,24 +24,22 @@ const EditAdvancedProfile = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const res = await updateAdvancedProfileService(formData);
+    const res = await updateAdvancedProfileService(formData);
 
-      if (!res.success) throw new Error(res.message);
-
-      updateCurrentUser(res.user);
-
-      toast.success("Perfil avanzado actualizado!");
-      navigate(`/profile/${res.user.username}`);
-    } catch (error) {
-      toast.error(error.message || "Error actualizando perfil avanzado");
-    } finally {
+    if (!res.success) {
+      toast.error(res.message || "Error actualizando perfil avanzado");
       setLoading(false);
+      return;
     }
+
+    updateCurrentUser(res.user);
+    toast.success("Perfil avanzado actualizado!");
+    navigate(`/profile/${res.user.username}`);
+    setLoading(false);
   };
 
   return (

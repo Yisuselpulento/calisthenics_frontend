@@ -83,11 +83,11 @@ const EditSkill = () => {
     setSubmitting(false);
 
     if (res.success) {
-      toast.success(res.message || "Variante actualizada correctamente");
+      toast.success(res.message);
       updateViewedProfile(res.user);
       navigate(`/profile/${username}/skill/${variant.userSkillVariantId}`);
     } else {
-      toast.error(res.message || "Error al actualizar la variante");
+      toast.error(res.message);
     }
   };
 

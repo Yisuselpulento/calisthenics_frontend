@@ -102,15 +102,13 @@ const updateViewedProfile = (user) => {
 
 
 const toggleFollow = async (targetUser) => {
-  try {
-    const res = await toggleFollowService(targetUser._id);
+  const res = await toggleFollowService(targetUser._id);
 
-    if (res.success) {
-      updateCurrentUser(res.user);
-    }
-  } catch (err) {
-    console.error("Error en toggleFollow:", err);
+  if (res.success) {
+    updateCurrentUser(res.user);
   }
+
+  return res;
 };
 
   return (

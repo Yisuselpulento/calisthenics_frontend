@@ -35,7 +35,7 @@ const SkillDetail = () => {
       if (res.success) {
         setVariant(res.variant); 
       } else {
-        toast.error(res.message || "No se pudo cargar la skill");
+        toast.error(res.message);
         setVariant(null);
       }
       setLoading(false);
@@ -52,51 +52,45 @@ const SkillDetail = () => {
   
   if (!variant) return <p className="text-white p-5">Skill no encontrada</p>;
 
-  const handleConfirmDelete = async () => {
-  setLoading(true);
+ const handleConfirmDelete = async () => {
+    setLoading(true);
 
-  try {
     const res = await deleteSkillVariantService(userSkillVariantId);
+
     if (!res.success) {
-      toast.error(res.message || "No se pudo eliminar la variante.");
+      toast.error(res.message);
       setLoading(false);
       return;
     }
-    toast.success("Skill eliminada correctamente!");
-    setShowDeleteModal(false);
+
+    toast.success(res.message);
     updateViewedProfile(res.user);
+    setShowDeleteModal(false);
     navigate(-1);
-
-  } catch (err) {
-    toast.error("Error eliminando la variante.");
-  }
-
-  setLoading(false);
-};
+  };
 
   const handleReport = async (reason) => {
-    try {
-      setLoadingReport(true);
+    setLoadingReport(true);
 
-      await createReportService({
-        targetType: "UserSkill",
-        target: variant.userSkillId,
-        variantInfo: {
-          variantKey: variant.variantKey,
-          fingers: variant.fingers,
-        },
-        reason,
-        description: "",
-      });
+    const res = await createReportService({
+      targetType: "UserSkill",
+      target: variant.userSkillId,
+      variantInfo: {
+        variantKey: variant.variantKey,
+        fingers: variant.fingers,
+      },
+      reason,
+      description: "",
+    });
 
-      toast.success("Reporte enviado correctamente");
+    if (res.success) {
+      toast.success(res.message);
       setShowReportModal(false);
-    } catch (err) {
-      console.error("Error creando reporte:", err);
-      toast.error(err.message || "Error al enviar el reporte");
-    } finally {
-      setLoadingReport(false);
+    } else {
+      toast.error(res.message);
     }
+
+    setLoadingReport(false);
   };
 
   return (

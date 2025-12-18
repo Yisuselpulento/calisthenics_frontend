@@ -32,24 +32,23 @@ const Profile = () => {
   const showPesoAltura = (user.peso ?? 0) > 0 || (user.altura ?? 0) > 0;
 
     const handleReportSend = async (reasonValue) => {
-      try {
-        setLoadingReport(true);
+  setLoadingReport(true);
 
-        await createReportService({
-          targetType: "User",   // 👈 la U debe ser mayúscula
-          target: user._id,
-          reason: reasonValue,  
-          description: "",
-        });
+  const res = await createReportService({
+    targetType: "User",
+    target: user._id,
+    reason: reasonValue,
+    description: "",
+  });
 
-        toast.success("Reporte enviado correctamente");
-      } catch (err) {
-        console.error(err);
-        toast.error(err.message || "Error al enviar el reporte");
-      } finally {
-        setLoadingReport(false);
-      }
-    };
+  if (res.success) {
+    toast.success(res.message);
+  } else {
+    toast.error(res.message);
+  }
+
+  setLoadingReport(false);
+};
 
 
   return (

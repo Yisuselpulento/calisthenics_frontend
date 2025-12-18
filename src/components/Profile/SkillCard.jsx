@@ -30,24 +30,25 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
   } = skill;
 
   const handleReport = async (reason) => {
-    try {
-      setLoadingReport(true);
-      await createReportService({
-        targetType: "UserSkill",
-        target: userSkillVariantId,
-        variantInfo: { variantKey, fingers },
-        reason,
-        description: "",
-      });
-      toast.success("Reporte enviado correctamente");
-    } catch (err) {
-      console.error("Error creando reporte:", err);
-      toast.error(err.message || "Error al enviar el reporte");
-    } finally {
-      setLoadingReport(false);
-      setShowReportModal(false);
-    }
-  };
+  setLoadingReport(true);
+
+  const res = await createReportService({
+    targetType: "UserSkill",
+    target: userSkillVariantId,
+    variantInfo: { variantKey, fingers },
+    reason,
+    description: "",
+  });
+
+  if (res.success) {
+    toast.success(res.message);
+    setShowReportModal(false);
+  } else {
+    toast.error(res.message);
+  }
+
+  setLoadingReport(false);
+};
 
   // ===================================================
   //                VISTA CARD

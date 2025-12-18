@@ -7,7 +7,6 @@ import { getAllSkillsAdminService } from "../../Services/SkillAdminFetching.js";
 import toast from "react-hot-toast";
 import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
 import { getVariantBgColor } from "../../helpers/colorTargetVariants.js";
-import SearchSkills from "../../components/SearchSkills";
 import VideoPlayer from "../../components/VideoPlayer";
 
 const AddSkill = () => {
@@ -24,8 +23,6 @@ const AddSkill = () => {
   const [videoSrc, setVideoSrc] = useState(null);
 
   const [fingersUsed, setFingersUsed] = useState(5);
-  const [error, setError] = useState("");
-
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
 
@@ -35,36 +32,29 @@ const AddSkill = () => {
   useEffect(() => {
     const fetchSkills = async () => {
       setLoadingSkills(true);
-      try {
-        const data = await getAllSkillsAdminService();
-        if (!data || data.success === false) {
-          setError(data?.message || "Error cargando skills");
-        } else {
-          setSkills(data);
-        }
-      } catch (err) {
-        console.error(err);
-        setError("Error cargando skills");
-      } finally {
-        setLoadingSkills(false);
+
+      const res = await getAllSkillsAdminService();
+
+      if (!res.success) {
+        toast.error(res.message);
+      } else {
+        setSkills(res.data);
       }
+
+      setLoadingSkills(false);
     };
 
     fetchSkills();
   }, []);
 
-  /* =========================
-     Limpiar ObjectURL
-  ========================= */
+
   useEffect(() => {
     return () => {
       if (videoSrc) URL.revokeObjectURL(videoSrc);
     };
   }, [videoSrc]);
 
-  /* =========================
-     Variantes filtradas
-  ========================= */
+
   const filteredVariants =
     selectedSkill?.variants.filter((v) => {
       const matchesSearch = v.name
@@ -74,9 +64,7 @@ const AddSkill = () => {
       return matchesSearch && matchesType;
     }) || [];
 
-  /* =========================
-     Video handler
-  ========================= */
+ 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -91,50 +79,53 @@ const AddSkill = () => {
   const handleAddSkill = async () => {
     const validFingers = [1, 2, 5];
 
-    if (!selectedSkill || !selectedVariant)
-      return setError("Debes seleccionar una skill y una variante.");
+    if (!selectedSkill || !selectedVariant) {
+      toast.error("Debes seleccionar una skill y una variante");
+      return;
+    }
 
-    if (!videoFile)
-      return setError("Debes subir un video para agregar esta variante.");
+    if (!videoFile) {
+      toast.error("Debes subir un video");
+      return;
+    }
 
-    if (!validFingers.includes(fingersUsed))
-      return setError("Solo puedes elegir 1, 2 o 5 dedos.");
+    if (!validFingers.includes(fingersUsed)) {
+      toast.error("Solo puedes elegir 1, 2 o 5 dedos");
+      return;
+    }
 
     setLoadingSubmit(true);
 
-    try {
-      const formData = new FormData();
-      formData.append("skillId", selectedSkill._id);
-      formData.append("variantKey", selectedVariant.variantKey);
-      formData.append("fingers", fingersUsed);
-      formData.append("video", videoFile);
+    const formData = new FormData();
+    formData.append("skillId", selectedSkill._id);
+    formData.append("variantKey", selectedVariant.variantKey);
+    formData.append("fingers", fingersUsed);
+    formData.append("video", videoFile);
 
-      const response = await addSkillVariantService(formData);
+    const res = await addSkillVariantService(formData);
 
-      if (!response.success) {
-        setError(response.message || "Error agregando la variante");
-        return;
-      }
-
-      updateViewedProfile(response.user);
-
-      // Reset
-      setSelectedSkill(null);
-      setSelectedVariant(null);
-      setVideoFile(null);
-      setVideoSrc(null);
-      setFingersUsed(5);
-      setError("");
-
-      toast.success("Skill agregada con éxito!");
-    } catch (err) {
-      console.error(err);
-      toast.error("Error agregando la skill");
-    } finally {
+    if (!res.success) {
+      toast.error(res.message);
       setLoadingSubmit(false);
+      return;
     }
+
+    updateViewedProfile(res.data);
+
+    // Reset
+    setSelectedSkill(null);
+    setSelectedVariant(null);
+    setVideoFile(null);
+    setVideoSrc(null);
+    setFingersUsed(5);
+
+    toast.success(res.message);
+    setLoadingSubmit(false);
   };
 
+  /* =========================
+     Render
+  ========================= */
   if (loadingSkills)
     return <p className="text-white p-5">Cargando skills...</p>;
 
@@ -201,6 +192,12 @@ const AddSkill = () => {
             })}
           </div>
 
+          {filteredVariants.length === 0 && (
+            <p className="text-gray-400 text-sm text-center mt-4">
+              No hay variantes que coincidan
+            </p>
+          )}
+
           {selectedVariant && (
             <div className="mt-6 space-y-4">
               {/* Video */}
@@ -244,12 +241,6 @@ const AddSkill = () => {
                   <option value={5}>5 dedos</option>
                 </select>
               </div>
-
-              {error && (
-                <p className="text-red-400 text-sm text-center">
-                  {error}
-                </p>
-              )}
 
               <SubmitButton
                 onClick={handleAddSkill}
