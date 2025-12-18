@@ -1,22 +1,16 @@
 import axiosInstance from "../helpers/axiosConfig.js";
 
-// Esta es la base para manejar errores
 const handleRequest = async (request) => {
   try {
     const { data } = await request;
     return data;
   } catch (error) {
-    if (error.response && error.response.data) {
-      console.error("API Error:", error.response.data.message);
-      return {
-        success: false,
-        message: error.response.data.message,
-      };
+    if (error.response?.data) {
+      return error.response.data;
     }
-    console.error("Network or unexpected error:", error.message);
     return {
       success: false,
-      message: error.message || "Error de red o CORS",
+      message: "No se pudo conectar con el servidor",
     };
   }
 };

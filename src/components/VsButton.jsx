@@ -38,24 +38,20 @@ const VsButton = ({ opponent }) => {
     setShowSelect(false);
     setWaiting(true);
 
-    try {
-      const res = await sendChallengeService({
-        toUserId: opponent._id,
-        type,
-      });
+    const res = await sendChallengeService({
+    toUserId: opponent._id,
+    type,
+  });
 
-      if (!res.success) {
-        setErrorMsg(res.message || "No se pudo enviar el desafío");
-        setWaiting(false);
-        return;
-      }
-      
-    } catch (error) {
-      console.error("Error al enviar desafío:", error);
-      setErrorMsg("Ocurrió un error al enviar el desafío. Intenta de nuevo.");
-      setWaiting(false);
-    }
+  if (!res.success) {
+    setErrorMsg(res.message);
+    setWaiting(false);
+    return;
+  }
+
   };
+
+
   useEffect(() => {
   if (!currentUser?.pendingChallenge) {
     setWaiting(false);

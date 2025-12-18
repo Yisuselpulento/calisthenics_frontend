@@ -8,19 +8,20 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadFeed = async () => {
-      const res = await getFeedEventsService();
-      if (res.success) {
-        setFeed(res.data);
-      } else {
-        console.error(res.message);
-      }
+  const loadFeed = async () => {
+    const res = await getFeedEventsService();
 
+    if (!res.success) {
       setLoading(false);
-    };
+      return;
+    }
 
-    loadFeed();
-  }, []);
+    setFeed(res.data);
+    setLoading(false);
+  };
+
+  loadFeed();
+}, []);
 
    if (loading)
   return (

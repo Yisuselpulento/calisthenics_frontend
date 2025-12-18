@@ -21,53 +21,42 @@ const ComboDetails = () => {
 
   // ------------------- Cargar combo -------------------
   useEffect(() => {
-    if (!comboId) return;
+  if (!comboId) return;
 
-    const fetchCombo = async () => {
-      setLoading(true);
-      try {
-       const res = await getComboByIdService(comboId);
-          if (res?.success && res?.combo) {
-            setCombo(res.combo);
-          } else {
-            setCombo(null);
-          }
-      } catch (error) {
-        console.error("Error cargando combo:", error);
-        setCombo(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCombo = async () => {
+    setLoading(true);
 
-    fetchCombo();
-  }, [comboId]);
+    const res = await getComboByIdService(comboId);
+    setCombo(res.combo);
+
+    setLoading(false);
+  };
+
+  fetchCombo();
+}, [comboId]);
+
 
   if (loading) return <p className="text-white text-center mt-10">Cargando...</p>;
   if (!combo) return <p className="text-white text-center mt-10">Combo no encontrado</p>;
 
   const isOwner = String(currentUser?._id) === String(combo.owner);
 
-   const confirmDelete = async () => {
-    if (!combo) return;
+  const confirmDelete = async () => {
+      if (!combo) return;
 
-    setDeleting(true);
-    try {
+      setDeleting(true);
+
       const res = await deleteComboService(combo._id);
-      if (!res.success) throw new Error(res.message || "Error eliminando el combo");
 
-      toast.success("Combo eliminado correctamente 🎉");
+      toast.success(res.message);
+
+      updateViewedProfile(res.user);
 
       setShowDeleteModal(false);
       setDeleting(false);
-      updateViewedProfile(res.user); 
-      // Redirigir al listado de combos del usuario
+
       navigate(`/profile/${currentUser.username}/combos`);
-    } catch (error) {
-      toast.error(error.message || "Error eliminando el combo");
-      setDeleting(false);
-    }
-  };
+    };
 
 
   return (

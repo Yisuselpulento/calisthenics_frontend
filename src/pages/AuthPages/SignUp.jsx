@@ -55,13 +55,14 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const res = await signup(formData);
 
+       setLoading(false);
+
     if (!res.success) {
-      toast.error(res.message || "Error al registrarse");
-      setLoading(false);
+     toast.error(res.message);
       return;
     }
 
-    toast.success("Cuenta creada correctamente!");
+    toast.success(res.message);
     navigate("/");
   };
 

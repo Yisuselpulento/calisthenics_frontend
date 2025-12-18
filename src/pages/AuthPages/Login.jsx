@@ -33,9 +33,10 @@ const Login = () => {
 
     const res = await login(formData);
 
+    setLoading(false);
+
     if (!res.success) {
-      toast.error(res.message || "Credenciales incorrectas");
-      setLoading(false);
+      toast.error(res.message);
       return;
     }
     navigate("/");

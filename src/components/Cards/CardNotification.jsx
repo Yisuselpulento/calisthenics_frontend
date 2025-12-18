@@ -23,29 +23,21 @@ const CardNotification = ({ notification, closeDropdown }) => {
 
   const handleChallengeResponse = async (accepted) => {
     setLoading(true);
-    try {
-      const res = await respondChallengeService({
-        challengeId: notification.challenge,
-        accepted,
-      });
+    
+    const res = await respondChallengeService({
+      challengeId: notification.challenge,
+      accepted,
+    });
 
-      if (!res.success) {
-        toast.error(res.message || "Error al responder desafío");
-        return;
-      }
-
-      toast.success(
-        accepted ? "Desafío aceptado" : "Desafío rechazado"
-      );
-
-      closeDropdown();
-      // Backend actualizará currentUser automáticamente
-    } catch (error) {
-      console.error("Error al responder desafío:", error);
-      toast.error("Ocurrió un error al responder el desafío. Intenta nuevamente.");
-    } finally {
+    if (!res.success) {
+      toast.error(res.message);
       setLoading(false);
+      return;
     }
+
+    toast.success(accepted ? "Desafío aceptado" : "Desafío rechazado");
+    closeDropdown();
+
   };
 
   const isChallenge = Boolean(notification.challenge);

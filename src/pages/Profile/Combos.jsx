@@ -27,22 +27,11 @@ const Combos = () => {
     if (!comboToDelete) return;
 
     setLoading(true);
-    try {
       const res = await deleteComboService(comboToDelete._id || comboToDelete.comboId);
-      if (!res.success) throw new Error(res.message || "Error eliminando el combo");
-
-      toast.success("Combo eliminado correctamente 🎉");
-
-      // Actualizar el perfil visto con la info nueva
+      toast.success(res.message);
       updateViewedProfile(res.user);
-
       setShowDeleteModal(false);
       setComboToDelete(null);
-    } catch (error) {
-      toast.error(error.message || "Error eliminando el combo");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (

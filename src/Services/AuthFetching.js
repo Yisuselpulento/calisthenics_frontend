@@ -5,20 +5,12 @@ const handleRequest = async (request) => {
     const { data } = await request;
     return data;
   } catch (error) {
-    if (error.response && error.response.data) {
-      // Error que viene del backend
-      console.error("API Error:", error.response.data.message);
-      return {
-        success: false,
-        message: error.response.data.message,
-      };
+    if (error.response?.data) {
+      return error.response.data;
     }
-
-    // Error de red, CORS, URL incorrecta, etc.
-    console.error("Network or unexpected error:", error.message);
     return {
       success: false,
-      message: error.message || "Error de red o CORS",
+      message: "No se pudo conectar con el servidor",
     };
   }
 };

@@ -5,12 +5,13 @@ const handleRequest = async (request) => {
     const { data } = await request;
     return data;
   } catch (error) {
-    console.error("API Error:", error?.response?.data?.message);
-
-    const errorMessage =
-      error?.response?.data?.message || "Error inesperado en el servidor";
-
-    return { success: false, message: errorMessage };
+    if (error.response?.data) {
+      return error.response.data;
+    }
+    return {
+      success: false,
+      message: "No se pudo conectar con el servidor",
+    };
   }
 };
 
