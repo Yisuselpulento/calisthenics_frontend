@@ -6,9 +6,8 @@ const CookieInfoBox = () => {
   useEffect(() => {
     const fetchCookieInfo = async () => {
       try {
-        const res = await fetch("/api/check-cookie");
-        const data = await res.json();
-        setCookieInfo(data);
+        const res = await axiosInstance.get("/check-cookie"); // tu endpoint en backend
+        setCookieInfo(res.data);
       } catch (err) {
         setCookieInfo({ error: "No se pudo obtener info de cookie" });
       }
