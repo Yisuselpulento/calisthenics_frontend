@@ -11,9 +11,12 @@ const FavoriteComboStar = ({ comboId, type }) => {
   if (!currentUser) return null;
 
   // Verificar si este combo YA es favorito en el perfil cargado
-  const isFavorite =
-    currentUser.favoriteCombos?.[type] &&
-    String(currentUser.favoriteCombos[type]) === String(comboId);
+  const isFavorite = (() => {
+    const fav = currentUser.favoriteCombos?.[type];
+    if (!fav) return false;
+    // Si es un objeto poblado, usamos _id; si es un ObjectId, usamos directamente
+    return String(fav._id || fav) === String(comboId);
+  })();
 
   const handleToggle = async () => {
     if (loading) return;
