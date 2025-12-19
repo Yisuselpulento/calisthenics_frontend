@@ -110,7 +110,7 @@ const AddSkill = () => {
       return;
     }
 
-    updateViewedProfile(res.data);
+    updateViewedProfile(res.user);
 
     // Reset
     setSelectedSkill(null);
