@@ -40,6 +40,7 @@ import { Toaster } from "react-hot-toast";
 import EditAdvancedProfile from "./pages/Profile/EditAdvancedProfile";
 import OwnerRoute from "./components/OwnerRoute";
 import { SocketProvider } from "./context/SocketContext";
+import CookieInfoBox from "./components/CookieInfoBox";
 
 function App() {
   return (
@@ -48,7 +49,7 @@ function App() {
       <AuthProvider>
         <SocketProvider>
               <ScrollToTop />
-
+              <CookieInfoBox />
               <Routes>
                 {/* 🔓 RUTAS PÚBLICAS (solo sin sesión) */}
                 <Route
