@@ -49,7 +49,7 @@ function App() {
       <AuthProvider>
         <SocketProvider>
               <ScrollToTop />
-              <CookieInfoBox />
+        {/*       <CookieInfoBox /> */}
               <Routes>
                 {/* 🔓 RUTAS PÚBLICAS (solo sin sesión) */}
                 <Route
