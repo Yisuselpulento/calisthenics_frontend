@@ -11,7 +11,7 @@ export const SocketProvider = ({ children }) => {
   const { currentUser, updateCurrentUser } = useAuth();
   const navigate = useNavigate();
 
-  // Conectar al socket
+  // ------------------ CONEXIÓN ------------------
   useEffect(() => {
     if (socketRef.current) return;
 
@@ -25,61 +25,63 @@ export const SocketProvider = ({ children }) => {
     };
   }, []);
 
-  // Registrar usuario en el socket
+  // ------------------ REGISTRAR USUARIO ------------------
   useEffect(() => {
     if (!socketRef.current || !currentUser?._id) return;
     socketRef.current.emit("register", currentUser._id);
   }, [currentUser?._id]);
 
+  // ------------------ EVENTOS ------------------
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
 
-    // 🔔 Nuevo desafío recibido
-    socket.on("newChallenge", ({ notification }) => {
-    });
-
-    // 🔄 Usuario actualizado (backend envía el objeto completo)
+    // 🔄 USER ACTUALIZADO (CLAVE DE TODO)
     socket.on("userUpdated", ({ user }) => {
       updateCurrentUser(user);
     });
 
-    // ⚔️ Challenge respondido
+    // 🔔 NUEVO DESAFÍO
+    socket.on("newChallenge", () => {
+    });
+
+    // ⚔️ RESPUESTA A DESAFÍO
     socket.on("challengeResponded", ({ challengeId, accepted }) => {
       if (currentUser?.pendingChallenge === challengeId) {
         toast.success(
           accepted
-            ? "Tu desafío fue aceptado"
-            : "Tu desafío fue rechazado"
+            ? "Tu desafío fue aceptado 🎉"
+            : "Tu desafío fue rechazado ❌"
         );
       }
     });
 
-    // ⚠️ Challenge expirado
+    // ⚠️ DESAFÍO EXPIRADO
     socket.on("challengeExpired", ({ challengeId }) => {
       if (currentUser?.pendingChallenge === challengeId) {
-        toast.error("El desafío expiró. Puedes volver a intentarlo.");
+        toast.error("El desafío expiró");
       }
     });
 
+    // 🚫 DESAFÍO CANCELADO
     socket.on("challengeCancelled", ({ challengeId }) => {
-  if (currentUser?.pendingChallenge === challengeId) {
-    toast.error("Tu desafío fue cancelado.");
-  }
-});
+      if (currentUser?.pendingChallenge === challengeId) {
+        toast.error("Tu desafío fue cancelado");
+      }
+    });
 
-    // ⚔️ Match completado
-  socket.on("matchCompleted", ({ matchId }) => {
-  navigate(`/match/${matchId}`);
-});
+    // 🏁 MATCH COMPLETADO
+    socket.on("matchCompleted", ({ matchId }) => {
+      navigate(`/match/${matchId}`);
+    });
 
     return () => {
-      socket.off("newChallenge");
       socket.off("userUpdated");
-      socket.off("challengeExpired");
+      socket.off("newChallenge");
       socket.off("challengeResponded");
-      socket.off("matchCompleted");
+      socket.off("challengeExpired");
       socket.off("challengeCancelled");
+      socket.off("matchCompleted");
     };
   }, [currentUser, updateCurrentUser, navigate]);
 

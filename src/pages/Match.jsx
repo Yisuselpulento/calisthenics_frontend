@@ -5,102 +5,132 @@ import { getMatchById } from "../Services/matchFetching.js";
 
 const Match = () => {
   const { matchId } = useParams();
+
   const [matchData, setMatchData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchMatch = async () => {
-    const res = await getMatchById(matchId);
+    const fetchMatch = async () => {
+      try {
+        const res = await getMatchById(matchId);
 
-    if (!res.success) {
-      setMatchData(null);
-      setLoading(false);
-      return;
-    }
+        if (!res?.success) {
+          setMatchData(null);
+        } else {
+          setMatchData(res.match);
+        }
+      } catch (error) {
+        console.error("Error fetching match:", error);
+        setMatchData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setMatchData(res.match);
-    setLoading(false);
-  };
+    fetchMatch();
+  }, [matchId]);
 
-  fetchMatch();
-}, [matchId]);
+  if (loading) {
+    return <p className="text-center mt-8">Cargando enfrentamiento...</p>;
+  }
 
-  if (loading) return <p>Cargando enfrentamiento...</p>;
-  if (!matchData) return <p>Enfrentamiento no encontrado</p>;
+  if (!matchData) {
+    return <p className="text-center mt-8">Enfrentamiento no encontrado</p>;
+  }
 
-  const { user, opponent } = matchData;
+  const { user, opponent, matchType } = matchData;
 
-  console.log(user, opponent)
+  const isRanked = matchType === "ranked";
 
-  // Fallbacks por si combo es null
+  // Fallbacks defensivos
   const userCombo = user?.combo || {};
   const opponentCombo = opponent?.combo || {};
 
   return (
-    <div className="flex justify-center items-start gap-2 mt-8">
-      {/* USER */}
-      <div className="flex flex-col items-center rounded-xl">
-        <img
-          src={user?.user.avatar?.url || "/default-avatar.png"}
-          alt="avatar"
-          className="w-25 h-25 rounded-full border m-2"
-        />
-        <h2 className="text-lg font-semibold">{userCombo.user?.username || "Jugador"}</h2>
+    <div className="flex flex-col items-center gap-6 mt-8">
 
-        {userCombo.video?.url ? (
-          <video
-            src={userCombo.video.url}
-            className="w-64 rounded-xl my-2 p-2"
-            autoPlay
-            muted
-            loop
-            playsInline
+      {/* MATCH TYPE */}
+      <span
+        className={`px-4 py-1 rounded-full text-xs font-bold tracking-wide ${
+          isRanked ? "bg-red-600 text-white" : "bg-green-600 text-white"
+        }`}
+      >
+        {isRanked ? "RANKED MATCH" : "CASUAL MATCH"}
+      </span>
+
+      {/* PLAYERS */}
+      <div className="flex justify-center items-start gap-4">
+
+        {/* USER */}
+        <div className="flex flex-col items-center rounded-xl">
+          <img
+            src={user?.user?.avatar?.url || "/default-avatar.png"}
+            alt="avatar"
+            className="w-24 h-24 rounded-full border m-2"
           />
-        ) : (
-          <p>No hay combo disponible</p>
-        )}
 
-        <ComboStepByStep
-          elementsStepData={user.stepData || []}
-          totalPoints={user.totalPoints || 0}
-          isWinner={user.isWinner || false}
-          playerName={userCombo.user?.username || "Jugador"}
-        />
-      </div>
+          <h2 className="text-lg font-semibold">
+            {user?.user?.username || "Jugador"}
+          </h2>
 
-      {/* VS */}
-      <div className="flex items-center justify-center text-3xl font-bold text-white">
-        VS
-      </div>
+          {userCombo?.video?.url ? (
+            <video
+              src={userCombo.video.url}
+              className="w-64 rounded-xl my-2 p-2"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <p className="text-sm opacity-70">No hay combo disponible</p>
+          )}
 
-      {/* OPPONENT */}
-      <div className="flex flex-col items-center rounded-xl">
-        <img
-          src={opponent.user?.avatar?.url || "/default-avatar.png"}
-          alt="avatar"
-          className="w-25 h-25 rounded-full border m-2"
-        />
-        <h2 className="text-lg font-semibold">{opponentCombo.user?.username || "Oponente"}</h2>
-
-        {opponentCombo.video?.url ? (
-          <video
-            src={opponentCombo.video.url}
-            className="w-64 rounded-xl my-2 p-2"
-            autoPlay
-            muted
-            loop
-            playsInline
+          <ComboStepByStep
+            elementsStepData={user?.stepData || []}
+            totalPoints={user?.totalPoints || 0}
+            isWinner={user?.isWinner || false}
+            playerName={user?.user?.username || "Jugador"}
           />
-        ) : (
-          <p>No hay combo disponible</p>
-        )}
+        </div>
 
-        <ComboStepByStep
-          elementsStepData={opponent.stepData || []}
-          totalPoints={opponent.totalPoints || 0}
-          isWinner={opponent.isWinner || false}
-          playerName={opponentCombo.user?.username || "Oponente"}
-        />
+        {/* VS */}
+        <div className="flex items-center justify-center text-3xl font-bold text-white mt-28">
+          VS
+        </div>
+
+        {/* OPPONENT */}
+        <div className="flex flex-col items-center rounded-xl">
+          <img
+            src={opponent?.user?.avatar?.url || "/default-avatar.png"}
+            alt="avatar"
+            className="w-24 h-24 rounded-full border m-2"
+          />
+
+          <h2 className="text-lg font-semibold">
+            {opponent?.user?.username || "Oponente"}
+          </h2>
+
+          {opponentCombo?.video?.url ? (
+            <video
+              src={opponentCombo.video.url}
+              className="w-64 rounded-xl my-2 p-2"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <p className="text-sm opacity-70">No hay combo disponible</p>
+          )}
+
+          <ComboStepByStep
+            elementsStepData={opponent?.stepData || []}
+            totalPoints={opponent?.totalPoints || 0}
+            isWinner={opponent?.isWinner || false}
+            playerName={opponent?.user?.username || "Oponente"}
+          />
+        </div>
       </div>
     </div>
   );

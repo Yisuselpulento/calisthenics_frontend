@@ -9,6 +9,7 @@ import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
 import { getVariantBgColor } from "../../helpers/colorTargetVariants.js";
 import VideoPlayer from "../../components/VideoPlayer";
 
+
 const AddSkill = () => {
   const { updateViewedProfile } = useAuth();
 
@@ -25,6 +26,7 @@ const AddSkill = () => {
   const [fingersUsed, setFingersUsed] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  
 
   /* =========================
      Cargar skills
