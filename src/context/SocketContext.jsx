@@ -75,6 +75,50 @@ export const SocketProvider = ({ children }) => {
       navigate(`/match/${matchId}`);
     });
 
+     socket.on("ranked:found", ({ opponentId, matchId }) => {
+      toast.custom(() => (
+        <div className="bg-stone-900 p-4 rounded-xl border border-yellow-500">
+          <p className="text-white mb-2">⚔️ Oponente encontrado</p>
+          <button
+            onClick={() => socket.emit("ranked:accept", { matchId })}
+            className="bg-yellow-500 px-3 py-1 rounded text-black"
+          >
+            Aceptar
+          </button>
+        </div>
+      ));
+    });
+
+    /* ⏳ READY CHECK */
+    socket.on("ranked:readyCheck", ({ matchId, timeout }) => {
+      toast.custom(
+        () => (
+          <div className="bg-stone-900 p-4 rounded-xl border border-green-500">
+            <p className="text-white mb-2">
+              ⏳ Confirma para iniciar la ranked
+            </p>
+            <button
+              onClick={() => socket.emit("ranked:accept", { matchId })}
+              className="bg-green-500 px-3 py-1 rounded text-black"
+            >
+              Estoy listo
+            </button>
+          </div>
+        ),
+        { duration: timeout }
+      );
+    });
+
+    /* ❌ READY CHECK CANCELADO */
+    socket.on("ranked:cancelled", ({ reason }) => {
+      toast.error(
+        reason === "timeout"
+          ? "El oponente no aceptó a tiempo"
+          : "La ranked fue cancelada"
+      );
+    });
+
+
     return () => {
       socket.off("userUpdated");
       socket.off("newChallenge");
@@ -82,6 +126,10 @@ export const SocketProvider = ({ children }) => {
       socket.off("challengeExpired");
       socket.off("challengeCancelled");
       socket.off("matchCompleted");
+
+      socket.off("ranked:found");
+      socket.off("ranked:readyCheck");
+      socket.off("ranked:cancelled");
     };
   }, [currentUser, updateCurrentUser, navigate]);
 

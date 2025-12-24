@@ -40,8 +40,7 @@ const VsButton = ({ opponent }) => {
 
     const res = await sendChallengeService({
     toUserId: opponent._id,
-    type,
-    matchType: "casual",
+    type
   });
 
   if (!res.success) {

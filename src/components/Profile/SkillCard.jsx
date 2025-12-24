@@ -138,10 +138,10 @@ const SkillCard = ({ skill, view = "card", ownerUsername }) => {
                 </button>
               )}
 
-              <h3 className="text-white mb-1 font-semibold">{name || variantKey}</h3>
-              <p className="text-xs text-gray-400 mb-1">Skill: {skillName}</p>
+              <h3 className="text-white font-semibold">{name || variantKey}</h3>
+              <p className="text-xs text-gray-400">Skill: {skillName}</p>
 
-              <p className="text-sm text-gray-300 mb-2">
+              <p className="text-sm text-gray-300">
                 🔹 Static AU: <span className="text-blue-400">{staticAU ?? 0}</span> |
                 🔸 Dynamic AU: <span className="text-green-400">{dynamicAU ?? 0}</span>
               </p>
