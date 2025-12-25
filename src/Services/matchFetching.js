@@ -18,3 +18,13 @@ const handleRequest = async (request) => {
 /* -------------------- GET FEED EVENTS -------------------- */
 export const getMatchById = async (matchId) =>
   handleRequest(axiosInstance.get(`/api/match/${matchId}`));
+
+export const getMyRankedHistory = async () =>
+  handleRequest(
+    axiosInstance.get("/api/match/me/history/ranked")
+  );
+
+export const getMyCasualHistory = async () =>
+  handleRequest(
+    axiosInstance.get("/api/match/me/history/casual")
+  );
