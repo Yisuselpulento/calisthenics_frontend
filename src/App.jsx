@@ -41,6 +41,8 @@ import EditAdvancedProfile from "./pages/Profile/EditAdvancedProfile";
 import OwnerRoute from "./components/OwnerRoute";
 import { SocketProvider } from "./context/SocketContext";
 import CookieInfoBox from "./components/CookieInfoBox";
+import { RankedSocketProvider } from "./context/RankedSocketContext";
+import { CasualSocketProvider } from "./context/CasualSocketContext";
 
 function App() {
   return (
@@ -48,6 +50,8 @@ function App() {
     <Toaster position="top-right" />
       <AuthProvider>
         <SocketProvider>
+          <RankedSocketProvider>
+            <CasualSocketProvider>
               <ScrollToTop />
         {/*       <CookieInfoBox /> */}
               <Routes>
@@ -187,6 +191,8 @@ function App() {
                 {/* ❌ 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </CasualSocketProvider>
+          </RankedSocketProvider>
         </SocketProvider>
       </AuthProvider>
     </BrowserRouter>
