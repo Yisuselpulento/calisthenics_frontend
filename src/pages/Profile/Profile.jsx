@@ -14,6 +14,7 @@ import { toast } from "react-hot-toast";
 import ImageLightbox from "../../components/ImageLightbox";
 import EnergyBar from "../../components/Profile/Energybar";
 import RankingDisplay from "../../components/Profile/RankingDisplay";
+import { getRankingBorderWrapper } from "../../helpers/getRankingborderWrapper";
 
 const Profile = () => {
   const { currentUser, viewedProfile, toggleFollow } = useAuth();
@@ -71,13 +72,17 @@ const Profile = () => {
 
         {/* IZQUIERDA: AVATAR + ENERGY + RANKING */}
         <div className="flex flex-col items-center gap-2">
-          <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
+          <div
+            className={`relative w-34 h-34 xs:w-20 xs:h-20 shrink-0
+              ${getRankingBorderWrapper(user.ranking?.static?.tier)}
+            `}
+          >
             <img
               src={user.avatar.url}
               alt={user.fullName}
               onClick={() => setOpenImage(true)}
               className="w-full h-full object-cover rounded-full border"
-              style={{ borderColor: bgColor }}
+              style={{ borderColor: bgColor }} // 🔹 tu borde de nivel SE MANTIENE
             />
           </div>
 
