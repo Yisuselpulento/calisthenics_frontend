@@ -19,5 +19,8 @@ const handleRequest = async (request) => {
 export const searchUsersService = async (query) =>
   handleRequest(axiosInstance.get(`/api/users/search?query=${query}`));
 
-export const getRankedLeaderboardService = async () =>
-  handleRequest(axiosInstance.get("/api/users/ranked-leaderboard"));
+export const getRankedLeaderboardService = async (type = "static") => {
+  return handleRequest(
+    axiosInstance.get(`/api/users/ranked-leaderboard?type=${type}`)
+  );
+};

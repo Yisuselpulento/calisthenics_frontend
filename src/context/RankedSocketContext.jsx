@@ -91,7 +91,6 @@ export const RankedSocketProvider = ({ children }) => {
     readyToastRef.current = null;
   }
 
-  toast.success("🔥 Ranked iniciada");
 
   // 🚀 REDIRECCIÓN
   setTimeout(() => {
