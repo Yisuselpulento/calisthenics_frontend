@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
 import {
-  getMyRankedHistory,
-  getMyCasualHistory,
+  getUserRankedHistory,
+  getUserCasualHistory,
 } from "../../Services/matchFetching.js";
 import HistorialCard from "../../components/Profile/HistorialCard";
 import toast from "react-hot-toast";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const ProfileHistorial = () => {
   const [tab, setTab] = useState("ranked");
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { viewedProfile } = useAuth();
 
-  const fetchHistory = async (type) => {
+  const fetchHistory = async (type, userId) => {
     setLoading(true);
 
     const res =
       type === "ranked"
-        ? await getMyRankedHistory()
-        : await getMyCasualHistory();
+        ? await getUserRankedHistory(userId)
+        : await getUserCasualHistory(userId);
 
     if (!res?.success) {
       toast.error(res?.message || "Error al cargar historial");
@@ -29,9 +31,12 @@ const ProfileHistorial = () => {
     setLoading(false);
   };
 
+  // ✅ Solo un useEffect que depende de tab y del perfil que estás viendo
   useEffect(() => {
-    fetchHistory(tab);
-  }, [tab]);
+    if (viewedProfile?._id) {
+      fetchHistory(tab, viewedProfile._id);
+    }
+  }, [tab, viewedProfile]);
 
   return (
     <div className="p-2 md:p-6">
@@ -73,7 +78,7 @@ const ProfileHistorial = () => {
         <div className="space-y-3">
           {matches.map((match) => (
             <HistorialCard
-              key={match.matchId}
+              key={match._id}
               match={match}
               type={tab}
             />
@@ -82,8 +87,8 @@ const ProfileHistorial = () => {
       ) : (
         <p className="text-gray-400">
           {tab === "ranked"
-            ? "Aún no tienes partidas ranked."
-            : "Aún no tienes partidas casual."}
+            ? "Aún no tiene partidas ranked."
+            : "Aún no tiene partidas casual."}
         </p>
       )}
     </div>

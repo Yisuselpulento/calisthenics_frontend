@@ -19,12 +19,8 @@ const handleRequest = async (request) => {
 export const getMatchById = async (matchId) =>
   handleRequest(axiosInstance.get(`/api/match/${matchId}`));
 
-export const getMyRankedHistory = async () =>
-  handleRequest(
-    axiosInstance.get("/api/match/me/history/ranked")
-  );
+export const getUserRankedHistory = async (userId) =>
+  handleRequest(axiosInstance.get(`/api/match/user/${userId}/ranked`));
 
-export const getMyCasualHistory = async () =>
-  handleRequest(
-    axiosInstance.get("/api/match/me/history/casual")
-  );
+export const getUserCasualHistory = async (userId) =>
+  handleRequest(axiosInstance.get(`/api/match/user/${userId}/casual`));
