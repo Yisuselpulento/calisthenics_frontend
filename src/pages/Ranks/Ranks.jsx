@@ -3,6 +3,7 @@ import { FaTrophy } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { getRankedLeaderboardService } from "../../Services/userFetching.js";
 import RankedSearchButton from "../../components/Buttons/RankedSearchButton.jsx";
+import { getRankingColor } from "../../helpers/getRankingColor.js";
 
 export default function Ranks() {
   const [users, setUsers] = useState([]);
@@ -84,13 +85,22 @@ export default function Ranks() {
                 </div>
               </div>
 
-              <div className="flex flex-col items-end text-yellow-300">
-                <div className="flex items-center gap-2">
-                  <FaTrophy />
-                  <span className="font-medium">{safeElo(user)}</span>
-                </div>
-                <span className="text-xs text-gray-400">{user.ranking?.[type]?.tier || "Bronze"}</span>
+              <div className="flex flex-col items-end">
+              <div className="flex items-center gap-2">
+                <FaTrophy
+                  className={`text-lg ${getRankingColor(user.ranking?.[type]?.tier)}`}
+                />
+                <span className="font-medium text-white">
+                  {safeElo(user)}
+                </span>
               </div>
+
+              <span
+                className={`text-xs ${getRankingColor(user.ranking?.[type]?.tier)}`}
+              >
+                {user.ranking?.[type]?.tier || "Bronze"}
+              </span>
+            </div>
             </div>
           </Link>
         ))}

@@ -12,6 +12,8 @@ import ButtonConfigProfile from "../../components/Profile/ButtonConfigProfile";
 import { createReportService } from "../../Services/reportsFetching";
 import { toast } from "react-hot-toast";
 import ImageLightbox from "../../components/ImageLightbox";
+import EnergyBar from "../../components/Profile/Energybar";
+import RankingDisplay from "../../components/Profile/RankingDisplay";
 
 const Profile = () => {
   const { currentUser, viewedProfile, toggleFollow } = useAuth();
@@ -55,6 +57,7 @@ const Profile = () => {
     <div className="p-2 flex flex-col gap-2 min-h-screen">
       {/* PERFIL */}
       <section className="relative flex gap-5 p-3 border-white border rounded-lg backdrop-blur-md">
+        {/* BUTTON CONFIG / REPORT */}
         {!isCurrentUser && (
           <div className="absolute top-2 left-2 z-50">
             <ButtonConfigProfile
@@ -66,22 +69,29 @@ const Profile = () => {
           </div>
         )}
 
-        <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
-          <img
-            src={user.avatar.url}
-            alt={user.fullName}
-            onClick={() => setOpenImage(true)}
-            className="w-full h-full object-cover rounded-full border"
-            style={{ borderColor: bgColor }}
-          />
-          {!isCurrentUser && (
-            <ButtonFollow
-                targetUserId={user._id}
-              />
-          )}
+        {/* IZQUIERDA: AVATAR + ENERGY + RANKING */}
+        <div className="flex flex-col items-center gap-2">
+          <div className="relative w-34 h-34 xs:w-20 xs:h-20 shrink-0">
+            <img
+              src={user.avatar.url}
+              alt={user.fullName}
+              onClick={() => setOpenImage(true)}
+              className="w-full h-full object-cover rounded-full border"
+              style={{ borderColor: bgColor }}
+            />
+          </div>
+
+          {/* Barra de energía */}
+        {isCurrentUser && (
+          <EnergyBar energy={user.stats?.energy || 0} />
+        )}
+
+          {/* Ranking */}
+          {showMore && <RankingDisplay ranking={user.ranking} />}
         </div>
 
-        <div className="w-full">
+        {/* DERECHA: CONTENIDO DEL PERFIL */}
+        <div className="flex-1">
           <div className="flex gap-3 items-center relative">
             <p className="text-xl mt-2">{user.fullName}</p>
             <p
@@ -134,9 +144,14 @@ const Profile = () => {
               </div>
             )}
           </div>
+          
         </div>
+        
       </section>
 
+             {!isCurrentUser && (
+              <ButtonFollow targetUserId={user._id} />
+            )}
       {/* TEAM */}
       {userTeam && (
         <section className="flex justify-center items-center mt-3">
