@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const UserItem = ({ user, isFollowing, onToggleFollow }) => {
+  const { followLoading } = useAuth();
+
   return (
     <div className="flex items-center justify-between bg-stone-800 p-3 rounded-lg hover:bg-stone-700">
       <Link to={`/profile/${user.username}`} className="flex items-center gap-3">
@@ -16,12 +19,21 @@ const UserItem = ({ user, isFollowing, onToggleFollow }) => {
       </Link>
 
       <button
+        disabled={followLoading}
         onClick={() => onToggleFollow(user)}
-        className={`px-3 py-1 text-xs rounded ${
-          isFollowing ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"
-        }`}
+        className={`
+          px-3 py-1 text-xs rounded transition
+          ${isFollowing
+            ? "bg-red-600 hover:bg-red-700"
+            : "bg-green-600 hover:bg-green-700"}
+          ${followLoading && "opacity-60 cursor-not-allowed"}
+        `}
       >
-        {isFollowing ? "Dejar de seguir" : "Seguir"}
+        {followLoading
+          ? "Cargando..."
+          : isFollowing
+          ? "Dejar de seguir"
+          : "Seguir"}
       </button>
     </div>
   );

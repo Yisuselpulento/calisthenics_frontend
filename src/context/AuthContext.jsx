@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true); 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
 
   // Nuevo estado para manejar el perfil de cualquier usuario
   const [viewedProfile, setViewedProfile] = useState(null);
@@ -102,12 +103,17 @@ const updateViewedProfile = (user) => {
 
 
 const toggleFollow = async (targetUser) => {
+  if (followLoading) return; 
+
+  setFollowLoading(true);
+
   const res = await toggleFollowService(targetUser._id);
 
-  if (res.success) {
+  if (res?.success) {
     updateCurrentUser(res.user);
   }
 
+  setFollowLoading(false);
   return res;
 };
 
@@ -125,7 +131,8 @@ const toggleFollow = async (targetUser) => {
         viewedProfile,
         profileLoading,
         loadProfile,
-        toggleFollow
+        toggleFollow, 
+        followLoading 
         
       }}
     >
