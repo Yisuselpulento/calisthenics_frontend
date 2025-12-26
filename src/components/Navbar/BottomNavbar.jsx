@@ -56,7 +56,7 @@ const BottomNavbar = () => {
         </button>
 
         {showDropdown && (
-          <FriendsDropdown user={currentUser} />
+          <FriendsDropdown user={currentUser}  onClose={closeDropdown} />
         )}
       </div>
 

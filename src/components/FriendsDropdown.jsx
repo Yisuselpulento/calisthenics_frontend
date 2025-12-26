@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaUserFriends, FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const FriendsDropdown = ({ user }) => {
+const FriendsDropdown = ({ user, onClose }) => {
   const [activeTab, setActiveTab] = useState("friends");
 
   if (!user) return null; // evita errores si no hay usuario
@@ -75,6 +75,7 @@ const FriendsDropdown = ({ user }) => {
       <div className="mt-4 text-center">
         <Link
           to={`/profile/${user.username}/friends`}
+          onClick={onClose}
           className="text-blue-400 hover:underline text-sm"
         >
           Ver todos →
