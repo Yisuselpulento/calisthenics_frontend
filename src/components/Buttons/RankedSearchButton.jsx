@@ -1,5 +1,5 @@
 import { useRankedSocket } from "../../context/RankedSocketContext";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import SearchTimer from "../SearchTimer";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
@@ -9,18 +9,24 @@ const MIN_ENERGY_TO_RANKED = 333;
 export default function RankedSearchButton() {
   const socket = useRankedSocket();
   const { currentUser } = useAuth();
+
   const [searching, setSearching] = useState(false);
   const [mode, setMode] = useState("static");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const searchingRef = useRef(false);
+
+  /* =========================
+     BUSCAR
+  ========================== */
   const startSearch = () => {
-    // 🔴 Validar energía
+    if (searchingRef.current) return;
+
     if (!currentUser?.stats?.energy || currentUser.stats.energy < MIN_ENERGY_TO_RANKED) {
       toast.error("No tienes energía suficiente para buscar ranked");
       return;
     }
 
-    // 🔴 Validar combo favorito
     const hasCombo = currentUser?.favoriteCombos?.[mode];
     if (!hasCombo) {
       toast.error(`No tienes un combo favorito de tipo "${mode}"`);
@@ -28,17 +34,34 @@ export default function RankedSearchButton() {
     }
 
     socket.emit("ranked:search", { mode });
+
+    searchingRef.current = true;
     setSearching(true);
   };
 
+  /* =========================
+     CANCELAR
+  ========================== */
   const cancelSearch = () => {
     socket.emit("ranked:cancel", { mode });
+
+    searchingRef.current = false;
     setSearching(false);
   };
 
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  /* =========================
+     CLEANUP AL SALIR
+  ========================== */
+  useEffect(() => {
+    return () => {
+      if (searchingRef.current) {
+        socket.emit("ranked:cancel", { mode });
+      }
+    };
+  }, [socket, mode]);
 
   const selectMode = (newMode) => {
+    if (searching) return;
     setMode(newMode);
     setDropdownOpen(false);
   };
@@ -71,11 +94,12 @@ export default function RankedSearchButton() {
       {!searching && (
         <div className="relative">
           <button
-            onClick={toggleDropdown}
+            onClick={() => setDropdownOpen(!dropdownOpen)}
             className="px-3 py-2 bg-stone-700 text-white rounded-lg text-sm"
           >
             Modo: {mode}
           </button>
+
           {dropdownOpen && (
             <div className="absolute top-full left-0 mt-1 bg-stone-800 border border-stone-600 rounded-lg z-10">
               {["static", "dynamic"].map((m) => (
