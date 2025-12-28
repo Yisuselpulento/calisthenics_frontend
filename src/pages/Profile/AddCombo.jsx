@@ -11,6 +11,9 @@ import { useAuth } from "../../context/AuthContext";
 import { createComboService } from "../../Services/comboFetching.js";
 import { getUserVariants } from "../../helpers/getUserVariants";
 
+const MAX_VIDEO_SIZE_MB = 100;
+const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024;
+
 const AddCombo = () => {
   const navigate = useNavigate();
   const { viewedProfile, updateViewedProfile } = useAuth();
@@ -137,6 +140,27 @@ const AddCombo = () => {
     }
   };
 
+  const handleVideoChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // ❌ tamaño
+  if (file.size > MAX_VIDEO_SIZE_BYTES) {
+    toast.error("El video no puede superar los 100 MB");
+    e.target.value = "";
+    return;
+  }
+
+  // ❌ tipo (extra seguridad)
+  if (!file.type.startsWith("video/")) {
+    toast.error("El archivo debe ser un video");
+    e.target.value = "";
+    return;
+  }
+
+  setVideoFile(file);
+};
+
   /* --------------------------- UI ------------------------------- */
   return (
     <div className="text-white min-h-screen p-4">
@@ -242,7 +266,7 @@ const AddCombo = () => {
             type="file"
             accept="video/*"
             className="hidden"
-            onChange={(e) => setVideoFile(e.target.files[0])}
+            onChange={handleVideoChange}
           />
 
           <label

@@ -7,6 +7,9 @@ import toast from "react-hot-toast";
 import TeamButtonProfile from "../../components/Profile/TeamButtonProfile";
 import VideoPlayer from "../../components/VideoPlayer";
 
+const MAX_VIDEO_SIZE_MB = 100;
+const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024;
+
 const EditProfile = () => {
   const { currentUser, updateCurrentUser } = useAuth();
   const navigate = useNavigate();
@@ -22,14 +25,29 @@ const EditProfile = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+  const { name, value, files } = e.target;
 
-    if ((name === "avatar" || name === "videoProfile") && files?.length > 0) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+  /* =========================
+     AVATAR o VIDEO
+  ========================= */
+  if ((name === "avatar" || name === "videoProfile") && files?.length > 0) {
+    const file = files[0];
+
+    // 🔴 SOLO validar peso si es video
+    if (name === "videoProfile" && file.size > MAX_VIDEO_SIZE_BYTES) {
+      toast.error("El video no puede superar los 100 MB");
+      e.target.value = ""; // limpia input
       return;
     }
 
-    if (name === "peso" || name === "altura") {
+    setFormData((prev) => ({ ...prev, [name]: file }));
+    return;
+  }
+
+  /* =========================
+     PESO / ALTURA
+  ========================= */
+  if (name === "peso" || name === "altura") {
     // Permitimos solo números positivos o vacío
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -37,9 +55,11 @@ const EditProfile = () => {
     return;
   }
 
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
+  /* =========================
+     RESTO DE CAMPOS
+  ========================= */
+  setFormData((prev) => ({ ...prev, [name]: value }));
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

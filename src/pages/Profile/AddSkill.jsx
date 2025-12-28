@@ -9,6 +9,8 @@ import SubmitButton from "../../components/Buttons/SubmitButton.jsx";
 import { getVariantBgColor } from "../../helpers/colorTargetVariants.js";
 import VideoPlayer from "../../components/VideoPlayer";
 
+const MAX_VIDEO_SIZE_MB = 100;
+const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024;
 
 const AddSkill = () => {
   const { updateViewedProfile } = useAuth();
@@ -68,12 +70,28 @@ const AddSkill = () => {
 
  
   const handleVideoChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    setVideoFile(file);
-    setVideoSrc(URL.createObjectURL(file));
-  };
+  // ❌ Validar tamaño
+  if (file.size > MAX_VIDEO_SIZE_BYTES) {
+    toast.error("El video no puede superar los 100 MB");
+
+    // limpiar input
+    e.target.value = "";
+    return;
+  }
+
+  // (opcional) validar tipo
+  if (!file.type.startsWith("video/")) {
+    toast.error("El archivo debe ser un video");
+    e.target.value = "";
+    return;
+  }
+
+  setVideoFile(file);
+  setVideoSrc(URL.createObjectURL(file));
+};
 
   /* =========================
      Agregar skill
