@@ -112,12 +112,22 @@ const Profile = () => {
             </p>
           </div>
 
-          {showPesoAltura && (
-            <div className="flex gap-2 text-xs">
-              {user.peso != null && <p>Peso: {user.peso} kg</p>}
-              {user.altura != null && <p>Altura: {user.altura} m</p>}
-            </div>
-          )}
+         {(showPesoAltura || user.country) && (
+          <div className="flex flex-col text-xs gap-0.5">
+            {/* Peso + Altura en horizontal */}
+            {showPesoAltura && (
+              <div className="flex gap-2">
+                {(user.peso ?? 0) > 0 && <p>Peso: {user.peso} kg</p>}
+                {(user.altura ?? 0) > 0 && <p>Altura: {user.altura} m</p>}
+              </div>
+            )}
+
+            {/* País debajo */}
+            {user.country && (
+              <p className="text-gray-300">{user.country}</p>
+            )}
+          </div>
+        )}
 
           {isCurrentUser && (
             <Link
@@ -140,12 +150,12 @@ const Profile = () => {
               </button>
             </div>
 
-            <ProgressBar level={user.stats?.mainAura || 0} maxLevel={18000} label="Main AU" />
+            <ProgressBar level={user.stats?.mainAura || 0} maxLevel={25000} label="Main AU" />
 
             {showMore && (
               <div className="mt-1 flex flex-col animate-fadeIn">
-                <ProgressBar level={user.stats?.staticAura || 0} maxLevel={9000} label="Static AU" showPercent={false} />
-                <ProgressBar level={user.stats?.dynamicAura || 0} maxLevel={9000} label="Dynamic AU" showPercent={false} />
+                <ProgressBar level={user.stats?.staticAura || 0} maxLevel={12500} label="Static AU" showPercent={false} />
+                <ProgressBar level={user.stats?.dynamicAura || 0} maxLevel={12500} label="Dynamic AU" showPercent={false} />
               </div>
             )}
           </div>
