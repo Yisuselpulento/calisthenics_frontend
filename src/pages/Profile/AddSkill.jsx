@@ -43,6 +43,7 @@ const AddSkill = () => {
         toast.error(res.message);
       } else {
         setSkills(res.data);
+        console.log("Skills loaded:", res.data);
       }
 
       setLoadingSkills(false);
