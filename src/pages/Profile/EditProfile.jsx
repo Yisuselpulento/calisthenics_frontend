@@ -6,6 +6,7 @@ import SubmitButton from "../../components/Buttons/SubmitButton";
 import toast from "react-hot-toast";
 import TeamButtonProfile from "../../components/Profile/TeamButtonProfile";
 import VideoPlayer from "../../components/VideoPlayer";
+import countries from "../../helpers/countries";
 
 const MAX_VIDEO_SIZE_MB = 100;
 const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024;
@@ -218,14 +219,24 @@ const EditProfile = () => {
 
         {/* País */}
         <div>
-          <label className="block text-sm mb-1">País</label>
-          <input
-            type="text"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            className="w-full p-2 bg-black/30 rounded-md border text-sm"
-          />
+          <div>
+            <label className="block text-sm mb-1">País</label>
+
+            <select
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              className="w-full p-2 bg-black/90 rounded-md border text-sm"
+            >
+              <option value="">Selecciona un país</option>
+
+              {countries.map((country) => (
+                <option key={country.code} value={country.name}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
           {/* LINK A EDIT AVANZADO */}
       <Link

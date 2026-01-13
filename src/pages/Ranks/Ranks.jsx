@@ -1,36 +1,58 @@
 import { useEffect, useState } from "react";
 import { FaTrophy } from "react-icons/fa";
 import { Link } from "react-router-dom";
+
 import { getRankedLeaderboardService } from "../../Services/userFetching.js";
 import RankedSearchButton from "../../components/Buttons/RankedSearchButton.jsx";
 import { getRankingColor } from "../../helpers/getRankingColor.js";
+import Pagination from "../../components/Pagination.jsx";
+
+const PAGE_LIMIT = 10;
 
 export default function Ranks() {
   const [users, setUsers] = useState([]);
   const [me, setMe] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [type, setType] = useState("static");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Helper seguro para obtener ELO
-  const safeElo = (user) => {
-    return user?.ranking?.[type]?.elo != null ? Math.round(user.ranking[type].elo) : 0;
+  const safeElo = (user) =>
+    user?.ranking?.[type]?.elo != null
+      ? Math.round(user.ranking[type].elo)
+      : 0;
+
+  const loadLeaderboard = async (pageToLoad = 1) => {
+    setLoading(true);
+
+    const res = await getRankedLeaderboardService({
+      type,
+      page: pageToLoad,
+      limit: PAGE_LIMIT,
+    });
+
+    if (res.success) {
+      setUsers(res.data.leaderboard || []);
+      setMe(res.data.me || null);
+      setTotalPages(res.data.pagination?.totalPages || 1);
+    }
+
+    setLoading(false);
   };
 
+  // 🔄 Cargar al cambiar tipo o página
   useEffect(() => {
-    const loadLeaderboard = async () => {
-      setLoading(true);
-      const res = await getRankedLeaderboardService(type);
+    loadLeaderboard(page);
+  }, [type, page]);
 
-      if (res.success) {
-        setUsers(res.data.leaderboard || []);
-        setMe(res.data.me || null);
-      }
-
-      setLoading(false);
-    };
-
-    loadLeaderboard();
-  }, [type]);
+  // 🔁 Resetear página al cambiar tipo
+  const handleTypeChange = (newType) => {
+    if (newType === type) return;
+    setType(newType);
+    setPage(1);
+  };
 
   if (loading) {
     return (
@@ -42,6 +64,7 @@ export default function Ranks() {
 
   return (
     <div className="p-2 max-w-3xl mx-auto">
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl">🏆 Ranking Ranked</h1>
         <RankedSearchButton />
@@ -50,78 +73,123 @@ export default function Ranks() {
       {/* BOTONES DE TIPO */}
       <div className="flex gap-2 mb-4">
         <button
-          className={`px-4 py-1 rounded ${type === "static" ? "bg-yellow-500 text-black" : "bg-stone-700 text-gray-300"}`}
-          onClick={() => setType("static")}
+          className={`px-4 py-1 rounded ${
+            type === "static"
+              ? "bg-yellow-500 text-black"
+              : "bg-stone-700 text-gray-300"
+          }`}
+          onClick={() => handleTypeChange("static")}
         >
           Static
         </button>
+
         <button
-          className={`px-4 py-1 rounded ${type === "dynamic" ? "bg-yellow-500 text-black" : "bg-stone-700 text-gray-300"}`}
-          onClick={() => setType("dynamic")}
+          className={`px-4 py-1 rounded ${
+            type === "dynamic"
+              ? "bg-yellow-500 text-black"
+              : "bg-stone-700 text-gray-300"
+          }`}
+          onClick={() => handleTypeChange("dynamic")}
         >
           Dynamic
         </button>
       </div>
 
-      {/* Leaderboard */}
+      {/* LEADERBOARD */}
       <div className="bg-stone-900 rounded-xl p-2 space-y-1 border border-stone-700">
-        {users.map((user, i) => (
-          <Link to={`/profile/${user.username}`} key={user._id} className="block">
-            <div className="flex justify-between items-center p-3 rounded-lg bg-stone-800 hover:bg-stone-700 transition">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`text-lg font-bold w-6 text-center ${
-                    i === 0 ? "text-yellow-400" : i === 1 ? "text-gray-300" : i === 2 ? "text-amber-600" : "text-gray-500"
-                  }`}
-                >
-                  {i + 1}
-                </span>
+        {users.map((user, i) => {
+          const globalRank = i + 1 + (page - 1) * PAGE_LIMIT;
 
-                <img src={user.avatar?.url} alt={user.username} className="w-10 h-10 rounded-full object-cover" />
+          return (
+            <Link
+              to={`/profile/${user.username}`}
+              key={user._id}
+              className="block"
+            >
+              <div className="flex justify-between items-center p-3 rounded-lg bg-stone-800 hover:bg-stone-700 transition">
+                <div className="flex items-center gap-3">
+                  <span className="text-lg font-bold w-8 text-center text-gray-300">
+                    {globalRank}
+                  </span>
 
-                <div>
-                  <p className="text-white font-semibold">{user.fullName}</p>
-                  <p className="text-gray-400 text-sm">@{user.username}</p>
+                  <img
+                    src={user.avatar?.url}
+                    alt={user.username}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+
+                  <div>
+                    <p className="text-white font-semibold">
+                      {user.fullName}
+                    </p>
+                    <p className="text-gray-400 text-sm">
+                      @{user.username}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-end">
+                  <div className="flex items-center gap-2">
+                    <FaTrophy
+                      className={`text-lg ${getRankingColor(
+                        user.ranking?.[type]?.tier
+                      )}`}
+                    />
+                    <span className="font-medium text-white">
+                      {safeElo(user)}
+                    </span>
+                  </div>
+
+                  <span
+                    className={`text-xs ${getRankingColor(
+                      user.ranking?.[type]?.tier
+                    )}`}
+                  >
+                    {user.ranking?.[type]?.tier || "Bronze"}
+                  </span>
                 </div>
               </div>
-
-              <div className="flex flex-col items-end">
-              <div className="flex items-center gap-2">
-                <FaTrophy
-                  className={`text-lg ${getRankingColor(user.ranking?.[type]?.tier)}`}
-                />
-                <span className="font-medium text-white">
-                  {safeElo(user)}
-                </span>
-              </div>
-
-              <span
-                className={`text-xs ${getRankingColor(user.ranking?.[type]?.tier)}`}
-              >
-                {user.ranking?.[type]?.tier || "Bronze"}
-              </span>
-            </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
 
+      {/* PAGINACIÓN */}
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
+
+      {/* MI POSICIÓN */}
       {me && (
         <div className="mt-4 p-3 rounded-xl bg-stone-800 border border-yellow-500">
           <p className="text-sm text-gray-400 mb-1">Tu posición</p>
 
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <span className="font-bold text-yellow-400">#{me.rank}</span>
+              <span className="font-bold text-yellow-400">
+                #{me.rank}
+              </span>
 
-              <img src={me.avatar?.url} alt={me.username} className="w-8 h-8 rounded-full object-cover" />
+              <img
+                src={me.avatar?.url}
+                alt={me.username}
+                className="w-8 h-8 rounded-full object-cover"
+              />
 
-              <span className="text-white font-semibold">@{me.username}</span>
+              <span className="text-white font-semibold">
+                @{me.username}
+              </span>
             </div>
 
             <div className="text-right">
-              <p className="text-yellow-400 font-bold">{safeElo(me)} ELO</p>
-              <p className="text-xs text-gray-400">{me.ranking?.[type]?.tier || "Bronze"}</p>
+              <p className="text-yellow-400 font-bold">
+                {safeElo(me)} ELO
+              </p>
+              <p className="text-xs text-gray-400">
+                {me.ranking?.[type]?.tier || "Bronze"}
+              </p>
             </div>
           </div>
         </div>
