@@ -43,6 +43,7 @@ import { SocketProvider } from "./context/SocketContext";
 import CookieInfoBox from "./components/CookieInfoBox";
 import { RankedSocketProvider } from "./context/RankedSocketContext";
 import { CasualSocketProvider } from "./context/CasualSocketContext";
+import EnergyUpgrade from "./pages/EnergyUpgrade";
 
 function App() {
   return (
@@ -120,6 +121,7 @@ function App() {
                   <Route path="/teams/create" element={<CreateTeamPage />} />
                   <Route path="/ranks" element={<Ranks />} />
                   <Route path="/notifications" element={<Notifications />} />
+                  <Route path="/energy/upgrade" element={<EnergyUpgrade />} />
 
                   {/* --- Perfil --- */}
                   <Route path="profile/:username" element={<ProfileLayout />}>
