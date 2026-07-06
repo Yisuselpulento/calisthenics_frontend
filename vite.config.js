@@ -11,4 +11,16 @@ export default defineConfig({
       "@ffmpeg/util",
     ],
   },
+
+  build: {
+    rollupOptions: {
+      output: {
+        // Vendors en chunks propios → se cachean entre deploys de tu código
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "socket-vendor": ["socket.io-client"],
+        },
+      },
+    },
+  },
 });
