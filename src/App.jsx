@@ -1,49 +1,54 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./Layouts/Layout";
-import Home from "./pages/Home";
-import ScrollToTop from "./components/ScrollToTop";
-import Profile from "./pages/Profile/Profile";
-import NotFound from "./pages/NotFound";
-import ProfileSkills from "./pages/Profile/ProfileSkills";
-import ProfileHistorial from "./pages/Profile/ProfileHistorial";
-import ProfileLayout from "./Layouts/ProfileLayout";
-import Match from "./pages/Match";
-import EditProfile from "./pages/Profile/EditProfile";
-import AddSkill from "./pages/Profile/AddSkill";
-import { AuthProvider } from "./context/AuthContext";
-import Combos from "./pages/Profile/Combos";
-import ComboDetails from "./pages/Profile/ComboDetails";
-import EditCombo from "./pages/Profile/EditCombo";
-import AddCombo from "./pages/Profile/AddCombo";
-import VsDetails from "./pages/VsDetails";
-import Ranks from "./pages/Ranks/Ranks";
-import Notifications from "./pages/Notifications";
-import SkillsStatsPage from "./pages/SkillStatsPage";
-import TeamPage from "./pages/Teampage";
-import CreateTeamPage from "./pages/Teams/CreateTeamPage";
-import SkillsUser from "./pages/Profile/SkillsUser";
-import SkillDetail from "./pages/Profile/SkillDetail";
-import EditSkill from "./pages/Profile/EditSkill";
-import UserFriendsPage from "./pages/Profile/UserFriendsPage";
-
-// 🔐 Auth Pages
-import Login from "./pages/AuthPages/Login";
-import SignUp from "./pages/AuthPages/SignUp";
-import ForgotPassword from "./pages/AuthPages/ForgotPassword";
-import EmailVerification from "./pages/AuthPages/EmailVerification";
-import UpdatePassword from "./pages/AuthPages/UpdatePassword";
-
-// Middleware
-import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
 import { Toaster } from "react-hot-toast";
-import EditAdvancedProfile from "./pages/Profile/EditAdvancedProfile";
-import OwnerRoute from "./components/OwnerRoute";
+
+// Estructura (se necesita de inmediato → eager)
+import Layout from "./Layouts/Layout";
+import ProfileLayout from "./Layouts/ProfileLayout";
+import ScrollToTop from "./components/ScrollToTop";
+import Spinner from "./components/Spinner/Spinner";
+import { AuthProvider } from "./context/AuthContext";
 import { SocketProvider } from "./context/SocketContext";
-import CookieInfoBox from "./components/CookieInfoBox";
 import { RankedSocketProvider } from "./context/RankedSocketContext";
 import { CasualSocketProvider } from "./context/CasualSocketContext";
-import EnergyUpgrade from "./pages/EnergyUpgrade";
+
+// Middleware de rutas (eager)
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
+import OwnerRoute from "./components/OwnerRoute";
+
+// 📄 Páginas (lazy → cada una en su propio chunk, se baja al visitarla)
+const Home = lazy(() => import("./pages/Home"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ProfileSkills = lazy(() => import("./pages/Profile/ProfileSkills"));
+const ProfileHistorial = lazy(() => import("./pages/Profile/ProfileHistorial"));
+const Match = lazy(() => import("./pages/Match"));
+const EditProfile = lazy(() => import("./pages/Profile/EditProfile"));
+const AddSkill = lazy(() => import("./pages/Profile/AddSkill"));
+const Combos = lazy(() => import("./pages/Profile/Combos"));
+const ComboDetails = lazy(() => import("./pages/Profile/ComboDetails"));
+const EditCombo = lazy(() => import("./pages/Profile/EditCombo"));
+const AddCombo = lazy(() => import("./pages/Profile/AddCombo"));
+const VsDetails = lazy(() => import("./pages/VsDetails"));
+const Ranks = lazy(() => import("./pages/Ranks/Ranks"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const SkillsStatsPage = lazy(() => import("./pages/SkillStatsPage"));
+const TeamPage = lazy(() => import("./pages/Teampage"));
+const CreateTeamPage = lazy(() => import("./pages/Teams/CreateTeamPage"));
+const SkillsUser = lazy(() => import("./pages/Profile/SkillsUser"));
+const SkillDetail = lazy(() => import("./pages/Profile/SkillDetail"));
+const EditSkill = lazy(() => import("./pages/Profile/EditSkill"));
+const UserFriendsPage = lazy(() => import("./pages/Profile/UserFriendsPage"));
+const EditAdvancedProfile = lazy(() => import("./pages/Profile/EditAdvancedProfile"));
+const EnergyUpgrade = lazy(() => import("./pages/EnergyUpgrade"));
+
+// 🔐 Auth Pages (lazy)
+const Login = lazy(() => import("./pages/AuthPages/Login"));
+const SignUp = lazy(() => import("./pages/AuthPages/SignUp"));
+const ForgotPassword = lazy(() => import("./pages/AuthPages/ForgotPassword"));
+const EmailVerification = lazy(() => import("./pages/AuthPages/EmailVerification"));
+const UpdatePassword = lazy(() => import("./pages/AuthPages/UpdatePassword"));
 
 function App() {
   return (
@@ -54,7 +59,7 @@ function App() {
           <RankedSocketProvider>
             <CasualSocketProvider>
               <ScrollToTop />
-        {/*       <CookieInfoBox /> */}
+              <Suspense fallback={<Spinner />}>
               <Routes>
                 {/* 🔓 RUTAS PÚBLICAS (solo sin sesión) */}
                 <Route
@@ -128,7 +133,7 @@ function App() {
                       <Route index element={<Profile />} />
                       <Route path="skills" element={<ProfileSkills />} />
                       <Route path="historial" element={<ProfileHistorial />} />
-                      
+
                       {/* Rutas solo accesibles por el dueño */}
                       <Route path="edit" element={
                         <OwnerRoute>
@@ -193,6 +198,7 @@ function App() {
                 {/* ❌ 404 */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </Suspense>
               </CasualSocketProvider>
           </RankedSocketProvider>
         </SocketProvider>
